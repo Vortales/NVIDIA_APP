@@ -1,0 +1,22 @@
+{
+  "switches": [
+    "nv-disable-zoom=true",
+    "nv-combine-processes=false",
+    "nv-custom-black-window=true",
+    "nv-gpu-accel=true",
+    "nv-background-color=0xFF000000",
+    "nv-min-window-size=320,320",
+    "nv-def-window-size=1298,942",
+    "nv-allow-file-access-from-files=true",
+    "nv-app-hidpi=true",
+    "nv-url-relative=../www/index.html",
+    "nv-plugin-folder-relative=./plugins/BackgroundProcess;./plugins/NVIDIA App;./plugins/Base",
+    "nv-plugin-dependencies-relative=./dependencies",
+    "nv-app-url-scheme=nvidiaapp",
+    "nv-app-name=NVIDIA App",
+    "nv-self-update-path=NVIDIA App\\UpdateFramework\\status\\nvapp\\nvAppUpdate.json",
+    "nv-startup-autoupdate=true",
+    "nv-nvtelemetry-config-path=..\\..\\NvTelemetry\\plugin\\NvTelemetry.json",
+    "nv-telemetry-api-binary-path=..\\..\\NvTelemetry"
+  ]
+}

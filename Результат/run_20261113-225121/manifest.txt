@@ -1,0 +1,45 @@
+﻿ЧТО В ЭТОЙ ПАПКЕ И ЗАЧЕМ
+========================================================================
+прогон:   D:\Users\79528\PycharmProjects\PythonProject1\nvidia_diag\Результат\run_20261113-225121
+дата:     2026-11-13 22:51:36
+скрипт:   nvidia_overlay_diag.py  sha256[:16]=cc7e38f74b004eeb
+аргументы:  python nvidia_overlay_diag.py
+среда:    python 3.12.6 / Windows 10 / cwd=D:\Users\79528\PycharmProjects\PythonProject1\nvidia_diag
+итог:     находок 85, файлов отчёта 3, копий логов 22
+
+КАК ОТПРАВИТЬ
+------------------------------------------------------------------------
+1) Архивируй либо всю папку Результат, либо только run_20261113-225121 — имена файлов внутри ASCII, при упаковке не поедут.
+2) Приложи архив к сообщению ассистенту — внутри есть отчёт, JSON и копии логов, этого хватает.
+3) Логи не попали (копий = 0)? Положи файлы в Результат\incoming\ и повтори: python nvidia_overlay_diag.py logs
+
+СОДЕРЖИМОЕ
+------------------------------------------------------------------------
+     129,675 Б  report.txt
+     208,291 Б  report.json
+      45,509 Б  verdict.txt
+      63,565 Б  logs\CxNative_NVIDIA Overlay.log
+     594,542 Б  logs\Log.nvcontainer.exe.log
+     261,089 Б  logs\CaptureCore.log
+      80,387 Б  logs\CxNative_NVIDIA App.log
+      81,757 Б  logs\Log.NVIDIA App.exe.log
+      79,139 Б  logs\CxNative_NVIDIA App.1.log
+      13,813 Б  logs\NvContainerLocalSystem.log
+      33,577 Б  logs\NvContainerWatchdog.log
+       5,460 Б  logs\Log.NVIDIA Overlay.exe.log
+      20,418 Б  logs\NvContainerUser1.log
+       6,286 Б  logs\NvContainerUser1SPUser.log
+       6,829 Б  logs\NvContainerSession1.log
+         235 Б  logs\AudioDriver_nvcontainer_261113_224337__0.log
+       4,726 Б  logs\NvContainerAIUser1.log
+      60,544 Б  logs\CxNative_NVIDIA Overlay.1.log
+         235 Б  logs\AudioDriver_nvcontainer_261113_215409__0.log
+         235 Б  logs\AudioDriver_nvcontainer_261113_215143__0.log
+   3,670,893 Б  logs\setupapi.dev.log
+     412,390 Б  logs\Primary1794010655122118600_DE486298-2CEF-4EA7-B601-F633D0303459.log
+          71 Б  logs\Additional1794010655132170700_DE486298-2CEF-4EA7-B601-F633D0303459.log
+         856 Б  logs\NVIDIA App.json
+         512 Б  logs\NVIDIA Overlay.json
+
+========================================================================
+Скрипт ничего в системе не меняет — только читает. Правки по плану из report.txt делаешь сам.

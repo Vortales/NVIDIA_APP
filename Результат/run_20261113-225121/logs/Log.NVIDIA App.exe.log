@@ -1,0 +1,507 @@
+2026-11-13 21:47:37.329 (      0.542) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:47:37.331 (      0.544) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:47:37.329 (      0.542) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:47:37.334 (      0.547) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:47:37.340 (      0.553) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:47:37.341 (      0.554) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:47:37.342 (      0.555) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:47:37.342 (      0.555) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:47:37.343 (      0.556) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 21:47:37.343 (      0.556) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:47:37.623 (      0.836) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_NVIEW_STATE. 
+2026-11-13 21:47:37.642 (      0.855) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x324. 
+2026-11-13 21:47:37.642 (      0.855) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_GSYNC_INDICATOR. 
+2026-11-13 21:47:37.643 (      0.856) |    DEBUG: [UXDriver.NvCpl] 667@NvCplApiGetInfo : Call. 
+2026-11-13 21:47:37.643 (      0.856) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 21:47:37.763 (      0.976) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:47:37.764 (      0.977) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:47:37.767 (      0.980) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:47:37.768 (      0.981) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:47:37.769 (      0.982) |    DEBUG: [UXDriver.NViewState] 287@Nvidia::UXDriver::Shim::NviewState::AddActiveDisplayDevices : RID62152  - Target.size() 1   ,WinDisplayNum  1. 
+2026-11-13 21:47:37.776 (      0.989) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:47:37.777 (      0.990) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:47:37.846 (      1.059) |    DEBUG: [UXDriver.NvCpl] 2307@Nvidia::UXDriver::Shim::ShimSystem::UpdateGsyncInfo : gsyncCapabilities: 4  ,Enable: 0  ,VRR capablity GPU: 1  ,true Gsync: 0. 
+2026-11-13 21:47:37.846 (      1.059) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 21:47:37.849 (      1.062) |    DEBUG: [UXDriver.NvCpl] 2101@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpInfo : hdcp Status: 0x00000000. 
+2026-11-13 21:47:37.849 (      1.062) |    DEBUG: [UXDriver.NvCpl] 2096@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpStatusReportSupport : GPU Architecture: 18 HDCP supported: 1. 
+2026-11-13 21:47:37.850 (      1.063) |    DEBUG: [UXDriver.NViewState] 905@Nvidia::UXDriver::Shim::NviewState::AddDisplayDevice : RID62152  - displays.size: 0   ,isPrimary: 0  Display ID: 1. 
+2026-11-13 21:47:37.851 (      1.064) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_ADVANCE_COLOR_SETTINGS_SUPPORTED. 
+2026-11-13 21:47:37.879 (      1.092) |    DEBUG: [UXDriver.NvCpl] 667@NvCplApiGetInfo : Call. 
+2026-11-13 21:47:37.880 (      1.093) |    DEBUG: [UXDriver.NvCpl] 2725@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncGlobalState : GetGsyncGlobalState: 3. 
+2026-11-13 21:47:37.881 (      1.094) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:47:37.882 (      1.095) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:47:37.882 (      1.095) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:47:37.883 (      1.096) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:47:37.992 (      1.205) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 21:47:37.992 (      1.205) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 21:47:38.280 (      1.493) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:47:38.281 (      1.494) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:47:38.282 (      1.495) |    DEBUG: [UXDriver.NvCpl] 2737@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncIndicator : GetGsyncIndicator: 0. 
+2026-11-13 21:47:38.283 (      1.496) |    DEBUG: [UXDriver.NvCpl] 2975@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 21:47:38.284 (      1.497) |    DEBUG: [UXDriver.NvCpl] 3001@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : display Name :  HDMI , displayId : 3. 
+2026-11-13 21:47:38.284 (      1.497) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 21:47:38.285 (      1.498) |    DEBUG: [UXDriver.NvCpl] 3032@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :   gpuCount: 1. 
+2026-11-13 21:47:38.285 (      1.498) |    DEBUG: [UXDriver.NvCpl] 3042@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :  displayCount: 1  ,gpu name: NVIDIA GeForce RTX 3060 Laptop GPU. 
+2026-11-13 21:47:38.285 (      1.498) |    DEBUG: [UXDriver.NvCpl] 3060@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -end. 
+2026-11-13 21:47:38.286 (      1.499) |    DEBUG: [UXDriver.NvCpl] 320@NvCplApiFreeMemory : NvCplApiFreeMemory: Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 21:47:38.313 (      1.526) |    DEBUG: [UXDriver.NvCpl] 310@NvCplApiSetSetting : Call NVCPLAPI_SETTING_SIMPLE_REZ. 
+2026-11-13 21:47:38.313 (      1.526) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  1. 
+2026-11-13 21:47:38.313 (      1.526) |    DEBUG: [UXDriver.NvCpl] 2968@Nvidia::UXDriver::Shim::ShimSystem::FreeGpusAndDisplaysPhysicalInformation : FreeGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 21:47:38.313 (      1.526) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 21:47:38.331 (      1.544) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_MISC_HIDE_MODES. 
+2026-11-13 21:47:38.334 (      1.547) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_DISPLAY_PULSAR_INFO. 
+2026-11-13 21:47:38.347 (      1.560) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 21:47:38.349 (      1.562) |    DEBUG: [UXDriver.NvCpl] 2543@Nvidia::UXDriver::Shim::ShimSystem::GetDisplayPulsarInfo : GetDisplayPulsarInfo result: 0  ,isSupported: 0  ,enabled: 0  ,lowFpsMin: 0  ,lowFpsMax: 0  ,lowFpsCurrent: 0  ,canUsePulsar: 0. 
+2026-11-13 21:50:42.223 (    185.436) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:50:42.223 (    185.436) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:50:42.223 (    185.436) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 21:50:42.224 (    185.437) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:50:42.223 (    185.436) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 21:50:42.224 (    185.437) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:50:42.225 (    185.438) |    DEBUG: [UXDriver.Batching.NvXDSerializerImpl] 140@Nvidia::UXDriver::Batching::NvXDSerializerImpl::FinalRelease : CALL. 
+2026-11-13 21:51:43.093 (      0.560) |    DEBUG: [UXDriver.NvCpl] 4176@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  0. 
+2026-11-13 21:51:43.093 (      0.560) |    DEBUG: [UXDriver.NvCpl] 4176@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  0. 
+2026-11-13 21:51:43.093 (      0.560) |    DEBUG: [UXDriver.NvCpl] 4176@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  0. 
+2026-11-13 21:51:43.144 (      0.611) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.144 (      0.611) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.145 (      0.612) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.195 (      0.662) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.195 (      0.662) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.211 (      0.678) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.246 (      0.713) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.246 (      0.713) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.262 (      0.729) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.311 (      0.778) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.311 (      0.778) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.327 (      0.794) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.377 (      0.844) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.377 (      0.844) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.379 (      0.846) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.429 (      0.896) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.429 (      0.896) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.446 (      0.913) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.480 (      0.947) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.480 (      0.947) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.497 (      0.964) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.546 (      1.013) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.546 (      1.013) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.561 (      1.028) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.612 (      1.079) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.612 (      1.079) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.612 (      1.079) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.663 (      1.130) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.664 (      1.131) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.664 (      1.131) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.714 (      1.181) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.729 (      1.196) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.729 (      1.196) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.779 (      1.246) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.781 (      1.248) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.781 (      1.248) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.830 (      1.297) |    DEBUG: [UXDriver.NvCpl] 4199@NvCplApiIsUxdServiceRunning : Open UXD service started event failed with error:  2. 
+2026-11-13 21:51:43.846 (      1.313) |    DEBUG: [UXDriver.NvCpl] 4192@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:51:43.847 (      1.314) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:51:43.846 (      1.313) |    DEBUG: [UXDriver.NvCpl] 4192@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:51:43.847 (      1.314) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:51:43.855 (      1.322) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:51:43.855 (      1.322) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:51:43.855 (      1.322) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 21:51:43.881 (      1.348) |    DEBUG: [UXDriver.NvCpl] 4192@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:51:43.881 (      1.348) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:51:43.882 (      1.349) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:51:44.924 (      2.391) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x324. 
+2026-11-13 21:51:44.924 (      2.391) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_GSYNC_INDICATOR. 
+2026-11-13 21:51:44.924 (      2.391) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_NVIEW_STATE. 
+2026-11-13 21:51:44.925 (      2.392) |    DEBUG: [UXDriver.NvCpl] 667@NvCplApiGetInfo : Call. 
+2026-11-13 21:51:44.927 (      2.394) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 21:51:45.009 (      2.476) |    DEBUG: [UXDriver.NvCpl] 2725@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncGlobalState : GetGsyncGlobalState: 3. 
+2026-11-13 21:51:45.011 (      2.478) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:51:45.012 (      2.479) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:51:45.013 (      2.480) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:51:45.014 (      2.481) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:51:45.170 (      2.637) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 21:51:45.170 (      2.637) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 21:51:45.249 (      2.716) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:51:45.250 (      2.717) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:51:45.251 (      2.718) |    DEBUG: [UXDriver.NvCpl] 2737@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncIndicator : GetGsyncIndicator: 0. 
+2026-11-13 21:51:45.291 (      2.758) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:51:45.292 (      2.759) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:51:45.293 (      2.760) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:51:45.294 (      2.761) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:51:45.294 (      2.761) |    DEBUG: [UXDriver.NViewState] 287@Nvidia::UXDriver::Shim::NviewState::AddActiveDisplayDevices : RID62152  - Target.size() 1   ,WinDisplayNum  1. 
+2026-11-13 21:51:45.299 (      2.766) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:51:45.300 (      2.767) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:51:45.339 (      2.806) |    DEBUG: [UXDriver.NvCpl] 2307@Nvidia::UXDriver::Shim::ShimSystem::UpdateGsyncInfo : gsyncCapabilities: 4  ,Enable: 0  ,VRR capablity GPU: 1  ,true Gsync: 0. 
+2026-11-13 21:51:45.339 (      2.806) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 21:51:45.341 (      2.808) |    DEBUG: [UXDriver.NvCpl] 2101@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpInfo : hdcp Status: 0x00000000. 
+2026-11-13 21:51:45.342 (      2.809) |    DEBUG: [UXDriver.NvCpl] 2096@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpStatusReportSupport : GPU Architecture: 18 HDCP supported: 1. 
+2026-11-13 21:51:45.342 (      2.809) |    DEBUG: [UXDriver.NViewState] 905@Nvidia::UXDriver::Shim::NviewState::AddDisplayDevice : RID62152  - displays.size: 0   ,isPrimary: 0  Display ID: 1. 
+2026-11-13 21:51:45.343 (      2.810) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_ADVANCE_COLOR_SETTINGS_SUPPORTED. 
+2026-11-13 21:51:45.369 (      2.836) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  1. 
+2026-11-13 21:51:45.369 (      2.836) |    DEBUG: [UXDriver.NvCpl] 310@NvCplApiSetSetting : Call NVCPLAPI_SETTING_SIMPLE_REZ. 
+2026-11-13 21:51:45.369 (      2.836) |    DEBUG: [UXDriver.NvCpl] 2975@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 21:51:45.369 (      2.836) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 21:51:45.369 (      2.836) |    DEBUG: [UXDriver.NvCpl] 3001@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : display Name :  HDMI , displayId : 3. 
+2026-11-13 21:51:45.370 (      2.837) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 21:51:45.370 (      2.837) |    DEBUG: [UXDriver.NvCpl] 3032@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :   gpuCount: 1. 
+2026-11-13 21:51:45.370 (      2.837) |    DEBUG: [UXDriver.NvCpl] 3042@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :  displayCount: 1  ,gpu name: NVIDIA GeForce RTX 3060 Laptop GPU. 
+2026-11-13 21:51:45.371 (      2.838) |    DEBUG: [UXDriver.NvCpl] 3060@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -end. 
+2026-11-13 21:51:45.371 (      2.838) |    DEBUG: [UXDriver.NvCpl] 320@NvCplApiFreeMemory : NvCplApiFreeMemory: Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 21:51:45.386 (      2.853) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_MISC_HIDE_MODES. 
+2026-11-13 21:51:45.387 (      2.854) |    DEBUG: [UXDriver.NvCpl] 2968@Nvidia::UXDriver::Shim::ShimSystem::FreeGpusAndDisplaysPhysicalInformation : FreeGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 21:51:45.389 (      2.856) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_DISPLAY_PULSAR_INFO. 
+2026-11-13 21:51:45.406 (      2.873) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 21:51:45.407 (      2.874) |    DEBUG: [UXDriver.NvCpl] 2543@Nvidia::UXDriver::Shim::ShimSystem::GetDisplayPulsarInfo : GetDisplayPulsarInfo result: 0  ,isSupported: 0  ,enabled: 0  ,lowFpsMin: 0  ,lowFpsMax: 0  ,lowFpsCurrent: 0  ,canUsePulsar: 0. 
+2026-11-13 21:51:58.639 (     16.106) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:51:58.642 (     16.109) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:51:58.642 (     16.109) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 21:51:58.643 (     16.110) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:51:58.643 (     16.110) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 21:51:58.644 (     16.111) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:51:58.644 (     16.111) |    DEBUG: [UXDriver.Batching.NvXDSerializerImpl] 140@Nvidia::UXDriver::Batching::NvXDSerializerImpl::FinalRelease : CALL. 
+2026-11-13 21:52:01.695 (      0.514) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:52:01.695 (      0.514) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:52:01.703 (      0.522) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:52:01.705 (      0.524) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:52:01.705 (      0.524) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:52:01.705 (      0.524) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:52:01.706 (      0.525) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:52:01.705 (      0.524) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:52:01.706 (      0.525) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:52:01.706 (      0.525) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 21:52:01.972 (      0.791) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x324. 
+2026-11-13 21:52:01.972 (      0.791) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_GSYNC_INDICATOR. 
+2026-11-13 21:52:01.972 (      0.791) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_NVIEW_STATE. 
+2026-11-13 21:52:01.972 (      0.791) |    DEBUG: [UXDriver.NvCpl] 667@NvCplApiGetInfo : Call. 
+2026-11-13 21:52:01.972 (      0.791) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 21:52:02.026 (      0.845) |    DEBUG: [UXDriver.NvCpl] 2725@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncGlobalState : GetGsyncGlobalState: 3. 
+2026-11-13 21:52:02.028 (      0.847) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:52:02.029 (      0.848) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:52:02.029 (      0.848) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:52:02.030 (      0.849) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:52:02.149 (      0.968) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 21:52:02.152 (      0.971) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 21:52:02.253 (      1.072) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:52:02.253 (      1.072) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:52:02.255 (      1.074) |    DEBUG: [UXDriver.NvCpl] 2737@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncIndicator : GetGsyncIndicator: 0. 
+2026-11-13 21:52:02.307 (      1.126) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:52:02.307 (      1.126) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:52:02.310 (      1.129) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:52:02.310 (      1.129) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:52:02.311 (      1.130) |    DEBUG: [UXDriver.NViewState] 287@Nvidia::UXDriver::Shim::NviewState::AddActiveDisplayDevices : RID62152  - Target.size() 1   ,WinDisplayNum  1. 
+2026-11-13 21:52:02.315 (      1.134) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:52:02.316 (      1.135) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:52:02.340 (      1.159) |    DEBUG: [UXDriver.NvCpl] 2307@Nvidia::UXDriver::Shim::ShimSystem::UpdateGsyncInfo : gsyncCapabilities: 4  ,Enable: 0  ,VRR capablity GPU: 1  ,true Gsync: 0. 
+2026-11-13 21:52:02.340 (      1.159) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 21:52:02.342 (      1.161) |    DEBUG: [UXDriver.NvCpl] 2101@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpInfo : hdcp Status: 0x00000000. 
+2026-11-13 21:52:02.342 (      1.161) |    DEBUG: [UXDriver.NvCpl] 2096@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpStatusReportSupport : GPU Architecture: 18 HDCP supported: 1. 
+2026-11-13 21:52:02.343 (      1.162) |    DEBUG: [UXDriver.NViewState] 905@Nvidia::UXDriver::Shim::NviewState::AddDisplayDevice : RID62152  - displays.size: 0   ,isPrimary: 0  Display ID: 1. 
+2026-11-13 21:52:02.344 (      1.163) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_ADVANCE_COLOR_SETTINGS_SUPPORTED. 
+2026-11-13 21:52:02.344 (      1.163) |    DEBUG: [UXDriver.NvCpl] 2975@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 21:52:02.345 (      1.164) |    DEBUG: [UXDriver.NvCpl] 3001@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : display Name :  HDMI , displayId : 3. 
+2026-11-13 21:52:02.345 (      1.164) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 21:52:02.346 (      1.165) |    DEBUG: [UXDriver.NvCpl] 3032@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :   gpuCount: 1. 
+2026-11-13 21:52:02.346 (      1.165) |    DEBUG: [UXDriver.NvCpl] 3042@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :  displayCount: 1  ,gpu name: NVIDIA GeForce RTX 3060 Laptop GPU. 
+2026-11-13 21:52:02.346 (      1.165) |    DEBUG: [UXDriver.NvCpl] 3060@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -end. 
+2026-11-13 21:52:02.347 (      1.166) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  1. 
+2026-11-13 21:52:02.347 (      1.166) |    DEBUG: [UXDriver.NvCpl] 320@NvCplApiFreeMemory : NvCplApiFreeMemory: Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 21:52:02.354 (      1.173) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 21:52:02.354 (      1.173) |    DEBUG: [UXDriver.NvCpl] 2968@Nvidia::UXDriver::Shim::ShimSystem::FreeGpusAndDisplaysPhysicalInformation : FreeGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 21:52:02.354 (      1.173) |    DEBUG: [UXDriver.NvCpl] 310@NvCplApiSetSetting : Call NVCPLAPI_SETTING_SIMPLE_REZ. 
+2026-11-13 21:52:02.372 (      1.191) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 21:52:02.372 (      1.191) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_MISC_HIDE_MODES. 
+2026-11-13 21:52:02.377 (      1.196) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_DISPLAY_PULSAR_INFO. 
+2026-11-13 21:52:02.382 (      1.201) |    DEBUG: [UXDriver.NvCpl] 2543@Nvidia::UXDriver::Shim::ShimSystem::GetDisplayPulsarInfo : GetDisplayPulsarInfo result: 0  ,isSupported: 0  ,enabled: 0  ,lowFpsMin: 0  ,lowFpsMax: 0  ,lowFpsCurrent: 0  ,canUsePulsar: 0. 
+2026-11-13 21:53:54.820 (    113.639) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:53:54.823 (    113.642) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:53:54.825 (    113.644) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 21:53:54.824 (    113.643) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:53:54.825 (    113.644) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 21:53:54.825 (    113.644) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:53:54.825 (    113.644) |    DEBUG: [UXDriver.Batching.NvXDSerializerImpl] 140@Nvidia::UXDriver::Batching::NvXDSerializerImpl::FinalRelease : CALL. 
+2026-11-13 21:54:18.327 (      0.539) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:54:18.327 (      0.539) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:54:18.336 (      0.548) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:54:18.336 (      0.548) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 21:54:18.341 (      0.553) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:54:18.342 (      0.554) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:54:18.341 (      0.553) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:54:18.342 (      0.554) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:54:18.342 (      0.554) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:54:18.343 (      0.555) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:54:18.677 (      0.889) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 21:54:18.680 (      0.892) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 21:54:18.683 (      0.895) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  2. 
+2026-11-13 21:54:18.683 (      0.895) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 21:54:18.724 (      0.936) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 21:54:19.036 (      1.248) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x324. 
+2026-11-13 21:54:19.036 (      1.248) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_NVIEW_STATE. 
+2026-11-13 21:54:19.036 (      1.248) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_GSYNC_INDICATOR. 
+2026-11-13 21:54:19.036 (      1.248) |    DEBUG: [UXDriver.NvCpl] 667@NvCplApiGetInfo : Call. 
+2026-11-13 21:54:19.037 (      1.249) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 21:54:19.081 (      1.293) |    DEBUG: [UXDriver.NvCpl] 2725@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncGlobalState : GetGsyncGlobalState: 3. 
+2026-11-13 21:54:19.111 (      1.323) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:54:19.111 (      1.323) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:54:19.113 (      1.325) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:54:19.114 (      1.326) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:54:19.115 (      1.327) |    DEBUG: [UXDriver.NViewState] 287@Nvidia::UXDriver::Shim::NviewState::AddActiveDisplayDevices : RID62152  - Target.size() 1   ,WinDisplayNum  1. 
+2026-11-13 21:54:19.121 (      1.333) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:54:19.121 (      1.333) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 21:54:19.182 (      1.394) |    DEBUG: [UXDriver.NvCpl] 2307@Nvidia::UXDriver::Shim::ShimSystem::UpdateGsyncInfo : gsyncCapabilities: 4  ,Enable: 0  ,VRR capablity GPU: 1  ,true Gsync: 0. 
+2026-11-13 21:54:19.183 (      1.395) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 21:54:19.185 (      1.397) |    DEBUG: [UXDriver.NvCpl] 2101@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpInfo : hdcp Status: 0x00000000. 
+2026-11-13 21:54:19.186 (      1.398) |    DEBUG: [UXDriver.NvCpl] 2096@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpStatusReportSupport : GPU Architecture: 18 HDCP supported: 1. 
+2026-11-13 21:54:19.187 (      1.399) |    DEBUG: [UXDriver.NViewState] 905@Nvidia::UXDriver::Shim::NviewState::AddDisplayDevice : RID62152  - displays.size: 0   ,isPrimary: 0  Display ID: 1. 
+2026-11-13 21:54:19.188 (      1.400) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_ADVANCE_COLOR_SETTINGS_SUPPORTED. 
+2026-11-13 21:54:19.189 (      1.401) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:54:19.190 (      1.402) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:54:19.190 (      1.402) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:54:19.191 (      1.403) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:54:19.434 (      1.646) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:54:19.435 (      1.647) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 21:54:19.436 (      1.648) |    DEBUG: [UXDriver.NvCpl] 2737@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncIndicator : GetGsyncIndicator: 0. 
+2026-11-13 21:54:19.437 (      1.649) |    DEBUG: [UXDriver.NvCpl] 2975@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 21:54:19.438 (      1.650) |    DEBUG: [UXDriver.NvCpl] 3001@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : display Name :  HDMI , displayId : 3. 
+2026-11-13 21:54:19.438 (      1.650) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 21:54:19.439 (      1.651) |    DEBUG: [UXDriver.NvCpl] 3032@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :   gpuCount: 1. 
+2026-11-13 21:54:19.439 (      1.651) |    DEBUG: [UXDriver.NvCpl] 3042@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :  displayCount: 1  ,gpu name: NVIDIA GeForce RTX 3060 Laptop GPU. 
+2026-11-13 21:54:19.439 (      1.651) |    DEBUG: [UXDriver.NvCpl] 3060@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -end. 
+2026-11-13 21:54:19.440 (      1.652) |    DEBUG: [UXDriver.NvCpl] 320@NvCplApiFreeMemory : NvCplApiFreeMemory: Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 21:54:19.463 (      1.675) |    DEBUG: [UXDriver.NvCpl] 2968@Nvidia::UXDriver::Shim::ShimSystem::FreeGpusAndDisplaysPhysicalInformation : FreeGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 21:54:19.463 (      1.675) |    DEBUG: [UXDriver.NvCpl] 310@NvCplApiSetSetting : Call NVCPLAPI_SETTING_SIMPLE_REZ. 
+2026-11-13 21:54:19.480 (      1.692) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_MISC_HIDE_MODES. 
+2026-11-13 21:54:19.481 (      1.693) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_DISPLAY_PULSAR_INFO. 
+2026-11-13 21:54:19.496 (      1.708) |    DEBUG: [UXDriver.NvCpl] 2543@Nvidia::UXDriver::Shim::ShimSystem::GetDisplayPulsarInfo : GetDisplayPulsarInfo result: 0  ,isSupported: 0  ,enabled: 0  ,lowFpsMin: 0  ,lowFpsMax: 0  ,lowFpsCurrent: 0  ,canUsePulsar: 0. 
+2026-11-13 21:54:35.381 (     17.593) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:54:35.382 (     17.594) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:54:35.381 (     17.593) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 21:54:35.382 (     17.594) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:54:35.382 (     17.594) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 21:54:35.383 (     17.595) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 21:54:35.383 (     17.595) |    DEBUG: [UXDriver.Batching.NvXDSerializerImpl] 140@Nvidia::UXDriver::Batching::NvXDSerializerImpl::FinalRelease : CALL. 
+2026-11-13 22:37:06.241 (      0.561) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:37:06.242 (      0.562) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:37:06.246 (      0.566) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:37:06.246 (      0.566) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:37:06.246 (      0.566) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:37:06.246 (      0.566) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:37:06.249 (      0.569) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:37:06.249 (      0.569) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:37:06.249 (      0.569) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 22:37:06.250 (      0.570) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:37:06.517 (      0.837) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_NVIEW_STATE. 
+2026-11-13 22:37:06.518 (      0.838) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x324. 
+2026-11-13 22:37:06.519 (      0.839) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_GSYNC_INDICATOR. 
+2026-11-13 22:37:06.520 (      0.840) |    DEBUG: [UXDriver.NvCpl] 667@NvCplApiGetInfo : Call. 
+2026-11-13 22:37:06.520 (      0.840) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 22:37:06.639 (      0.959) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:37:06.640 (      0.960) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:37:06.668 (      0.988) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:37:06.669 (      0.989) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:37:06.670 (      0.990) |    DEBUG: [UXDriver.NViewState] 287@Nvidia::UXDriver::Shim::NviewState::AddActiveDisplayDevices : RID62152  - Target.size() 1   ,WinDisplayNum  1. 
+2026-11-13 22:37:06.674 (      0.994) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:37:06.674 (      0.994) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:37:06.696 (      1.016) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 22:37:06.696 (      1.016) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 22:37:06.707 (      1.027) |    DEBUG: [UXDriver.NvCpl] 2307@Nvidia::UXDriver::Shim::ShimSystem::UpdateGsyncInfo : gsyncCapabilities: 4  ,Enable: 0  ,VRR capablity GPU: 1  ,true Gsync: 0. 
+2026-11-13 22:37:06.707 (      1.027) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 22:37:06.710 (      1.030) |    DEBUG: [UXDriver.NvCpl] 2101@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpInfo : hdcp Status: 0x01000000. 
+2026-11-13 22:37:06.711 (      1.031) |    DEBUG: [UXDriver.NvCpl] 2096@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpStatusReportSupport : GPU Architecture: 18 HDCP supported: 1. 
+2026-11-13 22:37:06.711 (      1.031) |    DEBUG: [UXDriver.NViewState] 905@Nvidia::UXDriver::Shim::NviewState::AddDisplayDevice : RID62152  - displays.size: 0   ,isPrimary: 0  Display ID: 1. 
+2026-11-13 22:37:06.713 (      1.033) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_ADVANCE_COLOR_SETTINGS_SUPPORTED. 
+2026-11-13 22:37:06.732 (      1.052) |    DEBUG: [UXDriver.NvCpl] 2725@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncGlobalState : GetGsyncGlobalState: 3. 
+2026-11-13 22:37:06.733 (      1.053) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:37:06.733 (      1.053) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:37:06.734 (      1.054) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:37:06.734 (      1.054) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:37:06.943 (      1.263) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:37:06.943 (      1.263) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:37:06.945 (      1.265) |    DEBUG: [UXDriver.NvCpl] 2737@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncIndicator : GetGsyncIndicator: 0. 
+2026-11-13 22:37:06.947 (      1.267) |    DEBUG: [UXDriver.NvCpl] 2975@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 22:37:06.947 (      1.267) |    DEBUG: [UXDriver.NvCpl] 3001@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : display Name :  HDMI , displayId : 3. 
+2026-11-13 22:37:06.948 (      1.268) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 22:37:06.949 (      1.269) |    DEBUG: [UXDriver.NvCpl] 3032@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :   gpuCount: 1. 
+2026-11-13 22:37:06.949 (      1.269) |    DEBUG: [UXDriver.NvCpl] 3042@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :  displayCount: 1  ,gpu name: NVIDIA GeForce RTX 3060 Laptop GPU. 
+2026-11-13 22:37:06.949 (      1.269) |    DEBUG: [UXDriver.NvCpl] 3060@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -end. 
+2026-11-13 22:37:06.949 (      1.269) |    DEBUG: [UXDriver.NvCpl] 320@NvCplApiFreeMemory : NvCplApiFreeMemory: Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 22:37:06.949 (      1.269) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  1. 
+2026-11-13 22:37:06.960 (      1.280) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 22:37:06.961 (      1.281) |    DEBUG: [UXDriver.NvCpl] 2968@Nvidia::UXDriver::Shim::ShimSystem::FreeGpusAndDisplaysPhysicalInformation : FreeGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 22:37:06.961 (      1.281) |    DEBUG: [UXDriver.NvCpl] 310@NvCplApiSetSetting : Call NVCPLAPI_SETTING_SIMPLE_REZ. 
+2026-11-13 22:37:06.983 (      1.303) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 22:37:06.987 (      1.307) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_MISC_HIDE_MODES. 
+2026-11-13 22:37:06.992 (      1.312) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_DISPLAY_PULSAR_INFO. 
+2026-11-13 22:37:06.997 (      1.317) |    DEBUG: [UXDriver.NvCpl] 2543@Nvidia::UXDriver::Shim::ShimSystem::GetDisplayPulsarInfo : GetDisplayPulsarInfo result: 0  ,isSupported: 0  ,enabled: 0  ,lowFpsMin: 0  ,lowFpsMax: 0  ,lowFpsCurrent: 0  ,canUsePulsar: 0. 
+2026-11-13 22:37:12.121 (      6.441) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 22:37:12.124 (      6.444) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 22:37:12.125 (      6.445) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 22:37:12.125 (      6.445) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 22:37:12.126 (      6.446) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 22:37:12.125 (      6.445) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 22:37:12.126 (      6.446) |    DEBUG: [UXDriver.Batching.NvXDSerializerImpl] 140@Nvidia::UXDriver::Batching::NvXDSerializerImpl::FinalRelease : CALL. 
+2026-11-13 22:43:02.091 (      0.601) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:43:02.092 (      0.602) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:43:02.093 (      0.603) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:43:02.093 (      0.603) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:43:02.094 (      0.604) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:43:02.094 (      0.604) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:43:02.099 (      0.609) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:43:02.099 (      0.609) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:43:02.099 (      0.609) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:43:02.100 (      0.610) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 22:43:02.375 (      0.885) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x324. 
+2026-11-13 22:43:02.375 (      0.885) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_GSYNC_INDICATOR. 
+2026-11-13 22:43:02.375 (      0.885) |    DEBUG: [UXDriver.NvCpl] 667@NvCplApiGetInfo : Call. 
+2026-11-13 22:43:02.375 (      0.885) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_NVIEW_STATE. 
+2026-11-13 22:43:02.375 (      0.885) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 22:43:02.425 (      0.935) |    DEBUG: [UXDriver.NvCpl] 2725@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncGlobalState : GetGsyncGlobalState: 3. 
+2026-11-13 22:43:02.427 (      0.937) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:02.428 (      0.938) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:02.429 (      0.939) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:02.430 (      0.940) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:02.584 (      1.094) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 22:43:02.585 (      1.095) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 22:43:02.674 (      1.184) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:02.677 (      1.187) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:02.678 (      1.188) |    DEBUG: [UXDriver.NvCpl] 2737@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncIndicator : GetGsyncIndicator: 0. 
+2026-11-13 22:43:02.737 (      1.247) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:02.738 (      1.248) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:02.741 (      1.251) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:02.742 (      1.252) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:02.743 (      1.253) |    DEBUG: [UXDriver.NViewState] 287@Nvidia::UXDriver::Shim::NviewState::AddActiveDisplayDevices : RID62152  - Target.size() 1   ,WinDisplayNum  1. 
+2026-11-13 22:43:02.748 (      1.258) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:02.749 (      1.259) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:02.777 (      1.287) |    DEBUG: [UXDriver.NvCpl] 2307@Nvidia::UXDriver::Shim::ShimSystem::UpdateGsyncInfo : gsyncCapabilities: 4  ,Enable: 0  ,VRR capablity GPU: 1  ,true Gsync: 0. 
+2026-11-13 22:43:02.777 (      1.287) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 22:43:02.780 (      1.290) |    DEBUG: [UXDriver.NvCpl] 2101@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpInfo : hdcp Status: 0x01000000. 
+2026-11-13 22:43:02.780 (      1.290) |    DEBUG: [UXDriver.NvCpl] 2096@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpStatusReportSupport : GPU Architecture: 18 HDCP supported: 1. 
+2026-11-13 22:43:02.781 (      1.291) |    DEBUG: [UXDriver.NViewState] 905@Nvidia::UXDriver::Shim::NviewState::AddDisplayDevice : RID62152  - displays.size: 0   ,isPrimary: 0  Display ID: 1. 
+2026-11-13 22:43:02.782 (      1.292) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_ADVANCE_COLOR_SETTINGS_SUPPORTED. 
+2026-11-13 22:43:02.782 (      1.292) |    DEBUG: [UXDriver.NvCpl] 2975@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 22:43:02.782 (      1.292) |    DEBUG: [UXDriver.NvCpl] 3001@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : display Name :  HDMI , displayId : 3. 
+2026-11-13 22:43:02.783 (      1.293) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 22:43:02.783 (      1.293) |    DEBUG: [UXDriver.NvCpl] 3032@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :   gpuCount: 1. 
+2026-11-13 22:43:02.783 (      1.293) |    DEBUG: [UXDriver.NvCpl] 3042@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :  displayCount: 1  ,gpu name: NVIDIA GeForce RTX 3060 Laptop GPU. 
+2026-11-13 22:43:02.784 (      1.294) |    DEBUG: [UXDriver.NvCpl] 3060@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -end. 
+2026-11-13 22:43:02.784 (      1.294) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  1. 
+2026-11-13 22:43:02.784 (      1.294) |    DEBUG: [UXDriver.NvCpl] 320@NvCplApiFreeMemory : NvCplApiFreeMemory: Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 22:43:02.792 (      1.302) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 22:43:02.792 (      1.302) |    DEBUG: [UXDriver.NvCpl] 2968@Nvidia::UXDriver::Shim::ShimSystem::FreeGpusAndDisplaysPhysicalInformation : FreeGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 22:43:02.792 (      1.302) |    DEBUG: [UXDriver.NvCpl] 310@NvCplApiSetSetting : Call NVCPLAPI_SETTING_SIMPLE_REZ. 
+2026-11-13 22:43:02.807 (      1.317) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 22:43:02.811 (      1.321) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_MISC_HIDE_MODES. 
+2026-11-13 22:43:02.815 (      1.325) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_DISPLAY_PULSAR_INFO. 
+2026-11-13 22:43:02.822 (      1.332) |    DEBUG: [UXDriver.NvCpl] 2543@Nvidia::UXDriver::Shim::ShimSystem::GetDisplayPulsarInfo : GetDisplayPulsarInfo result: 0  ,isSupported: 0  ,enabled: 0  ,lowFpsMin: 0  ,lowFpsMax: 0  ,lowFpsCurrent: 0  ,canUsePulsar: 0. 
+2026-11-13 22:43:50.784 (      0.828) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:43:50.785 (      0.829) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:43:50.784 (      0.828) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:43:50.784 (      0.828) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:43:50.788 (      0.832) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:43:50.788 (      0.832) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:43:50.798 (      0.842) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:43:50.798 (      0.842) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:43:50.798 (      0.842) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:43:50.798 (      0.842) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 22:43:51.268 (      1.312) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 22:43:51.268 (      1.312) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 22:43:51.273 (      1.317) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  2. 
+2026-11-13 22:43:51.273 (      1.317) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 22:43:51.328 (      1.372) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 22:43:51.824 (      1.868) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x324. 
+2026-11-13 22:43:51.824 (      1.868) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_NVIEW_STATE. 
+2026-11-13 22:43:51.825 (      1.869) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_GSYNC_INDICATOR. 
+2026-11-13 22:43:51.825 (      1.869) |    DEBUG: [UXDriver.NvCpl] 667@NvCplApiGetInfo : Call. 
+2026-11-13 22:43:51.825 (      1.869) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 22:43:51.881 (      1.925) |    DEBUG: [UXDriver.NvCpl] 2725@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncGlobalState : GetGsyncGlobalState: 3. 
+2026-11-13 22:43:51.918 (      1.962) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:51.919 (      1.963) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:51.924 (      1.968) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:51.925 (      1.969) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:51.926 (      1.970) |    DEBUG: [UXDriver.NViewState] 287@Nvidia::UXDriver::Shim::NviewState::AddActiveDisplayDevices : RID62152  - Target.size() 1   ,WinDisplayNum  1. 
+2026-11-13 22:43:51.940 (      1.984) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:51.941 (      1.985) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:43:52.012 (      2.056) |    DEBUG: [UXDriver.NvCpl] 2307@Nvidia::UXDriver::Shim::ShimSystem::UpdateGsyncInfo : gsyncCapabilities: 4  ,Enable: 0  ,VRR capablity GPU: 1  ,true Gsync: 0. 
+2026-11-13 22:43:52.012 (      2.056) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 22:43:52.015 (      2.059) |    DEBUG: [UXDriver.NvCpl] 2101@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpInfo : hdcp Status: 0x00000000. 
+2026-11-13 22:43:52.016 (      2.060) |    DEBUG: [UXDriver.NvCpl] 2096@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpStatusReportSupport : GPU Architecture: 18 HDCP supported: 1. 
+2026-11-13 22:43:52.017 (      2.061) |    DEBUG: [UXDriver.NViewState] 905@Nvidia::UXDriver::Shim::NviewState::AddDisplayDevice : RID62152  - displays.size: 0   ,isPrimary: 0  Display ID: 1. 
+2026-11-13 22:43:52.058 (      2.102) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_ADVANCE_COLOR_SETTINGS_SUPPORTED. 
+2026-11-13 22:43:52.058 (      2.102) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:52.059 (      2.103) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:52.059 (      2.103) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:52.060 (      2.104) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:52.291 (      2.335) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:52.292 (      2.336) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:43:52.293 (      2.337) |    DEBUG: [UXDriver.NvCpl] 2737@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncIndicator : GetGsyncIndicator: 0. 
+2026-11-13 22:43:52.294 (      2.338) |    DEBUG: [UXDriver.NvCpl] 2975@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 22:43:52.295 (      2.339) |    DEBUG: [UXDriver.NvCpl] 3001@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : display Name :  HDMI , displayId : 3. 
+2026-11-13 22:43:52.295 (      2.339) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 22:43:52.296 (      2.340) |    DEBUG: [UXDriver.NvCpl] 3032@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :   gpuCount: 1. 
+2026-11-13 22:43:52.296 (      2.340) |    DEBUG: [UXDriver.NvCpl] 3042@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :  displayCount: 1  ,gpu name: NVIDIA GeForce RTX 3060 Laptop GPU. 
+2026-11-13 22:43:52.296 (      2.340) |    DEBUG: [UXDriver.NvCpl] 3060@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -end. 
+2026-11-13 22:43:52.296 (      2.340) |    DEBUG: [UXDriver.NvCpl] 320@NvCplApiFreeMemory : NvCplApiFreeMemory: Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 22:43:52.320 (      2.364) |    DEBUG: [UXDriver.NvCpl] 2968@Nvidia::UXDriver::Shim::ShimSystem::FreeGpusAndDisplaysPhysicalInformation : FreeGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 22:43:52.321 (      2.365) |    DEBUG: [UXDriver.NvCpl] 310@NvCplApiSetSetting : Call NVCPLAPI_SETTING_SIMPLE_REZ. 
+2026-11-13 22:43:52.337 (      2.381) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_MISC_HIDE_MODES. 
+2026-11-13 22:43:52.338 (      2.382) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_DISPLAY_PULSAR_INFO. 
+2026-11-13 22:43:52.352 (      2.396) |    DEBUG: [UXDriver.NvCpl] 2543@Nvidia::UXDriver::Shim::ShimSystem::GetDisplayPulsarInfo : GetDisplayPulsarInfo result: 0  ,isSupported: 0  ,enabled: 0  ,lowFpsMin: 0  ,lowFpsMax: 0  ,lowFpsCurrent: 0  ,canUsePulsar: 0. 
+2026-11-13 22:44:08.868 (     18.912) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 22:44:08.869 (     18.913) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 22:44:08.868 (     18.912) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 22:44:08.869 (     18.913) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 22:44:08.869 (     18.913) |    DEBUG: [UXDriver.Policy] 88@Nvidia::UXDriver::Policy::CNvXDPlcyEngine::FinalRelease : CALL. 
+2026-11-13 22:44:08.870 (     18.914) |    DEBUG: [UXDriver.Batching] 176@Nvidia::UXDriver::Batching::NvXDBatchEngineImpl::FinalRelease : CALL. 
+2026-11-13 22:44:08.870 (     18.914) |    DEBUG: [UXDriver.Batching.NvXDSerializerImpl] 140@Nvidia::UXDriver::Batching::NvXDSerializerImpl::FinalRelease : CALL. 
+2026-11-13 22:44:11.613 (      0.523) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:44:11.614 (      0.524) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:44:11.622 (      0.532) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:44:11.637 (      0.547) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:44:11.637 (      0.547) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:44:11.638 (      0.548) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:44:11.638 (      0.548) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:44:11.638 (      0.548) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:44:11.639 (      0.549) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 22:44:11.639 (      0.549) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:44:11.914 (      0.824) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x324. 
+2026-11-13 22:44:11.914 (      0.824) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_NVIEW_STATE. 
+2026-11-13 22:44:11.914 (      0.824) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_GSYNC_INDICATOR. 
+2026-11-13 22:44:11.914 (      0.824) |    DEBUG: [UXDriver.NvCpl] 667@NvCplApiGetInfo : Call. 
+2026-11-13 22:44:11.915 (      0.825) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 22:44:11.947 (      0.857) |    DEBUG: [UXDriver.NvCpl] 2725@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncGlobalState : GetGsyncGlobalState: 3. 
+2026-11-13 22:44:12.009 (      0.919) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:44:12.010 (      0.920) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:44:12.010 (      0.920) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 22:44:12.011 (      0.921) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 22:44:12.012 (      0.922) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:44:12.013 (      0.923) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:44:12.014 (      0.924) |    DEBUG: [UXDriver.NViewState] 287@Nvidia::UXDriver::Shim::NviewState::AddActiveDisplayDevices : RID62152  - Target.size() 1   ,WinDisplayNum  1. 
+2026-11-13 22:44:12.018 (      0.928) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:44:12.018 (      0.928) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 0. 
+2026-11-13 22:44:12.050 (      0.960) |    DEBUG: [UXDriver.NvCpl] 2307@Nvidia::UXDriver::Shim::ShimSystem::UpdateGsyncInfo : gsyncCapabilities: 4  ,Enable: 0  ,VRR capablity GPU: 1  ,true Gsync: 0. 
+2026-11-13 22:44:12.050 (      0.960) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 22:44:12.052 (      0.962) |    DEBUG: [UXDriver.NvCpl] 2101@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpInfo : hdcp Status: 0x00000000. 
+2026-11-13 22:44:12.053 (      0.963) |    DEBUG: [UXDriver.NvCpl] 2096@Nvidia::UXDriver::Shim::ShimSystem::GetHdcpStatusReportSupport : GPU Architecture: 18 HDCP supported: 1. 
+2026-11-13 22:44:12.053 (      0.963) |    DEBUG: [UXDriver.NViewState] 905@Nvidia::UXDriver::Shim::NviewState::AddDisplayDevice : RID62152  - displays.size: 0   ,isPrimary: 0  Display ID: 1. 
+2026-11-13 22:44:12.055 (      0.965) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_ADVANCE_COLOR_SETTINGS_SUPPORTED. 
+2026-11-13 22:44:12.055 (      0.965) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:44:12.056 (      0.966) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:44:12.056 (      0.966) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:44:12.057 (      0.967) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:44:12.252 (      1.162) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:44:12.253 (      1.163) |    DEBUG: [UXDriver.NvCpl.ShimEventListener] 202@Nvidia::UXDriver::Shim::ShimEventListener::OnDataChanged : changes  1 dirty= 0 executed= 0 suspend= 0  block= 1. 
+2026-11-13 22:44:12.254 (      1.164) |    DEBUG: [UXDriver.NvCpl] 2737@Nvidia::UXDriver::Shim::ShimSystem::GetGsyncIndicator : GetGsyncIndicator: 0. 
+2026-11-13 22:44:12.255 (      1.165) |    DEBUG: [UXDriver.NvCpl] 2975@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 22:44:12.256 (      1.166) |    DEBUG: [UXDriver.NvCpl] 3001@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : display Name :  HDMI , displayId : 3. 
+2026-11-13 22:44:12.256 (      1.166) |    DEBUG: [UXDriver.Utility.DisplayConfigHelper] 834@Nvidia::UXDriver::Utility::DisplayConfigHelper::GetDeviceTypeEnum : displayType:  2 connectorType:  21 deviceType:  4. 
+2026-11-13 22:44:12.257 (      1.167) |    DEBUG: [UXDriver.NvCpl] 3032@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :   gpuCount: 1. 
+2026-11-13 22:44:12.257 (      1.167) |    DEBUG: [UXDriver.NvCpl] 3042@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation :  displayCount: 1  ,gpu name: NVIDIA GeForce RTX 3060 Laptop GPU. 
+2026-11-13 22:44:12.257 (      1.167) |    DEBUG: [UXDriver.NvCpl] 3060@Nvidia::UXDriver::Shim::ShimSystem::GetGpusAndDisplaysPhysicalInformation : GetGpusAndDisplaysPhysicalInformation -end. 
+2026-11-13 22:44:12.258 (      1.168) |    DEBUG: [UXDriver.NvCpl] 320@NvCplApiFreeMemory : NvCplApiFreeMemory: Unknown setting. Please edit CplSettingName.cpp: 0x32e. 
+2026-11-13 22:44:12.258 (      1.168) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  1. 
+2026-11-13 22:44:12.266 (      1.176) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 22:44:12.266 (      1.176) |    DEBUG: [UXDriver.NvCpl] 2968@Nvidia::UXDriver::Shim::ShimSystem::FreeGpusAndDisplaysPhysicalInformation : FreeGpusAndDisplaysPhysicalInformation -start. 
+2026-11-13 22:44:12.266 (      1.176) |    DEBUG: [UXDriver.NvCpl] 310@NvCplApiSetSetting : Call NVCPLAPI_SETTING_SIMPLE_REZ. 
+2026-11-13 22:44:12.283 (      1.193) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 22:44:12.286 (      1.196) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_MISC_HIDE_MODES. 
+2026-11-13 22:44:12.291 (      1.201) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTINGS_DISPLAY_PULSAR_INFO. 
+2026-11-13 22:44:12.296 (      1.206) |    DEBUG: [UXDriver.NvCpl] 2543@Nvidia::UXDriver::Shim::ShimSystem::GetDisplayPulsarInfo : GetDisplayPulsarInfo result: 0  ,isSupported: 0  ,enabled: 0  ,lowFpsMin: 0  ,lowFpsMax: 0  ,lowFpsCurrent: 0  ,canUsePulsar: 0. 

@@ -1,0 +1,539 @@
+2026-11-13T22:43:40.601[I]                     LoggingImpl.cpp:173  Initialize CrimsonNative logger done
+2026-11-13T22:43:40.601[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance Gallery for modules: Gallery
+2026-11-13T22:43:40.602[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin Gallery
+2026-11-13T22:43:40.602[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance GraphicsSetting for modules: GraphicsSetting
+2026-11-13T22:43:40.602[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin GraphicsSetting
+2026-11-13T22:43:40.602[I]  Gallery TASK         TaskQueue.cpp:180  Gallery worker thread started
+2026-11-13T22:43:40.602[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance MessageBusRouter for modules: MessageBusRouter,Downloader,Diagnostics,NvAccount,NvLocalizedConfig,OverClockingNvc,DesktopNotification,NvDriverDiagnostics,DriverUpdateRecommendation,NvKVStorage,NvAppIgoIpcProxy,McpServer
+2026-11-13T22:43:40.602[I] cefclien 1055 MessageBusRouterConfi:32   Creating MessageBusRouterConfig
+2026-11-13T22:43:40.602[I] Graphics TASK         TaskQueue.cpp:180  GraphicsSetting worker thread started
+2026-11-13T22:43:40.602[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin MessageBusRouter
+2026-11-13T22:43:40.602[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance NvCamera for modules: NvCamera
+2026-11-13T22:43:40.603[I] MessageB TASK         TaskQueue.cpp:180  TASK worker thread started
+2026-11-13T22:43:40.603[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin NvCamera
+2026-11-13T22:43:40.603[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance Rise for modules: Rise
+2026-11-13T22:43:40.603[I]               MessageBusRouterPlugi:260  Trying to join MessageBus...
+2026-11-13T22:43:40.603[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin Rise
+2026-11-13T22:43:40.603[I] NvCamera TASK         TaskQueue.cpp:180  NvCamera worker thread started
+2026-11-13T22:43:40.603[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance ShareServer for modules: ShareServer
+2026-11-13T22:43:40.603[I]     Rise TASK         TaskQueue.cpp:180  Rise worker thread started
+2026-11-13T22:43:40.603[I]  Gallery TASK  PluginModuleBase.cpp:315  Starting plugin Init for Gallery
+2026-11-13T22:43:40.603[I]  Gallery TASK     GalleryPlugin.cpp:42   Initialized Gallery
+2026-11-13T22:43:40.603[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin ShareServer
+2026-11-13T22:43:40.603[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance LocalGames for modules: LocalGames
+2026-11-13T22:43:40.603[I] Graphics TASK  PluginModuleBase.cpp:315  Starting plugin Init for GraphicsSetting
+2026-11-13T22:43:40.603[I] Graphics TASK      NvBackendApi.cpp:55   Loading NvBackendAPI DLL...
+2026-11-13T22:43:40.603[I] ShareSer TASK         TaskQueue.cpp:180  ShareServer worker thread started
+2026-11-13T22:43:40.603[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin LocalGames
+2026-11-13T22:43:40.603[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance NvCplDisplayPlugin for modules: NvCplDisplayPlugin
+2026-11-13T22:43:40.603[I] LocalGam TASK         TaskQueue.cpp:180  LocalGames worker thread started
+2026-11-13T22:43:40.604[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin NvCplDisplayPlugin
+2026-11-13T22:43:40.604[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance NvCplPlugin for modules: NvCplPlugin
+2026-11-13T22:43:40.604[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin NvCplPlugin
+2026-11-13T22:43:40.604[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance NvPerfMon for modules: NvPerfMon
+2026-11-13T22:43:40.604[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin NvPerfMon
+2026-11-13T22:43:40.604[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance NvWorkstation for modules: NvWorkstation
+2026-11-13T22:43:40.604[I] NvCplPlu TASK         TaskQueue.cpp:180  NvCplPlugin worker thread started
+2026-11-13T22:43:40.604[I] NvCamera TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvCamera
+2026-11-13T22:43:40.604[I] NvCamera TASK    NvCameraPlugin.cpp:47   Initializing NvCamera
+2026-11-13T22:43:40.604[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin NvWorkstation
+2026-11-13T22:43:40.604[I]     Rise TASK  PluginModuleBase.cpp:315  Starting plugin Init for Rise
+2026-11-13T22:43:40.604[I]     Rise TASK        RiseModule.cpp:100  Loading nvapi..
+2026-11-13T22:43:40.604[I] cefclien 1055         CefPlugin.cpp:146  Creating Plugin instance SystemInfo for modules: SystemInfo
+2026-11-13T22:43:40.605[I] cefclien 1055         CefPlugin.cpp:168  Invoking Initialize() for plugin SystemInfo
+2026-11-13T22:43:40.605[I]  Gallery TASK          Settings.cpp:292  Settings::ReadSettings:: enabled(false), capacityPercent(100), totalDiskSpaceMB(487734), trackerUpdateState(TrackerUpdateComplete)
+2026-11-13T22:43:40.605[I]  Gallery TASK          Settings.cpp:301  Settings::WriteSettings::enabled(false), capacityPercent(100), totalDiskSpaceMB(487734), trackerUpdateState(TrackerUpdateComplete)
+2026-11-13T22:43:40.605[I] LocalGam TASK  PluginModuleBase.cpp:315  Starting plugin Init for LocalGames
+2026-11-13T22:43:40.605[I] LocalGam TASK        LocalGames.cpp:31   Initializing LocalGames
+2026-11-13T22:43:40.605[I] NvPerfMo TASK         TaskQueue.cpp:180  NvPerfMon worker thread started
+2026-11-13T22:43:40.605[I] NvCplDis TASK         TaskQueue.cpp:180  NvCplDisplayPlugin worker thread started
+2026-11-13T22:43:40.605[I] ShareSer TASK  PluginModuleBase.cpp:315  Starting plugin Init for ShareServer
+2026-11-13T22:43:40.605[I] ShareSer TASK ShareServerPlugin.cpp:57   Initializing ShareServer
+2026-11-13T22:43:40.605[I] NvWorkst TASK         TaskQueue.cpp:180  NvWorkstation worker thread started
+2026-11-13T22:43:40.605[I] SystemIn TASK         TaskQueue.cpp:180  SystemInfo worker thread started
+2026-11-13T22:43:40.606[I] ShareSer TASK ShareServerPlugin.cpp:189  Initialize depsPath
+2026-11-13T22:43:40.606[I] ShareSer TASK ShareServerPlugin.cpp:191  Initialize exePath
+2026-11-13T22:43:40.606[I] ShareSer TASK ShareServerPlugin.cpp:193  Initialized ShareServer
+2026-11-13T22:43:40.606[I] ShareSer TASK  PluginModuleBase.cpp:323  Successfully initialized ShareServer, took 0.25ms
+2026-11-13T22:43:40.607[I] NvCplPlu TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvCplPlugin
+2026-11-13T22:43:40.607[I] NvCplPlu TASK       NvCplPlugin.cpp:40   Initializing module NvCplPlugin
+2026-11-13T22:43:40.607[I] NvCplPlu TASK    NvCplApiModule.cpp:40   nvcpl dll path is C:\Program Files\NVIDIA Corporation\NVIDIA App\NvCpl\NvCpl.dll
+2026-11-13T22:43:40.607[I] NvPerfMo TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvPerfMon
+2026-11-13T22:43:40.607[I] NvPerfMo TASK  FrameViewWrapper.cpp:125  Loading nvapi..
+2026-11-13T22:43:40.607[I] NvWorkst TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvWorkstation
+2026-11-13T22:43:40.607[I] NvWorkst TASK    NvCplAPIModule.cpp:20   nvcpl dll path is C:\Program Files\NVIDIA Corporation\NVIDIA App\NvCpl\NvCpl.dll
+2026-11-13T22:43:40.607[I] SystemIn TASK  PluginModuleBase.cpp:315  Starting plugin Init for SystemInfo
+2026-11-13T22:43:40.607[I] SystemIn TASK   system_info_win.cpp:149  Creating SystemInfo
+2026-11-13T22:43:40.608[I]  Gallery TASK        UGCTracker.cpp:357  ParseUGCFromJSON
+2026-11-13T22:43:40.608[I] NvCplDis TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvCplDisplayPlugin
+2026-11-13T22:43:40.608[I] NvCplDis TASK NvCplDisplayPlugin.cp:31   Initializing module NvCplDisplayPlugin
+2026-11-13T22:43:40.608[I] NvCplDis TASK    NvCplApiModule.cpp:571  nvcpl dll path is C:\Program Files\NVIDIA Corporation\NVIDIA App\NvCpl\NvCpl.dll
+2026-11-13T22:43:40.608[I]     Rise TASK        RiseModule.cpp:108  nvapiinit successful
+2026-11-13T22:43:40.608[I] NvPerfMo TASK  FrameViewWrapper.cpp:133  nvapiinit successful
+2026-11-13T22:43:40.608[I]     Rise TASK        RisePlugin.cpp:85   Initialized Rise
+2026-11-13T22:43:40.608[I]     Rise TASK  PluginModuleBase.cpp:323  Successfully initialized Rise, took 3.80ms
+2026-11-13T22:43:40.609[I]  Gallery TASK         TaskQueue.cpp:180  UGC_ worker thread started
+2026-11-13T22:43:40.610[I]  Gallery TASK      NvGalleryAPI.cpp:1671 Files: 38 Dir size: 127 CRC: 4100984341
+2026-11-13T22:43:40.610[I]  Gallery TASK        UGCTracker.cpp:641  CRC Check: Tracker value: 4100984341, calculated value: 4100984341
+2026-11-13T22:43:40.610[D]  Gallery TASK  PluginModuleBase.cpp:201  Plugin is not yet ready to receive messages. Keeping message in queue
+2026-11-13T22:43:40.611[I]  Gallery TASK       FileWatcher.cpp:181  Create FileWatcherInstance
+2026-11-13T22:43:40.611[I]  Gallery TASK  PluginModuleBase.cpp:323  Successfully initialized Gallery, took 7.69ms
+2026-11-13T22:43:40.626[I] Graphics TASK      NvBackendApi.cpp:143  Calling EnsureThatBackendIsRunning...
+2026-11-13T22:43:40.626[I] Graphics TASK      NvBackendApi.cpp:151  EnsureThatBackendIsRunning succeded.
+2026-11-13T22:43:40.627[I] Graphics TASK GraphicsSettingPlugin:70   GraphicsSettingPlugin::Initialize Initialized GraphicsSetting
+2026-11-13T22:43:40.627[I] Graphics TASK  PluginModuleBase.cpp:323  Successfully initialized GraphicsSetting, took 24.07ms
+2026-11-13T22:43:40.627[I] LocalGam TASK        LocalGames.cpp:70   Initialized LocalGames
+2026-11-13T22:43:40.627[I] LocalGam TASK  PluginModuleBase.cpp:323  Successfully initialized LocalGames, took 22.45ms
+2026-11-13T22:43:40.628[I] NvPerfMo TASK  FrameViewWrapper.cpp:144  frameView init successfully
+2026-11-13T22:43:40.628[I] NvPerfMo TASK   NvPerfMonPlugin.cpp:56   Initialized NvPerfMon
+2026-11-13T22:43:40.628[I] NvPerfMo TASK  PluginModuleBase.cpp:323  Successfully initialized NvPerfMon, took 21.47ms
+2026-11-13T22:43:40.633[I] SystemIn TASK  SystemInfoPlugin.cpp:45   Initialized SystemInfo
+2026-11-13T22:43:40.633[I] SystemIn TASK  PluginModuleBase.cpp:323  Successfully initialized SystemInfo, took 25.88ms
+2026-11-13T22:43:40.640[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:DesktopNotification
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:Diagnostics
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:Downloader
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:DriverUpdateRecommendation
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:McpServer
+2026-11-13T22:43:40.641[I] NvCamera TASK MessageBusConnector.c:177  Joined bus as Ansel:NvCameraControl
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvAccount
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvAppIgoIpcProxy
+2026-11-13T22:43:40.641[I] NvCamera TASK       NvCameraAPI.cpp:1475 GetNvCameraDLL PATH is specified in registry 
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvDriverDiagnostics
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvKVStorage
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Hotkey:HotkeyPlugin
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN NvBackend:NvBackend
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowPlayApi_OSCUI
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.641[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowplayServer
+2026-11-13T22:43:40.641[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.665[I] NvCamera TASK       NvCameraAPI.cpp:1521 GetNvCameraDLL: Loaded successfully from: C:\Windows\System32\DriverStore\FileRepository\nvcvi.inf_amd64_7428391d91532508\NvCamera\NvCamera64.dll
+2026-11-13T22:43:40.666[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Ansel:NvCameraControl
+2026-11-13T22:43:40.666[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:MessageBusRouter-IGO
+2026-11-13T22:43:40.666[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.666[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:DesktopNotification
+2026-11-13T22:43:40.666[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.666[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.666[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:Diagnostics
+2026-11-13T22:43:40.666[I]               MessageBusConnector.c:177  Joined bus as CrimsonNative:MessageBusRouter-IGO
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:Downloader
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:DriverUpdateRecommendation
+2026-11-13T22:43:40.667[I]               MessageBusRouterPlugi:272  Forwarding messages...
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:McpServer
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvAccount
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvAppIgoIpcProxy
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvDriverDiagnostics
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvKVStorage
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvLocalizedConfig
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Hotkey:HotkeyPlugin
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN NvBackend:NvBackend
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowPlayApi_OSCUI
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.667[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowplayServer
+2026-11-13T22:43:40.667[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.668[D] NvCamera TASK  PluginModuleBase.cpp:201  Plugin is not yet ready to receive messages. Keeping message in queue
+2026-11-13T22:43:40.668[D] NvCamera TASK  PluginModuleBase.cpp:201  Plugin is not yet ready to receive messages. Keeping message in queue
+2026-11-13T22:43:40.668[D] NvCamera TASK  PluginModuleBase.cpp:201  Plugin is not yet ready to receive messages. Keeping message in queue
+2026-11-13T22:43:40.668[D] NvCamera TASK  PluginModuleBase.cpp:201  Plugin is not yet ready to receive messages. Keeping message in queue
+2026-11-13T22:43:40.668[D] NvCamera TASK  PluginModuleBase.cpp:201  Plugin is not yet ready to receive messages. Keeping message in queue
+2026-11-13T22:43:40.668[I] NvCamera TASK  PluginModuleBase.cpp:323  Successfully initialized NvCamera, took 63.92ms
+2026-11-13T22:43:40.689[I] NvWorkst TASK    NvCplAPIModule.cpp:92   nvcplinit is successful
+2026-11-13T22:43:40.689[I] NvWorkst TASK     NvWorkstation.cpp:34   Initializing module NvWorkstation
+2026-11-13T22:43:40.689[I] NvWorkst TASK     NvWorkstation.cpp:48   Initialized NvWorkstation
+2026-11-13T22:43:40.689[I] NvWorkst TASK  PluginModuleBase.cpp:323  Successfully initialized NvWorkstation, took 81.57ms
+2026-11-13T22:43:40.689[I] NvCplPlu TASK    NvCplApiModule.cpp:161  nvcplinit is successful
+2026-11-13T22:43:40.689[I] NvCplPlu TASK      NvBackendApi.cpp:81   Loading NvBackendAPI DLL...
+2026-11-13T22:43:40.689[I] NvCplDis TASK    NvCplApiModule.cpp:674  nvcplinit is successful
+2026-11-13T22:43:40.689[I] NvCplDis TASK NvCplDisplayPlugin.cp:171  Initialized NvCplDisplayPlugin : successfully
+2026-11-13T22:43:40.689[I] NvCplDis TASK  PluginModuleBase.cpp:323  Successfully initialized NvCplDisplayPlugin, took 81.65ms
+2026-11-13T22:43:40.703[I] NvCplPlu TASK      NvBackendApi.cpp:148  Calling EnsureThatBackendIsRunning...
+2026-11-13T22:43:40.703[I] NvCplPlu TASK      NvBackendApi.cpp:156  EnsureThatBackendIsRunning succeded.
+2026-11-13T22:43:40.703[I] NvCplPlu TASK       NvCplPlugin.cpp:76   Initialized NvCplPlugin : successfully
+2026-11-13T22:43:40.703[I] NvCplPlu TASK  PluginModuleBase.cpp:323  Successfully initialized NvCplPlugin, took 96.18ms
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin Gallery
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin GraphicsSetting
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin MessageBusRouter
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin NvCamera
+2026-11-13T22:43:40.703[I]                  NvCplApiModule.cpp:81   Profilemap instance
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin Rise
+2026-11-13T22:43:40.703[D] NvCamera TASK  PluginModuleBase.cpp:164  Forwarding queued message
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin ShareServer
+2026-11-13T22:43:40.703[D] NvCamera TASK  PluginModuleBase.cpp:164  Forwarding queued message
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin LocalGames
+2026-11-13T22:43:40.703[D]               MessageCallbackManage:198  Registering notification listener for method HighlightSavedNotification
+2026-11-13T22:43:40.703[I] ShareSer TASK ShareServerPlugin.cpp:206  Starting ShareServer
+2026-11-13T22:43:40.703[D]  Gallery TASK  PluginModuleBase.cpp:164  Forwarding queued message
+2026-11-13T22:43:40.703[D] NvCamera TASK  PluginModuleBase.cpp:164  Forwarding queued message
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin NvCplDisplayPlugin
+2026-11-13T22:43:40.703[D]               MessageCallbackManage:198  Registering notification listener for method GalleryCapStateChangeNotification
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin NvCplPlugin
+2026-11-13T22:43:40.703[D] NvCamera TASK  PluginModuleBase.cpp:164  Forwarding queued message
+2026-11-13T22:43:40.703[D]               MessageCallbackManage:198  Registering notification listener for method HighlightCaptureFailureNotification
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin NvPerfMon
+2026-11-13T22:43:40.703[D]               MessageCallbackManage:198  Registering notification listener for method CaptureSavedNotification
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin NvWorkstation
+2026-11-13T22:43:40.703[D]               MessageCallbackManage:198  Registering notification listener for method GalleryUpdatedNotification
+2026-11-13T22:43:40.703[I] cefclien 1055         CefPlugin.cpp:181  Invoking Start() for plugin SystemInfo
+2026-11-13T22:43:40.703[D]               MessageCallbackManage:198  Registering notification listener for method AnselShotSavedNotification
+2026-11-13T22:43:40.703[D]               MessageCallbackManage:198  Registering notification listener for method RegisterAppNotifications
+2026-11-13T22:43:40.703[D] NvCamera TASK  PluginModuleBase.cpp:164  Forwarding queued message
+2026-11-13T22:43:40.703[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+2026-11-13T22:43:40.704[I] ShareSer TASK          Settings.cpp:208  No valid hotkey combo information in settings file, using defaults
+2026-11-13T22:43:40.704[D] ShareSer TASK   NvShadowPlayApi.cpp:58   Looking for Software ShadowPlay...
+2026-11-13T22:43:40.704[D] ShareSer TASK   NvShadowPlayApi.cpp:62   Looking for ShadowPlay...
+2026-11-13T22:43:40.704[I] NvCamera TASK       NvCameraAPI.cpp:1418 Notifying NvCamera of Gallery Updated: capEnabled = false, capacityMB = 487734, usageMB = 67141
+2026-11-13T22:43:40.718[I]                        GpuProps.cpp:982  Attempting to retrieve GPU UUIDs via CUDA Driver API
+2026-11-13T22:43:40.719[I]                        GpuProps.cpp:1010 Found CUDA driver DLL at: C:\Windows\system32\DriverStore\FileRepository\nvcvi.inf_amd64_7428391d91532508\nvcuda64.dll
+2026-11-13T22:43:40.727[D] ShareSer TASK   NvShadowPlayApi.cpp:81   Loaded ShadowPlay
+2026-11-13T22:43:40.827[I]                        GpuProps.cpp:1020 Successfully loaded nvcuda64.dll from driver store
+2026-11-13T22:43:40.827[I]                        GpuProps.cpp:1055 All CUDA function pointers obtained successfully
+2026-11-13T22:43:40.857[I]                        GpuProps.cpp:1066 CUDA initialized successfully
+2026-11-13T22:43:40.857[I]                        GpuProps.cpp:1079 CUDA device count: 1
+2026-11-13T22:43:40.857[I]                        GpuProps.cpp:1085 NVAPI physical GPU count: 1
+2026-11-13T22:43:40.857[I]                        GpuProps.cpp:1121 Device 0 - CUDA UUID: 1C326399-55C0-6AF9-2F5C-CCB025F46538
+2026-11-13T22:43:40.858[I]                        GpuProps.cpp:1142 CUDA Device 0 matched with m_vGpus[0], updated UUID info
+2026-11-13T22:43:40.858[I]                        GpuProps.cpp:1150 Added GPU to CUDA ordering string: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:40.858[I]                        GpuProps.cpp:1169 GPU UUID retrieval completed successfully
+2026-11-13T22:43:40.858[I]                        GpuProps.cpp:1170 CUDA GPU default ordering (in CUDA enumeration order): NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:40.879[I]                        GpuProps.cpp:982  Attempting to retrieve GPU UUIDs via CUDA Driver API
+2026-11-13T22:43:40.879[I]                        GpuProps.cpp:1010 Found CUDA driver DLL at: C:\Windows\system32\DriverStore\FileRepository\nvcvi.inf_amd64_7428391d91532508\nvcuda64.dll
+2026-11-13T22:43:40.924[D] ShareSer TASK   NvShadowPlayApi.cpp:190  ShadowPlay enabled on init
+2026-11-13T22:43:40.924[D] ShareSer TASK   NvShadowPlayApi.cpp:439  ShadowPlay already running
+2026-11-13T22:43:40.924[D] ShareSer TASK CaptureSessionManager:557  SetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 23
+2026-11-13T22:43:40.942[I] SystemIn 3429   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:40.942[I] SystemIn cd8d   SystemInfoTasks.cpp:95   ExecuteAsync DeviceIDGet
+2026-11-13T22:43:40.943[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: CPUName, OSName, OSVersion, BrowserVersion, OSBuildNumber, PhysicalMemoryCapacity, Platform, ProcessorArchitecture, SystemName, VendorName, DeviceType, ConfidenceInBrowser, IsBrowserForged, ProductVersion, ProductName, Make, Model, UserDefaultUILanguage, UserSpecifiedDeviceName
+2026-11-13T22:43:40.964[I] SystemIn 2e14   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:40.968[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: OSName, Platform
+2026-11-13T22:43:40.972[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:40.982[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:40.993[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Hotkey:OSC
+2026-11-13T22:43:40.993[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.994[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Hotkey:OSC
+2026-11-13T22:43:40.994[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:40.996[D] ShareSer TASK CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 12
+2026-11-13T22:43:40.998[I] ShareSer TASK CaptureSessionManager:175  m_broadcastConcurrencySupported: 0
+2026-11-13T22:43:40.998[I] ShareSer TASK MessageBusV1Transport:122  Creating MessageBusV1Transport
+2026-11-13T22:43:40.998[I] ShareSer TASK MessageBusV1Transport:124  Obtaining v1 MessageBus interface
+2026-11-13T22:43:41.012[D]               MessageCallbackManage:198  Registering notification listener for method UserPreferredLanguageChangeNotification
+2026-11-13T22:43:41.014[I] NvCamera TASK      GenericCalls.cpp:382  SetLcarsClientId: 7dafbd1e-7e0d-45ff-9b81-2e10b2066abf
+2026-11-13T22:43:41.014[I] NvCamera TASK      GenericCalls.cpp:396  SetLcarsClientId: clientVersion=11.0.9.585
+2026-11-13T22:43:41.018[I] Graphics TASK           DeepDVC.cpp:385  Finish GetUserPreferredLanguage
+2026-11-13T22:43:41.023[I]                        GpuProps.cpp:1020 Successfully loaded nvcuda64.dll from driver store
+2026-11-13T22:43:41.023[I]                        GpuProps.cpp:1055 All CUDA function pointers obtained successfully
+2026-11-13T22:43:41.023[I]                        GpuProps.cpp:1066 CUDA initialized successfully
+2026-11-13T22:43:41.023[I]                        GpuProps.cpp:1079 CUDA device count: 1
+2026-11-13T22:43:41.024[I]                        GpuProps.cpp:1085 NVAPI physical GPU count: 1
+2026-11-13T22:43:41.024[I]                        GpuProps.cpp:1121 Device 0 - CUDA UUID: 1C326399-55C0-6AF9-2F5C-CCB025F46538
+2026-11-13T22:43:41.025[I]                        GpuProps.cpp:1142 CUDA Device 0 matched with m_vGpus[0], updated UUID info
+2026-11-13T22:43:41.025[I]                        GpuProps.cpp:1150 Added GPU to CUDA ordering string: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:41.025[I]                        GpuProps.cpp:1169 GPU UUID retrieval completed successfully
+2026-11-13T22:43:41.025[I]                        GpuProps.cpp:1170 CUDA GPU default ordering (in CUDA enumeration order): NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:41.033[I]                    NvApiWrapper.cpp:1676 Graphics driver version: 62124, branch: r621_20
+2026-11-13T22:43:41.033[I]                        GpuProps.cpp:976  Getting default CUDA GPU ordering: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:41.033[I]                    ProfileTable.cpp:2826 Using default GPU ordering from NVAPI: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:41.070[I] SystemIn 03ea   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:41.071[I] SystemIn fef2   SystemInfoTasks.cpp:95   ExecuteAsync DeviceIDGet
+2026-11-13T22:43:41.071[I] SystemIn cf91   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:41.071[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: OSName, Platform
+2026-11-13T22:43:41.073[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: OSName, OSVersion, DeviceType, SystemName, VendorName
+2026-11-13T22:43:41.081[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:41.085[I] ShareSer TASK MessageBusV1Transport:144  Connecting to MessageBus as NvNode:SDKAPI
+2026-11-13T22:43:41.089[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:41.118[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN NvNode:SDKAPI
+2026-11-13T22:43:41.118[D]               MessageBusV1Transport:252  Processing JOIN from Ansel:NvCameraControl
+2026-11-13T22:43:41.118[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:41.118[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:DesktopNotification
+2026-11-13T22:43:41.118[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:Diagnostics
+2026-11-13T22:43:41.118[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:Downloader
+2026-11-13T22:43:41.118[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:DriverUpdateRecommendation
+2026-11-13T22:43:41.118[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:McpServer
+2026-11-13T22:43:41.118[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:MessageBusRouter-IGO
+2026-11-13T22:43:41.118[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:NvAccount
+2026-11-13T22:43:41.118[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:NvAppIgoIpcProxy
+2026-11-13T22:43:41.119[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:NvDriverDiagnostics
+2026-11-13T22:43:41.119[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:NvKVStorage
+2026-11-13T22:43:41.119[D]               MessageBusV1Transport:252  Processing JOIN from Hotkey:HotkeyPlugin
+2026-11-13T22:43:41.119[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN NvNode:SDKAPI
+2026-11-13T22:43:41.119[D]               MessageBusV1Transport:252  Processing JOIN from Hotkey:OSC
+2026-11-13T22:43:41.119[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:41.119[D]               MessageBusV1Transport:252  Processing JOIN from NvBackend:NvBackend
+2026-11-13T22:43:41.119[D]               MessageBusV1Transport:252  Processing JOIN from Shadowplay:ShadowPlayApi_OSCUI
+2026-11-13T22:43:41.119[D]               MessageBusV1Transport:252  Processing JOIN from Shadowplay:ShadowplayServer
+2026-11-13T22:43:41.119[I] ShareSer TASK MessageBusV1Transport:160  Joined bus as NvNode:SDKAPI
+2026-11-13T22:43:41.119[I] ShareSer TASK    CloudSyncUtils.cpp:75   Default CloudSync URL: https://release.nv-ahl.nvidia.com/
+2026-11-13T22:43:41.120[I] ShareSer TASK AutoHighlightsHandler:863  Activity Summary enabled[0]
+2026-11-13T22:43:41.120[D]               MessageCallbackManage:198  Registering notification listener for method RegisterAppNotifications
+2026-11-13T22:43:41.120[D]               MessageCallbackManage:198  Registering notification listener for method PathChangeNotification
+2026-11-13T22:43:41.120[D]               MessageCallbackManage:198  Registering notification listener for method TempFolderChangeNotification
+2026-11-13T22:43:41.120[I] ShareSer TASK ShareServerPlugin.cpp:272  Started ShareServer
+2026-11-13T22:43:41.120[D]               MessageCallbackManage:198  Registering notification listener for method GalleryCapStateChangeNotification
+2026-11-13T22:43:41.120[D]               MessageCallbackManage:198  Registering notification listener for method GalleryUpdatedNotification
+2026-11-13T22:43:41.120[D]               MessageCallbackManage:198  Registering notification listener for method SendEnableRedirectionToSP
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:41.161[D] ShareSer 2f6b CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 2
+2026-11-13T22:43:41.161[I] ShareSer e625      GenericCalls.cpp:1203 GFE exported data file not found
+2026-11-13T22:43:41.167[D] ShareSer 39bc CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 2
+2026-11-13T22:43:41.304[E]                 NvApiDrsWrapper.cpp:48   NVAPI error - (-132)
+2026-11-13T22:43:41.304[I]                  NvCplApiModule.cpp:84   Profilemap is instanced
+2026-11-13T22:43:41.305[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+2026-11-13T22:43:41.305[I]                    NvApiWrapper.cpp:1676 Graphics driver version: 62124, branch: r621_20
+2026-11-13T22:43:41.305[I]                        GpuProps.cpp:976  Getting default CUDA GPU ordering: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:41.305[I]                    ProfileTable.cpp:2826 Using default GPU ordering from NVAPI: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:41.305[E]                         Profile.cpp:484  unknown DRV value: 'none'
+2026-11-13T22:43:41.305[I]                  NvCplApiModule.cpp:89   Getting all settings for global
+2026-11-13T22:43:41.320[I] SystemIn cd8d   system_info_win.cpp:455  Replying to Device ID query with : 062b19a572c0afb81f72cb6a5f2fa2a28ebe1bfaef598e50147f89406ef1c5c0
+2026-11-13T22:43:41.320[I] SystemIn TASK   SystemInfoTasks.cpp:103  DeviceIDGet: FinishAsync
+2026-11-13T22:43:41.336[I]                  NvCplApiModule.cpp:252  IS_RESIZABLE_BAR API call result:0, gpuIndex:0, isResizableBar:1
+2026-11-13T22:43:41.340[D]                    NvApiWrapper.cpp:1289 isUpScalingSupported: displayId=0x80061083 status=0 factors=5
+2026-11-13T22:43:41.343[D]                    NvApiWrapper.cpp:1328 isHyperSamplingSupported: displayId=0x80061083 legacyStatus=0 legacyFactors=7 dlStatus=0 dlFactors=2
+2026-11-13T22:43:41.344[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+2026-11-13T22:43:41.344[I]                    NvApiWrapper.cpp:1676 Graphics driver version: 62124, branch: r621_20
+2026-11-13T22:43:41.344[I]                        GpuProps.cpp:976  Getting default CUDA GPU ordering: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:41.344[I]                    ProfileTable.cpp:2826 Using default GPU ordering from NVAPI: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:41.344[E]                         Profile.cpp:484  unknown DRV value: 'none'
+2026-11-13T22:43:41.348[I]                    NvApiWrapper.cpp:1676 Graphics driver version: 62124, branch: r621_20
+2026-11-13T22:43:41.348[I]                    NvApiWrapper.cpp:1676 Graphics driver version: 62124, branch: r621_20
+2026-11-13T22:43:41.371[I]                  NvCplApiModule.cpp:91   Getting all settings is done
+2026-11-13T22:43:41.410[I] SystemIn fef2   system_info_win.cpp:455  Replying to Device ID query with : 062b19a572c0afb81f72cb6a5f2fa2a28ebe1bfaef598e50147f89406ef1c5c0
+2026-11-13T22:43:41.410[I] SystemIn TASK   SystemInfoTasks.cpp:103  DeviceIDGet: FinishAsync
+2026-11-13T22:43:41.477[I] SystemIn ced1   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:41.478[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: UserDefaultUILanguage
+2026-11-13T22:43:41.482[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:41.491[I] SystemIn 0c34   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:41.491[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: UserDefaultUILanguage
+2026-11-13T22:43:41.493[I] ShareSer ff98   NvShadowPlayApi.cpp:1739 ConfigureSPGallerySettings: Entered
+2026-11-13T22:43:41.493[D] ShareSer e56c CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 3
+2026-11-13T22:43:41.493[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:41.495[D] ShareSer e56c CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 4
+2026-11-13T22:43:41.495[I]  Gallery TASK      NvGalleryAPI.cpp:2046 GetSettings:: enabled(false), capacityPercent(100), usageMB(67141), totalDiskSpaceMB(487734)
+2026-11-13T22:43:41.495[I]                       Callbacks.cpp:336  Notification Message Id: 2317, wParam: 0, lParam: 0
+2026-11-13T22:43:41.495[E]                       Callbacks.cpp:592  Unhandled message type
+2026-11-13T22:43:41.495[D] ShareSer 1842 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 3
+2026-11-13T22:43:41.496[I]                       Callbacks.cpp:336  Notification Message Id: 2317, wParam: 0, lParam: 0
+2026-11-13T22:43:41.496[E]                       Callbacks.cpp:592  Unhandled message type
+2026-11-13T22:43:41.497[D] ShareSer 1842 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 4
+2026-11-13T22:43:41.497[D] ShareSer 5cf0 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 3
+2026-11-13T22:43:41.503[I] ShareSer TASK   NvShadowPlayApi.cpp:1746 ConfigureSPGallerySettings: SendRequest Succeeded
+2026-11-13T22:43:41.514[D] ShareSer 5cf0 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 4
+2026-11-13T22:43:41.515[I] ShareSer TASK   NvShadowPlayApi.cpp:1795 Notifying SP of Gallery Updated: capEnabled = false, capacityMB = 487734, usageMB = 67141
+2026-11-13T22:43:41.515[D] ShareSer TASK CaptureSessionManager:557  SetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 22
+2026-11-13T22:43:41.515[I] ShareSer TASK   NvShadowPlayApi.cpp:1804 ConfigureSPGallerySettings: Done
+2026-11-13T22:43:41.542[D] ShareSer 4d15 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 3
+2026-11-13T22:43:41.564[D] ShareSer 4d15 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 4
+2026-11-13T22:43:41.578[D]               MessageCallbackManage:198  Registering notification listener for method RegisterHotkeyNotifications
+2026-11-13T22:43:41.580[D]               MessageCallbackManage:198  Registering notification listener for method RegisterWindowStateChangeNotifications
+2026-11-13T22:43:41.581[D]               MessageCallbackManage:198  Registering notification listener for method RegisterCaptureStateChangeNotifications
+2026-11-13T22:43:41.581[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+2026-11-13T22:43:41.583[D]               MessageCallbackManage:198  Registering notification listener for method RegisterAppNotifications
+2026-11-13T22:43:41.584[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+2026-11-13T22:43:41.585[D]               MessageCallbackManage:198  Registering notification listener for method ChromaDataNotification
+2026-11-13T22:43:41.585[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+2026-11-13T22:43:41.586[D]               MessageCallbackManage:198  Registering notification listener for method RegisterPerfStatsNotifications
+2026-11-13T22:43:41.587[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+2026-11-13T22:43:41.587[I] NvPerfMo 747b    FrameViewTasks.cpp:130  ExecuteAsync GetRLAMonitorSupport 
+2026-11-13T22:43:41.587[I] NvPerfMo ad39    FrameViewTasks.cpp:200  ExecuteAsync CheckRLASupportedDriver 
+2026-11-13T22:43:41.588[I] NvPerfMo ff20    FrameViewTasks.cpp:176  ExecuteAsync GetGpuInfo
+2026-11-13T22:43:41.588[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+2026-11-13T22:43:41.588[D]               MessageCallbackManage:198  Registering notification listener for method RegisterAppNotifications
+2026-11-13T22:43:41.588[I] NvPerfMo ff20      NvapiWrapper.cpp:18   NvAPI_EnumLogicalGPUs : NVAPI_OK 
+2026-11-13T22:43:41.588[D]               MessageCallbackManage:198  Registering notification listener for method RiseUpdatesNotifications
+2026-11-13T22:43:41.588[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+2026-11-13T22:43:41.590[I] NvPerfMo 747b      NvapiWrapper.cpp:18   NvAPI_DISP_GetGDIPrimaryDisplayId : NVAPI_OK 
+2026-11-13T22:43:41.590[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+2026-11-13T22:43:41.591[I] NvPerfMo ff20      NvapiWrapper.cpp:18   NvAPI_GPU_GetLogicalGpuInfo : NVAPI_OK 
+2026-11-13T22:43:41.591[I] NvPerfMo ff20  FrameViewWrapper.cpp:1401 GPU count is 1
+2026-11-13T22:43:41.591[I] NvPerfMo 747b      NvapiWrapper.cpp:18   NvAPI_DISP_GetMonitorCapabilities : NVAPI_OK 
+2026-11-13T22:43:41.591[I] NvPerfMo 747b  FrameViewWrapper.cpp:1171 Monitor isRLACapable false
+2026-11-13T22:43:41.591[I] NvPerfMo ff20      NvapiWrapper.cpp:18   NvAPI_GPU_GetFullName : NVAPI_OK 
+2026-11-13T22:43:41.591[I] NvPerfMo ff20      NvapiWrapper.cpp:36   GPU name is NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:41.591[I] NvPerfMo ff20  FrameViewWrapper.cpp:1407 Gpu index : 0, Name : NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:41.591[I] NvPerfMo TASK    FrameViewTasks.cpp:137  Finish GetRLAMonitorSupport 
+2026-11-13T22:43:41.592[I] NvPerfMo ad39      NvapiWrapper.cpp:18   NvAPI_SYS_GetDriverAndBranchVersion : NVAPI_OK 
+2026-11-13T22:43:41.592[I]     Rise fe69         RiseTasks.cpp:19   ExecuteAsync RiseSupported
+2026-11-13T22:43:41.592[I]     Rise fe69        RiseModule.cpp:47   Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE, 0
+2026-11-13T22:43:41.592[I]     Rise 96ee         RiseTasks.cpp:97   ExecuteAsync VqVoiceQuerySupported
+2026-11-13T22:43:41.592[E]     Rise fe69        RiseModule.cpp:120  Rise not found to be installed.
+2026-11-13T22:43:41.592[I]     Rise 96ee        RiseModule.cpp:47   Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist.ASR, 0
+2026-11-13T22:43:41.592[I]     Rise 53dc         RiseTasks.cpp:244  ExecuteAsync GameAssistSupported
+2026-11-13T22:43:41.592[E]     Rise 96ee    NvVqApiWrapper.cpp:271  Voice Query(ASR) not found to be installed.
+2026-11-13T22:43:41.592[I]     Rise TASK         RiseTasks.cpp:27   Finish RiseSupported
+2026-11-13T22:43:41.592[I]     Rise 96ee         RiseTasks.cpp:100  ExecuteAsync VqVoiceQuerySupported(0)
+2026-11-13T22:43:41.592[I]     Rise 53dc        RiseModule.cpp:47   Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist.ASR, 0
+2026-11-13T22:43:41.592[E]     Rise 53dc NvGameAssistApiWrappe:73   Game Assist not found to be installed.
+2026-11-13T22:43:41.592[I]     Rise 53dc         RiseTasks.cpp:247  ExecuteAsync GameAssistSupported(0)
+2026-11-13T22:43:41.592[I] NvPerfMo TASK    FrameViewTasks.cpp:183  FinishAsync GetGpuInfo : 1
+2026-11-13T22:43:41.592[I]     Rise TASK         RiseTasks.cpp:106  Finish VqVoiceQuerySupported
+2026-11-13T22:43:41.593[I] NvPerfMo TASK    FrameViewTasks.cpp:207  Finish CheckRLASupportedDriver 62124
+2026-11-13T22:43:41.593[I]     Rise TASK         RiseTasks.cpp:253  Finish GameAssistSupported
+2026-11-13T22:43:41.593[I] NvCplPlu 09ba        NvCplTasks.cpp:43   ExecuteAsync NvCplProfileSettingsInfo
+2026-11-13T22:43:41.594[I] NvCplPlu 09ba NvBackendApiModule.cp:40   Start - Fetch NvBackend settings support info.
+2026-11-13T22:43:41.596[I] Graphics TASK           DeepDVC.cpp:287  Finish GetGPUInfo
+2026-11-13T22:43:41.599[I] NvCplDis 4bf1    NvCplApiModule.cpp:3663 NvCplApiGetInfo NVFLAGS_DDS_STATUS result:0,supported:0, automatic:0, kmdResponse:0, muxState:0, srType:0 
+2026-11-13T22:43:41.602[D]               MessageCallbackManage:198  Registering notification listener for method GalleryNotifications
+2026-11-13T22:43:41.603[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+2026-11-13T22:43:41.603[D]               MessageCallbackManage:198  Registering notification listener for method TempFolderChangeNotification
+2026-11-13T22:43:41.603[D]               MessageCallbackManage:198  Registering notification listener for method RegisterSDKNotifications
+2026-11-13T22:43:41.605[I]  Gallery TASK      NvGalleryAPI.cpp:1687 NvGalleryAPI::CheckLowDiskSpace systemTotalSpaceMB[487734] systemFreeSpaceMB = 201225, galleryTotalSpaceMB[487734] galleryFreeSpaceMB = 201225
+2026-11-13T22:43:41.605[I] Graphics TASK           DeepDVC.cpp:287  Finish GetGPUInfo
+2026-11-13T22:43:41.608[I]  Gallery TASK      NvGalleryAPI.cpp:2046 GetSettings:: enabled(false), capacityPercent(100), usageMB(67141), totalDiskSpaceMB(487734)
+2026-11-13T22:43:41.612[I]  Gallery TASK      NvGalleryAPI.cpp:2046 GetSettings:: enabled(false), capacityPercent(100), usageMB(67141), totalDiskSpaceMB(487734)
+2026-11-13T22:43:41.617[I] Graphics TASK           DeepDVC.cpp:353  Finish GetGenericInfo
+2026-11-13T22:43:41.618[I]  Gallery bf1b      NvGalleryAPI.cpp:1671 Files: 38 Dir size: 127 CRC: 4100984341
+2026-11-13T22:43:41.625[I] Graphics TASK           DeepDVC.cpp:42   Finish GetAIDVCSupport
+2026-11-13T22:43:41.632[I] NvPerfMo c7b2    FrameViewTasks.cpp:200  ExecuteAsync CheckRLASupportedDriver 
+2026-11-13T22:43:41.632[I] NvPerfMo a844    FrameViewTasks.cpp:77   ExecuteAsync GetDefaultLoggingPath
+2026-11-13T22:43:41.632[I] NvPerfMo ebd6    FrameViewTasks.cpp:52   ExecuteAsync SetMetricSampleSize sampleSize 20
+2026-11-13T22:43:41.632[I] NvPerfMo c7b2      NvapiWrapper.cpp:18   NvAPI_SYS_GetDriverAndBranchVersion : NVAPI_OK 
+2026-11-13T22:43:41.632[I] NvPerfMo TASK    FrameViewTasks.cpp:88   Finish GetDefaultLoggingPath 
+2026-11-13T22:43:41.632[I] NvPerfMo ebd6  FrameViewWrapper.cpp:1037 SetMetricSampleSize =  20 
+2026-11-13T22:43:41.633[I] NvPerfMo TASK    FrameViewTasks.cpp:207  Finish CheckRLASupportedDriver 62124
+2026-11-13T22:43:41.633[I] NvPerfMo TASK    FrameViewTasks.cpp:59   Finish SetMetricSampleSize 
+2026-11-13T22:43:41.638[I] Graphics TASK           TrueHDR.cpp:40   Finish GetAIHDRSupport_V2
+2026-11-13T22:43:41.757[I] ShareSer d4c7          Settings.cpp:399  No supported hotkey for FPS
+2026-11-13T22:43:41.783[I] ShareSer 8f8c          Settings.cpp:399  No supported hotkey for BroadcastToggle
+2026-11-13T22:43:41.795[I] ShareSer f3ee          Settings.cpp:399  No supported hotkey for CameraToggle
+2026-11-13T22:43:41.795[I] ShareSer beb9          Settings.cpp:399  No supported hotkey for BroadcastPauseToggle
+2026-11-13T22:43:41.796[I] ShareSer 89ce          Settings.cpp:399  No supported hotkey for OverlayToggle
+2026-11-13T22:43:41.796[I] ShareSer bb58          Settings.cpp:399  No supported hotkey for CustomOverlayA
+2026-11-13T22:43:41.796[I] ShareSer 0f79          Settings.cpp:399  No supported hotkey for CustomOverlayB
+2026-11-13T22:43:41.796[I] ShareSer 1b76          Settings.cpp:399  No supported hotkey for CustomOverlayC
+2026-11-13T22:43:41.796[I] ShareSer 08d9          Settings.cpp:399  No supported hotkey for CommentsToggle
+2026-11-13T22:43:41.796[I] ShareSer e5ab          Settings.cpp:399  No supported hotkey for FreestyleToggle
+2026-11-13T22:43:41.796[I] ShareSer 292a          Settings.cpp:399  No supported hotkey for StatisticsToggle
+2026-11-13T22:43:41.796[I] ShareSer 933a          Settings.cpp:399  No supported hotkey for ConnectGfnBroadcastToggle
+2026-11-13T22:43:41.796[I] ShareSer 5097          Settings.cpp:399  No supported hotkey for NativeKeyboardInputDialog
+2026-11-13T22:43:41.796[I] ShareSer 8126          Settings.cpp:399  No supported hotkey for QuitGame
+2026-11-13T22:43:41.839[I] Graphics TASK           DeepDVC.cpp:353  Finish GetGenericInfo
+2026-11-13T22:43:41.876[I] ShareSer 068e          Settings.cpp:399  No supported hotkey for InStreamPaste
+2026-11-13T22:43:41.876[D] ShareSer 1697 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 2
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:55   *******Calling GetSetting for 65540.
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:55   *******Calling GetSetting for 65541.
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:55   *******Calling GetSetting for 65539.
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:55   *******Calling GetSetting for 65537.
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:55   *******Calling GetSetting for 65538.
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:55   *******Calling GetSetting for 65542.
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:55   *******Calling GetSetting for 65543.
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:55   *******Calling GetSetting for 65544.
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:55   *******Calling GetSetting for 65546.
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:55   *******Calling GetSetting for 65545.
+2026-11-13T22:43:41.901[I] NvCplPlu 09ba NvBackendApiModule.cp:79   End - Fetch NvBackend settings support Info.
+2026-11-13T22:43:41.901[I] NvCplPlu TASK        NvCplTasks.cpp:145  Finish NvCplProfileSettingsInfo
+2026-11-13T22:43:41.901[I] NvCplPlu TASK        NvCplTasks.cpp:147  ProfileSettingsInfo size is 58
+2026-11-13T22:43:41.901[I] NvCplPlu TASK        NvCplTasks.cpp:608  finish NvCplProfileSettingsInfo done
+2026-11-13T22:43:41.906[D] ShareSer 9ef2 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 7
+2026-11-13T22:43:41.950[D] ShareSer 8918 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 15
+2026-11-13T22:43:41.951[E] ShareSer 8918      GenericCalls.cpp:568  Failed to get Process Info
+2026-11-13T22:43:41.951[D] ShareSer 3bde CaptureSessionManager:557  SetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 13
+2026-11-13T22:43:41.952[I] NvCamera TASK       NvCameraAPI.cpp:1475 GetNvCameraDLL PATH is specified in registry 
+2026-11-13T22:43:41.955[I] NvCamera TASK       NvCameraAPI.cpp:1521 GetNvCameraDLL: Loaded successfully from: C:\Windows\System32\DriverStore\FileRepository\nvcvi.inf_amd64_7428391d91532508\NvCamera\NvCamera64.dll
+2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method NvCameraResponseNotification
+2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method NvCameraFilterResponseNotification
+2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method NgxAIUpResNotifications
+2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method NvCameraUIControlNotificationData
+2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method ChromaDataNotification
+2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+2026-11-13T22:43:41.969[I] Graphics TASK           DeepDVC.cpp:287  Finish GetGPUInfo
+2026-11-13T22:43:41.972[E] ShareSer TASK ShareServerPlugin.cpp:296  Share Task failed with 0x80004005[8004023a]: Method: GetCaptureProcessInfo Code: GXP: Unspecified failure Message: Unknown error
+2026-11-13T22:43:41.972[D] ShareSer cefb CaptureSessionManager:557  SetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 13
+2026-11-13T22:43:41.973[I] ShareSer 68f2      GenericCalls.cpp:396  Received SetTelemtryInfoToShadowPlay
+2026-11-13T22:43:41.973[D] ShareSer d6f1 CaptureSessionManager:557  SetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 13
+2026-11-13T22:43:41.973[D] ShareSer 68f2 CaptureSessionManager:557  SetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 28
+2026-11-13T22:43:42.011[D] ShareSer 2f48 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 3
+2026-11-13T22:43:42.012[D] ShareSer 2f48 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 4
+2026-11-13T22:43:42.012[D] ShareSer a8c5 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 3
+2026-11-13T22:43:42.013[D] ShareSer a8c5 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 4
+2026-11-13T22:43:42.013[D] ShareSer bca5 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 27
+2026-11-13T22:43:42.013[D] ShareSer ad10 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 3
+2026-11-13T22:43:42.026[D] ShareSer ad10 CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 4
+2026-11-13T22:43:42.026[D] ShareSer b3f8 CaptureSessionManager:557  SetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 13
+2026-11-13T22:43:42.034[D] ShareSer 2aab CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 3
+2026-11-13T22:43:42.058[D] ShareSer 2aab CaptureSessionManager:516  GetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 4
+2026-11-13T22:43:50.739[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:MessageBusRouter-NvApp
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:MessageBusRouter-NvApp
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:MessageBusRouter-NvApp
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:50.787[D]               MessageBusV1Transport:252  Processing JOIN from Shadowplay:ShadowPlayApi_NvAppUI
+2026-11-13T22:43:50.788[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowPlayApi_NvAppUI
+2026-11-13T22:43:50.788[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:43:50.788[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.788[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowPlayApi_NvAppUI
+2026-11-13T22:43:50.788[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:52.488[I] ShareSer 3b65      GenericCalls.cpp:396  Received SetTelemtryInfoToShadowPlay
+2026-11-13T22:43:52.488[D] ShareSer 3b65 CaptureSessionManager:557  SetCaptureSessionParam: session: 00000000FFFFFFFF, cmd: 28
+2026-11-13T22:44:08.861[D] MbBroadc MBUS MessageBusConnector.c:335   LEAVE CrimsonNative:MessageBusRouter-NvApp
+2026-11-13T22:44:08.861[D]               MessageBusV1Transport:273  Processing PART from CrimsonNative:MessageBusRouter-NvApp
+2026-11-13T22:44:08.861[D] MbBroadc MBUS MessageBusConnector.c:335   LEAVE CrimsonNative:MessageBusRouter-NvApp
+2026-11-13T22:44:08.861[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:44:08.861[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:44:08.861[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:44:08.863[D]               MessageBusV1Transport:273  Processing PART from Shadowplay:ShadowPlayApi_NvAppUI
+2026-11-13T22:44:08.863[D] MbBroadc MBUS MessageBusConnector.c:335   LEAVE Shadowplay:ShadowPlayApi_NvAppUI
+2026-11-13T22:44:08.864[D] MbBroadc MBUS MessageBusConnector.c:335   LEAVE Shadowplay:ShadowPlayApi_NvAppUI
+2026-11-13T22:44:08.864[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:44:08.864[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:44:08.864[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:44:11.593[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:MessageBusRouter-NvApp
+2026-11-13T22:44:11.593[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:MessageBusRouter-NvApp
+2026-11-13T22:44:11.593[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:44:11.594[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:44:11.594[D]               MessageBusV1Transport:252  Processing JOIN from CrimsonNative:MessageBusRouter-NvApp
+2026-11-13T22:44:11.594[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:44:11.619[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowPlayApi_NvAppUI
+2026-11-13T22:44:11.619[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:44:11.619[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowPlayApi_NvAppUI
+2026-11-13T22:44:11.619[D]               MessageBusV1Transport:252  Processing JOIN from Shadowplay:ShadowPlayApi_NvAppUI
+2026-11-13T22:44:11.619[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:44:11.619[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+2026-11-13T22:44:40.613[I]  Gallery TASK      NvGalleryAPI.cpp:1687 NvGalleryAPI::CheckLowDiskSpace systemTotalSpaceMB[487734] systemFreeSpaceMB = 201215, galleryTotalSpaceMB[487734] galleryFreeSpaceMB = 201215
+2026-11-13T22:44:40.613[I]  Gallery TASK        UGCTracker.cpp:1880 MonitorDiskSpace: bLowDiskSpace:0 resetFlag:0
+2026-11-13T22:45:40.627[I]  Gallery TASK      NvGalleryAPI.cpp:1687 NvGalleryAPI::CheckLowDiskSpace systemTotalSpaceMB[487734] systemFreeSpaceMB = 201177, galleryTotalSpaceMB[487734] galleryFreeSpaceMB = 201177
+2026-11-13T22:45:40.627[I]  Gallery TASK        UGCTracker.cpp:1880 MonitorDiskSpace: bLowDiskSpace:0 resetFlag:0
+2026-11-13T22:46:40.631[I]  Gallery TASK      NvGalleryAPI.cpp:1687 NvGalleryAPI::CheckLowDiskSpace systemTotalSpaceMB[487734] systemFreeSpaceMB = 201164, galleryTotalSpaceMB[487734] galleryFreeSpaceMB = 201164
+2026-11-13T22:46:40.631[I]  Gallery TASK        UGCTracker.cpp:1880 MonitorDiskSpace: bLowDiskSpace:0 resetFlag:0
+2026-11-13T22:47:40.634[I]  Gallery TASK      NvGalleryAPI.cpp:1687 NvGalleryAPI::CheckLowDiskSpace systemTotalSpaceMB[487734] systemFreeSpaceMB = 201163, galleryTotalSpaceMB[487734] galleryFreeSpaceMB = 201163
+2026-11-13T22:47:40.634[I]  Gallery TASK        UGCTracker.cpp:1880 MonitorDiskSpace: bLowDiskSpace:0 resetFlag:0
+2026-11-13T22:48:40.637[I]  Gallery TASK      NvGalleryAPI.cpp:1687 NvGalleryAPI::CheckLowDiskSpace systemTotalSpaceMB[487734] systemFreeSpaceMB = 201163, galleryTotalSpaceMB[487734] galleryFreeSpaceMB = 201163
+2026-11-13T22:48:40.637[I]  Gallery TASK        UGCTracker.cpp:1880 MonitorDiskSpace: bLowDiskSpace:0 resetFlag:0
+2026-11-13T22:49:40.649[I]  Gallery TASK      NvGalleryAPI.cpp:1687 NvGalleryAPI::CheckLowDiskSpace systemTotalSpaceMB[487734] systemFreeSpaceMB = 201169, galleryTotalSpaceMB[487734] galleryFreeSpaceMB = 201169
+2026-11-13T22:49:40.649[I]  Gallery TASK        UGCTracker.cpp:1880 MonitorDiskSpace: bLowDiskSpace:0 resetFlag:0
+2026-11-13T22:50:40.650[I]  Gallery TASK      NvGalleryAPI.cpp:1687 NvGalleryAPI::CheckLowDiskSpace systemTotalSpaceMB[487734] systemFreeSpaceMB = 201168, galleryTotalSpaceMB[487734] galleryFreeSpaceMB = 201168
+2026-11-13T22:50:40.650[I]  Gallery TASK        UGCTracker.cpp:1880 MonitorDiskSpace: bLowDiskSpace:0 resetFlag:0

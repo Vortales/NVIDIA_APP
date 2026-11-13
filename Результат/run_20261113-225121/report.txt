@@ -1,0 +1,1231 @@
+﻿====================================================================================================
+ДИАГНОСТИКА ОВЕРЛЕЯ NVIDIA APP (запись/Instant Replay)
+====================================================================================================
+режим: scan    дата: 2026-11-13 22:51:21
+ОС: Windows 10 Pro 10.0 build 19045   Python 3.12.6   админ: нет
+
+Находки: 85   (CRITICAL:17  HIGH:8  MEDIUM:21  LOW:5  INFO:25  OK:9)
+
+====================================================================================================
+ВЕРДИКТ — вероятные причины (по убыванию веса улик)
+====================================================================================================
+
+1. Сломаны/не установлены DRS-профили драйвера → 'isEnableHook: 0' для всех приложений
+   вес улик 95 (доля 27%, повторов 10): log.drs_broken, log.first_severe, log.hooks_disabled   ← начинай отсюда
+     • [!!] Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')
+     • [!!] Первая серьёзная ошибка в этом логе → Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')
+     • [!!] Для приложения выставлен 'isEnableHook: 0' — хук/оверлей запрещён настройкой профиля
+   план:
+     1) Закрой NVIDIA App и переименуй C:\ProgramData\NVIDIA Corporation\Drs (nvdrsdb0.bin, nvdrsdb1.bin, BaseProfileDB.xml …) — драйвер пересоздаст базу.
+     2) Перезагрузись, затем NVIDIA App → Настройки → 'Восстановить значения по умолчанию' для 3D-настроек; после этого включи оверлей/запись заново.
+     3) Проверь, что у твоей учётки есть доступ на запись к HKLM\SOFTWARE\NVIDIA Corporation и к папке Drs: без прав профили читаются как 'пусто' (m_uiIndex: -1).
+     4) Не помогло — переустановка драйвера 'Чистая установка' (кривые/модифицированные пакеты регулярно ломают DRS).
+     5) Закрой NVIDIA App → переименуй C:\ProgramData\NVIDIA Corporation\Drs → перезагрузка (создастся заново).
+     6) NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.
+
+2. Причина не сводится к типовым — нужен разбор лога
+   вес улик 40 (доля 11%, повторов 22): log.crash_generic, log.unknown_errors, log.net, svc.summary, log.file_summary, log.not_nvidia
+     • [!!] Аварийное завершение (exception/assert/minidump)
+     • [! ] Ошибочные строки, не описанные базой сигнатур
+     • [~ ] Сетевой/авторизационный сбой
+     • [i ] Сервисов NVIDIA: 3, запущено: 2
+     • [i ] Разобран лог CxNative_NVIDIA Overlay.log
+     • [i ] Разобран лог Log.nvcontainer.exe.log
+   план:
+     1) Пришли report.txt и папку логов (scan --bundle diag.zip) — разберём строки перед первым 'fail'.
+     2) Посмотри 'Имена сбойных пакетов' в Журнале Windows → Приложение (Application Error) — там Faulting module.
+     3) Если модуль не nvidia*.dll — это конфликт стороннего софта, удаляй/отключай его.
+     4) Ищи ПЕРВОЕ вхождение 'fail'/'error' сверху лога — обычно корень там, а всё после — каскад.
+     5) Проверь время/дат (ошибки TLS), DNS, отсутствие MITM-прокси (Kaspersky Web Traffic, Palo Alto, Zscaler).
+     6) Попробуй 'Не входить'/'локальный режим', если доступен.
+
+3. Не с чем захватывать: Desktop Duplication / RDP / HDR / мультимонитор-гибрид (Optimus)
+   вес улик 39 (доля 11%, повторов 6): log.record_fail, driver.hybrid, log.power_graphic, log.hdr, log.optimus_icon_noise
+     • [!!] Запись/буфер реплея не стартует или обрывается
+     • [! ] Активно 2 видеоадаптеров — гибридная графика (Optimus/Multi-GPU)
+     • [! ] Гибридная графика/энергосбережение режет оверлей
+     • [! ] Конфликт формата кадра (HDR/10-бит/color space)
+     • [i ] Шум 'OptimusIconWindowClass not found' в nvcontainer (само по себе не ошибка)
+   план:
+     1) Запись через RDP, быстрый запуск/выход из учётки, сессия 'Другой пользователь', виртуалка без GPU — оверлей не работает по дизайну.
+     2) Ноутбук с Optimus/гибридной графикой: переключи вывод экрана на дискретную nVidia (MUX/dGPU-only), либо запиши через 'Захват рабочего стола' вместо 'Захват игры'.
+     3) Выключи HDR (Параметры → Дисплей → HDR) и 'Аппаратное ускоречение планирования графического процесса' (HAGS) на тест, затем верни по одному.
+     4) Закрой всё, что тоже делает DXGI duplication: OBS (проектор/витрина), Discord стрим, Xbox Game Bar запись, Miracast, удалённый доступ (Parsec/Sunshine/Moonlight).
+     5) В мультимониторных схемах 'только второй экран' оверлей иногда цепляется не за тот вывод — попробуй 'Расширить эти экраны'.
+     6) Сравни: 'Захват игры' vs 'Захват рабочего стола' — если рабочий стол пишется, а игра нет, дело в инъекции (см. конфликт/привилегии).
+
+4. Не запускается сам процесс оверлея (NVIDIA Overlay.exe / CEF)
+   вес улик 37 (доля 11%, повторов 4): log.igo_open_failed, log.overlay_not_ready, log.mmf_race, log.overlay_activity
+     • [!!] Запрос 'открыть оверлей' отклонён на уровне GXP (0x80040228 / Unspecified failure)
+     • [!!] NVIDIA App не может 'разбудить' оверлей: ShowGFEOverlay / WaitForOverlayReady падают
+     • [! ] DWM-прокси оверлея не открыл общий MMF (обычно гонка старта)
+     • [~ ] В логе есть активность хоста оверлея (процесс живёт — это хорошо)
+   план:
+     1) Проверь, что файл существует: C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\NVIDIA Overlay.exe
+     2) Запусти NVIDIA App и нажми Alt+Z; подожди 10-20 с, затем Task Manager → детали → NVIDIA Overlay.exe.
+     3) Добавь папку C:\Program Files\NVIDIA Corporation\NVIDIA App в исключения антивируса/Defender (папку целиком, не один exe).
+     4) Отключи режим 'Экономия памяти'/совместимости, удали переменные окружения CEF_* и --disable-gpu-аккуратно: NVIDIA Overlay падает без аппаратного ускорения.
+     5) Если в логах виден 'GPU process crash'/CEF assert → полный цикл: DDU (безопасный режим) → свежий драйвер с сайта NVIDIA App.
+     6) Выгрузи стек начисто: выйди из App → taskkill /f /im "NVIDIA Overlay.exe" /t → перезапусти сервисы NVDisplay.ContainerLocalSystem, NvContainerLocalSystem → стартни App ОДИН раз.
+
+5. Оверлей вообще не пытается стартовать: в логах нет ни одной строки Overlay/Capture
+   вес улик 28 (доля 8%, повторов 14): log.quiet, log.file_summary
+     • [! ] В Log.NVIDIA Overlay.exe.log нет ни одной ошибки/сигнатуры
+     • [! ] В AudioDriver_nvcontainer_261113_224337__0.log нет ни одной ошибки/сигнатуры
+     • [! ] В AudioDriver_nvcontainer_261113_215409__0.log нет ни одной ошибки/сигнатуры
+     • [! ] В AudioDriver_nvcontainer_261113_215143__0.log нет ни одной ошибки/сигнатуры
+     • [! ] В Additional1794010655132170700_DE486298-2CEF-4EA7-B601-F633D0303459.log нет ни одной ошибки/сигнатуры
+     • [! ] В NVIDIA App.json нет ни одной ошибки/сигнатуры
+   план:
+     1) Значит проблема до оверлея: не поднят NVIDIA App (автозагрузка выключена) или убит его контейнер — см. Task Manager → Startup.
+     2) Включи подробное логирование и повтори запуск: NVIDIA App → Помощь → 'Собрать отчёт' (или запусти NVIDIA App.exe с --debug).
+     3) Проверь, что служба автозапуска не отключена оптимизаторами (Watcher/Predator/'ускорители Windows').
+     4) Нажми Alt+Z, подожди 20 с, затем сразу снова запусти `scan` — свежие строки появятся.
+     5) Включи расширенное логирование: NVIDIA App → Помощь → 'Собрать файлы отладки'.
+
+6. Кривая/остаточная установка драйвера или версия ниже требуемой
+   вес улик 25 (доля 7%, повторов 3): log.driver, log.first_severe, driver.old
+     • [!!] Драйвер/видеоядро недоступно для компонентов NVIDIA
+     • [!!] Первая серьёзная ошибка в этом логе → Драйвер/видеоядро недоступно для компонентов NVIDIA
+     • [! ] Версия драйвера 32.0.16.2124 выглядит устаревшей
+   план:
+     1) Свежий драйвер (не Windows Update), установка 'Выборочная' → 'Чистая установка'.
+     2) После 'Чистой установки' перезагрузись и включи оверлей заново в NVIDIA App.
+     3) Видишь в System Event Log 'nvlddmkm ... stopped responding' (TDR, ID 4101) — снизь разгон/UNDERT, отключи 'PowerMizer' тюнинг, MSI-Afterburner кривые.
+     4) Если ставил модифицированные драйверы/NVCleanstInstall/NoDVA — верни официальные для теста.
+     5) nvidia-smi в админ-консоли; 'no devices found' → Device Manager → Код 43 / не тот драйвер.
+     6) Установи свежий драйвер с 'Чистой установкой', затем перезагрузись (не 'Завершение работы' с Fast Startup).
+
+7. Куда писать: папка записи недоступна/нет места/сеть-диск/OneDrive
+   вес улик 21 (доля 6%, повторов 3): log.first_severe, log.storage
+     • [!!] Первая серьёзная ошибка в этом логе → Проблема с папкой/диском записи
+     • [!!] Проблема с папкой/диском записи
+   план:
+     1) Оставь минимум 20-30 ГБ свободных на диске записи; 'Capture folder' не должна быть на сетевом, съемном или зашифрованном (BitLocker-removable) диске.
+     2) Убери папку записи из OneDrive/виртуальных папок 'Файлы по требованию' — иначе запись падает на середине.
+     3) Путь без юникода/пробелов/символов # и & на время теста: D:\NVCapture.
+     4) Проверь, что на папке есть Full Control для твоего пользователя (свойства → Безопасность).
+     5) Освободи 20-30 ГБ и/или переназначь папку записи на локальный NTFS-диск.
+     6) Убери из OneDrive/сети; добавь исключения для *.mp4 в AV.
+
+8. Не работает сервис/контейнер NVIDIA (nvcontainer / Display Container)
+   вес улик 20 (доля 6%, повторов 2): log.container, log.first_severe
+     • [!!] Сбой обращения к контейнеру/сервису NVIDIA (IPC/pipe)
+     • [!!] Первая серьёзная ошибка в этом логе → Сбой обращения к контейнеру/сервису NVIDIA (IPC/pipe)
+   план:
+     1) PowerShell (админ): Get-Service *NVIDIA*,*Nv* | Select Name,Status,StartType — все NVIDIA-сервисы должны быть Running/Automatic.
+     2) Перезапусти: Restart-Service NVDisplay.ContainerLocalSystem -Force; если есть NVIDIA App Container / NvidiaAppContainer — его тоже.
+     3) Если сервис остановлен/отключён (StartType=Disabled): Set-Service <Имя> -StartupType Automatic; Start-Service <Имя>.
+     4) Если не стартует — переустанови драйвер с галкой 'Чистая установка' (NVIDIA App → Драйверы), либо 'Изменить установки' → восстановить Component.
+     5) Start-Service NVDisplay.ContainerLocalSystem (от админа) и проверь, что он не падает через 5 сек.
+     6) Помогает переустановка 'только' компонентов: установщик драйвера → Выборочно → Graphics Driver + NVIDIA App.
+
+9. Привилегии: игра/приложение запущены с повышенными правами, а оверлей — нет
+   вес улик 13 (доля 4%, повторов 3): log.access_denied, priv.not_admin
+     • [!!] Отказано в доступе / не хватает привилегий
+     • [! ] Скрипт/сессия без повышенных прав
+   план:
+     1) Оверлей не может показаться и перехватывать клавиши в окне, запущенном 'От имени администратора', если сам он обычный.
+     2) Запусти NVIDIA App от имени администратора (или убери 'От имени администратора' с ярлыка игры).
+     3) Отключи UAC-обход только для игры; не держи весь Windows под админом.
+     4) Игры из Microsoft Store/UWP и античит-защищённые (EAC/Vanguard) часто режут оверлеи — там нужен режим совместимости игры в окне.
+     5) Запусти NVIDIA App от администратора на время теста; убери 'Запуск от имени администратора' с ярлыка игры.
+     6) Проверь права на папку записи и на C:\Program Files\NVIDIA Corporation\NVIDIA App.
+
+10. Горячая клавиша не регистрируется / не тот ввод (Alt+Z перехвачен)
+   вес улик 11 (доля 3%, повторов 3): log.hotkey, log.hotkey_reg_failed, log.hotkey_unbound
+     • [! ] Не удалось зарегистрировать горячую клавишу
+     • [! ] NVIDIA App не смог прочитать назначенные хоткеи из реестра (откат на значения по умолчанию)
+     • [! ] Хоткей оверлея не назначен (в логе пустое имя клавиши)
+   план:
+     1) Смени клавишу в NVIDIA App → Настройки → Горячие клавиши (например на F9), затем проверь в игре и на рабочем столе.
+     2) Перехватчики: iCUE/Razer Synapse/Logitech G Hub/AutoHotkey/PowerToys FancyZones+Keyboard Manager, 'Win+G' назначенный другому.
+     3) Раскладка: Alt+Z может 'теряться' при русской раскладке — переключись на EN и проверь.
+     4) Если оверлей открывается, а клавиша нет — это не 'не запускается', а именно конфликт клавиш.
+     5) Смени клавишу в настройках NVIDIA App; освободи её от iCUE/Synapse/G Hub/PowerToys/AutoHotkey.
+     6) NVIDIA App → Настройки → Горячие клавиши → назначить заново Alt+Z и Alt+\, затем перезапустить App.
+
+11. Оверлей/запись выключены в настройках NVIDIA App (или политиками/реестром)
+   вес улик 9 (доля 3%, повторов 3): reg.switch_off, log.overlay_disabled
+     • [! ] Похожий на 'выключено' параметр: Software\NVIDIA Corporation\Ansel\IPCenabled = 0
+     • [! ] Похожий на 'выключено' параметр: Software\NVIDIA Corporation\Ansel\FreestyleEnabled = False
+     • [! ] Оверлей выключен в настройках
+   план:
+     1) NVIDIA App → Настройки → 'Внутриигровой оверлей' → включить; 'Запись' / Instant Replay → включить и выбрать горячую клавишу.
+     2) Проверь, что не стоит 'Только Studio Mode'/'Только скриншоты' и что выбран профиль записи.
+     3) GPO: HKLM\SOFTWARE\Policies\NVIDIA Corporation — если там есть значения Overlay/Capture/Privacy=0, это политика ИТ-отдела, снимай через gpedit.
+     4) После изменений выйди из NVIDIA App полностью (трей → Выход) и запусти заново, а не только закрой окно.
+     5) Экспортируй ключ (.reg), потом ставь 1/0 по одному и проверяй Alt+Z.
+     6) NVIDIA App → Настройки → внутриигровой оверлей → Вкл; затем полный выход из приложения и запуск.
+
+12. NVIDIA App / GeForce Experience не установлен полностью или версии рассинхронизированы
+   вес улик 7 (доля 2%): log.plugin_missing
+     • [!!] Компонент/плагин оверлея не установлен или не загрузился
+   план:
+     1) NVIDIA App и GFE одновременно ставить нельзя — останется 'висящая' установка, у которой оверлей не поднимается. Удали одно из двух (Параметры → Приложения).
+     2) Помогает: удалить NVIDIA App, перегрузиться, поставить свежий установщик с nvidia.ru, выбрать 'Драйвер + NVIDIA App'.
+     3) Если установка падает (Error 1606 / 'older version installed') — см. C:\Program Files\NVIDIA Corporation\Installer2\*.log
+     4) Запусти установщик драйвера → 'Выборочная' → включи NVIDIA App (и 'Optimize...'/Video, если есть) → восстановление.
+     5) Или просто: NVIDIA App → Помощь → 'Переустановить приложение'.
+
+13. Повреждены настройки/кэш NVIDIA App (Settings.json, кэш CEF, конфиг профиля записи)
+   вес улик 3 (доля 1%): cfg.no_settings
+     • [! ] Не найден Settings.json/конфиг NVIDIA App в ожидаемых папках
+   план:
+     1) Закрой NVIDIA App (трей → Выход), переименуй C:\ProgramData\NVIDIA Corporation\NVIDIA App\ (или GeForce Experience\) в *.bak и запусти приложение заново — настройки пересоздадутся.
+     2) Локальный кэш: удали %LOCALAPPDATA%\NVIDIA Corporation\NVIDIA App\ (или 'NVIDIA GeForce Experience') — слетают настройки интерфейса, но часто чинит CEF-краш.
+     3) Проверь, что папки ProgramData не 'Read-only' и пользователь имеет право записи.
+     4) Запусти NVIDIA App хотя бы раз; затем повтори сканирование.
+
+14. Блокировка запуска/инъекции защитником Windows (Controlled Folder Access, SmartScreen, Code Integrity/WDAC) или антивирусом
+   вес улик 2 (доля 1%): sec.av
+     • [~ ] Активные защитники: Windows Defender
+   план:
+     1) Безопасность Windows → Защита вируса и угрозы → Управление приложениями и файлами (Controlled Folder Access) → 'Разрешить взаимодействие с приложением' → добавь NVIDIA App.exe и NVIDIA Overlay.exe.
+     2) Просмотрите 'Журнал защиты' на предмет 'Заблокировано' для путей C:\Program Files\NVIDIA Corporation.
+     3) Если стоит LRWDAC/WDAC/Policy Rule из корпоративной сборки — нужен исключительный policy для C:\Program Files\NVIDIA Corporation.
+     4) Проверь, не в карантине ли NVIDIA Overlay.exe / nvcontainer.exe.
+     5) Добавь ИСКЛЮЧЕНИЕ на папку C:\Program Files\NVIDIA Corporation (целиком) и на папку записи.
+     6) На 5 минут отключи защиту и проверь Alt+Z: если заработало — точно блокировка, оформляй исключение постоянно.
+
+====================================================================================================
+НАХОДКИ
+====================================================================================================
+
+[!!] CRITICAL Сбой обращения к контейнеру/сервису NVIDIA (IPC/pipe)  <log.container>  ×4
+       Все функции NVIDIA App идут через nvcontainer. Нет контейнера — нет оверлея, независимо от
+       драйвера.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerWatchdog.log
+         - L69 2026-11-13 19:43:37,401: #8(I)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildProcess>  Use quit event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_aiuser' (error = 0) for non-elevated container 'C:\Progra
+         - L75 2026-11-13 19:43:37,432: #4(I)[2026-11-13 19:43:37,432]{00001FF4}<NvpChildProcess>  Use quit event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_session' (error = 0) for elevated container 'C:\Program F
+         - L82 2026-11-13 19:43:37,448: #1(I)[2026-11-13 19:43:37,448]{00001FF4}<NvpChildProcess>  Use quit event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_spuser' (error = 0) for non-elevated container 'C:\Progra
+         - L89 2026-11-13 19:43:37,479: #8(I)[2026-11-13 19:43:37,479]{00001FF4}<NvpChildProcess>  Use quit event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_user' (error = 0) for non-elevated container 'C:\Program 
+         - --- контекст первого совпадения ---
+         -   #2(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App
+         -   #3(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+         ... ещё 11
+       что делать:
+         1) Start-Service NVDisplay.ContainerLocalSystem (от админа) и проверь, что он не падает через 5 сек.
+         2) Помогает переустановка 'только' компонентов: установщик драйвера → Выборочно → Graphics Driver + NVIDIA App.
+       источник: log:NvContainerWatchdog.log
+
+[!!] CRITICAL Драйвер/видеоядро недоступно для компонентов NVIDIA  <log.driver>  ×11
+       Оверлей поверх NvAPI; если NvAPI_initialize падает, всё остальное бессмысленно.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\UXD\Log.nvcontainer.exe.log
+         - L81 2026-11-13 21:51:43.836: 2026-11-13 21:51:43.836 (      0.221) |    DEBUG: [UXDriver.Utility.SystemUtil] 2281@Nvidia::UXDriver::Utility::SystemUtil::NvApiInit : NvAPI_Initialize success.
+         - L633 2026-11-13 21:52:00.597: 2026-11-13 21:52:00.597 (     16.982) |    DEBUG: [UXDriver.Utility.GfeUtil] 45@Nvidia::UXDriver::Utility::GfeUtil::IsGfeInstalled : Failed to open registry key: SOFTWARE\NVIDIA Corporation\Global\GFExperience.
+         - L689 2026-11-13 21:52:52.359: 2026-11-13 21:52:52.359 (     68.744) |    DEBUG: [UXDriver.Utility.GfeUtil] 45@Nvidia::UXDriver::Utility::GfeUtil::IsGfeInstalled : Failed to open registry key: SOFTWARE\NVIDIA Corporation\Global\GFExperience.
+         - L824 2026-11-13 21:53:03.387: 2026-11-13 21:53:03.387 (     79.772) |    DEBUG: [UXDriver.Utility.GfeUtil] 45@Nvidia::UXDriver::Utility::GfeUtil::IsGfeInstalled : Failed to open registry key: SOFTWARE\NVIDIA Corporation\Global\GFExperience.
+         - L826 2026-11-13 21:53:13.957: 2026-11-13 21:53:13.957 (     90.342) |    DEBUG: [UXDriver.Utility.GfeUtil] 45@Nvidia::UXDriver::Utility::GfeUtil::IsGfeInstalled : Failed to open registry key: SOFTWARE\NVIDIA Corporation\Global\GFExperience.
+         - L834 2026-11-13 21:53:21.363: 2026-11-13 21:53:21.363 (     97.748) |    DEBUG: [UXDriver.Utility.GfeUtil] 45@Nvidia::UXDriver::Utility::GfeUtil::IsGfeInstalled : Failed to open registry key: SOFTWARE\NVIDIA Corporation\Global\GFExperience.
+         - --- контекст первого совпадения ---
+         ... ещё 13
+       что делать:
+         1) nvidia-smi в админ-консоли; 'no devices found' → Device Manager → Код 43 / не тот драйвер.
+         2) Установи свежий драйвер с 'Чистой установкой', затем перезагрузись (не 'Завершение работы' с Fast Startup).
+       источник: log:Log.nvcontainer.exe.log
+
+[!!] CRITICAL Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')  <log.drs_broken>  ×3
+       Разрешение 'показывать ли оверлей в этом приложении' идёт из DRS (база профилей драйвера).
+       Ошибки чтения → для ВСЕХ приложений получается -1/выключено: UI настроек при этом выглядит
+       нормально, а изменения ни на что не влияют. Классика после 'stripped'-драйверов, твикеров и
+       обрывов установки.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA Overlay.log
+         - L313 2026-11-13T22:43:41.304: 2026-11-13T22:43:41.304[E]                 NvApiDrsWrapper.cpp:48   NVAPI error - (-132)
+         - L315 2026-11-13T22:43:41.305: 2026-11-13T22:43:41.305[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+         - L326 2026-11-13T22:43:41.344: 2026-11-13T22:43:41.344[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+         - --- контекст первого совпадения ---
+         -   2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+         -   2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+         -   2026-11-13T22:43:41.160[E] ShareSer TASK          NvSDKAPI.cpp:385  Got message targeted for SDK, but cannot parse SDKIPCMessage
+         ... ещё 10
+       что делать:
+         1) Закрой NVIDIA App → переименуй C:\ProgramData\NVIDIA Corporation\Drs → перезагрузка (создастся заново).
+         2) NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.
+         3) Далее — чистая переустановка официального драйвера (полный пакет, без вырезаний).
+       источник: log:CxNative_NVIDIA Overlay.log
+
+[!!] CRITICAL Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')  <log.drs_broken>  ×25
+       Разрешение 'показывать ли оверлей в этом приложении' идёт из DRS (база профилей драйвера).
+       Ошибки чтения → для ВСЕХ приложений получается -1/выключено: UI настроек при этом выглядит
+       нормально, а изменения ни на что не влияют. Классика после 'stripped'-драйверов, твикеров и
+       обрывов установки.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L6: [13:21:51:42:767][E][NVIDIA App:4288:13664] QueryShadowPlayDdiShimStatusIN
+         - L188: [13:21:51:44:298][E][dwm:1460: 2008] QueryShadowPlayDdiShimStatusIN
+         - L214: [13:21:51:44:482][E][dwm:1460: 2008] QueryShadowPlayDdiShimStatusIN
+         - L215: [13:21:51:44:485][R][dwm:1460: 2008] CAppSettings::ComputeAppSettings: m_uiIndex: -1 isGame: 0 isLauncher: 0 isAppBlackListed: 0 isEnableHook: 0  isFSDEnabled: 0 isMouseClipEnabled: 0 isDx9FOEnabled: 0 isCAEnabled: 0 m_b
+         - L243: [13:21:52:01:373][E][NVIDIA App:10628: 4472] QueryShadowPlayDdiShimStatusIN
+         - L777: [13:21:53:39:461][E][dwm:1460: 2008] QueryShadowPlayDdiShimStatusIN
+         - --- контекст первого совпадения ---
+         ... ещё 12
+       что делать:
+         1) Закрой NVIDIA App → переименуй C:\ProgramData\NVIDIA Corporation\Drs → перезагрузка (создастся заново).
+         2) NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.
+         3) Далее — чистая переустановка официального драйвера (полный пакет, без вырезаний).
+       источник: log:CaptureCore.log
+
+[!!] CRITICAL Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')  <log.drs_broken>  ×3
+       Разрешение 'показывать ли оверлей в этом приложении' идёт из DRS (база профилей драйвера).
+       Ошибки чтения → для ВСЕХ приложений получается -1/выключено: UI настроек при этом выглядит
+       нормально, а изменения ни на что не влияют. Классика после 'stripped'-драйверов, твикеров и
+       обрывов установки.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA App\CxNative_NVIDIA App.log
+         - L254 2026-11-13T22:44:12.010: 2026-11-13T22:44:12.010[E]                 NvApiDrsWrapper.cpp:48   NVAPI error - (-132)
+         - L256 2026-11-13T22:44:12.011: 2026-11-13T22:44:12.011[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+         - L460 2026-11-13T22:44:12.280: 2026-11-13T22:44:12.280[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+         - --- контекст первого совпадения ---
+         -   2026-11-13T22:44:11.913[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+         -   2026-11-13T22:44:11.915[I] NvCplDis 2860    NvCplApiModule.cpp:2464 GetDisplaysState API call start
+         -   2026-11-13T22:44:11.948[I] NvCplDis 6567    NvCplApiModule.cpp:2122 GetGlobalGsyncState API call result:0. gsyncState:3
+         ... ещё 10
+       что делать:
+         1) Закрой NVIDIA App → переименуй C:\ProgramData\NVIDIA Corporation\Drs → перезагрузка (создастся заново).
+         2) NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.
+         3) Далее — чистая переустановка официального драйвера (полный пакет, без вырезаний).
+       источник: log:CxNative_NVIDIA App.log
+
+[!!] CRITICAL Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')  <log.drs_broken>  ×3
+       Разрешение 'показывать ли оверлей в этом приложении' идёт из DRS (база профилей драйвера).
+       Ошибки чтения → для ВСЕХ приложений получается -1/выключено: UI настроек при этом выглядит
+       нормально, а изменения ни на что не влияют. Классика после 'stripped'-драйверов, твикеров и
+       обрывов установки.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA App\CxNative_NVIDIA App.1.log
+         - L213 2026-11-13T22:43:51.269: 2026-11-13T22:43:51.269[E]                 NvApiDrsWrapper.cpp:48   NVAPI error - (-132)
+         - L215 2026-11-13T22:43:51.269: 2026-11-13T22:43:51.269[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+         - L224 2026-11-13T22:43:51.325: 2026-11-13T22:43:51.325[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+         - --- контекст первого совпадения ---
+         -   2026-11-13T22:43:51.079[I]                        GpuProps.cpp:1150 Added GPU to CUDA ordering string: NVIDIA GeForce RTX 3060 Laptop GPU
+         -   2026-11-13T22:43:51.079[I]                        GpuProps.cpp:1169 GPU UUID retrieval completed successfully
+         -   2026-11-13T22:43:51.079[I]                        GpuProps.cpp:1170 CUDA GPU default ordering (in CUDA enumeration order): NVIDIA GeForce RTX 3060 Laptop GPU
+         ... ещё 10
+       что делать:
+         1) Закрой NVIDIA App → переименуй C:\ProgramData\NVIDIA Corporation\Drs → перезагрузка (создастся заново).
+         2) NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.
+         3) Далее — чистая переустановка официального драйвера (полный пакет, без вырезаний).
+       источник: log:CxNative_NVIDIA App.1.log
+
+[!!] CRITICAL Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')  <log.drs_broken>  ×3
+       Разрешение 'показывать ли оверлей в этом приложении' идёт из DRS (база профилей драйвера).
+       Ошибки чтения → для ВСЕХ приложений получается -1/выключено: UI настроек при этом выглядит
+       нормально, а изменения ни на что не влияют. Классика после 'stripped'-драйверов, твикеров и
+       обрывов установки.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA Overlay.1.log
+         - L234 2026-11-13T21:55:07.661: 2026-11-13T21:55:07.661[E]                 NvApiDrsWrapper.cpp:48   NVAPI error - (-132)
+         - L236 2026-11-13T21:55:07.661: 2026-11-13T21:55:07.661[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+         - L245 2026-11-13T21:55:07.701: 2026-11-13T21:55:07.701[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+         - --- контекст первого совпадения ---
+         -   2026-11-13T21:55:07.506[I]                        GpuProps.cpp:1150 Added GPU to CUDA ordering string: NVIDIA GeForce RTX 3060 Laptop GPU
+         -   2026-11-13T21:55:07.506[I]                        GpuProps.cpp:1169 GPU UUID retrieval completed successfully
+         -   2026-11-13T21:55:07.506[I]                        GpuProps.cpp:1170 CUDA GPU default ordering (in CUDA enumeration order): NVIDIA GeForce RTX 3060 Laptop GPU
+         ... ещё 10
+       что делать:
+         1) Закрой NVIDIA App → переименуй C:\ProgramData\NVIDIA Corporation\Drs → перезагрузка (создастся заново).
+         2) NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.
+         3) Далее — чистая переустановка официального драйвера (полный пакет, без вырезаний).
+       источник: log:CxNative_NVIDIA Overlay.1.log
+
+[!!] CRITICAL Первая серьёзная ошибка в этом логе → Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')  <log.first_severe>  ×3
+       Разрешение 'показывать ли оверлей в этом приложении' идёт из DRS (база профилей драйвера).
+       Ошибки чтения → для ВСЕХ приложений получается -1/выключено: UI настроек при этом выглядит
+       нормально, а изменения ни на что не влияют. Классика после 'stripped'-драйверов, твикеров и
+       обрывов установки.
+       Считай эту строку корнем: всё, что написано ниже (таймауты, 'failed to start', 'retry') —
+       обычно последствия одной ошибки.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA Overlay.log
+         - L313 ← первое серьёзное: 2026-11-13T22:43:41.304[E]                 NvApiDrsWrapper.cpp:48   NVAPI error - (-132)
+         - L314: 2026-11-13T22:43:41.304[I]                  NvCplApiModule.cpp:84   Profilemap is instanced
+         - L315: 2026-11-13T22:43:41.305[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+       что делать:
+         1) Закрой NVIDIA App → переименуй C:\ProgramData\NVIDIA Corporation\Drs → перезагрузка (создастся заново).
+         2) NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.
+         3) Далее — чистая переустановка официального драйвера (полный пакет, без вырезаний).
+       источник: log:CxNative_NVIDIA Overlay.log
+
+[!!] CRITICAL Первая серьёзная ошибка в этом логе → Драйвер/видеоядро недоступно для компонентов NVIDIA  <log.first_severe>  ×11
+       Оверлей поверх NvAPI; если NvAPI_initialize падает, всё остальное бессмысленно.
+       Считай эту строку корнем: всё, что написано ниже (таймауты, 'failed to start', 'retry') —
+       обычно последствия одной ошибки.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\UXD\Log.nvcontainer.exe.log
+         - L633 ← первое серьёзное: 2026-11-13 21:52:00.597 (     16.982) |    DEBUG: [UXDriver.Utility.GfeUtil] 45@Nvidia::UXDriver::Utility::GfeUtil::IsGfeInstalled : Failed to open registry key: SOFTWARE\NVIDIA Corporation\Global\GFE
+         - L634: 2026-11-13 21:52:00.600 (     16.985) |    DEBUG: [UXDriver.Utility.StoreAppUtil] 56@Nvidia::UXDriver::Utility::StoreAppUtil::GetControlPanelPackageFullName :  error in FindPackagesByPackageFamily .
+         - L635: 2026-11-13 21:52:01.375 (     17.760) |    ERROR: [UXDriver.ApiX.MessageTranslator] 1149@Nvidia::UXDriver::ApiX::MessageTranslator::TranslateActiveProcessCountChanged : OptimusIconWindowClass not foun
+       что делать:
+         1) nvidia-smi в админ-консоли; 'no devices found' → Device Manager → Код 43 / не тот драйвер.
+         2) Установи свежий драйвер с 'Чистой установкой', затем перезагрузись (не 'Завершение работы' с Fast Startup).
+       источник: log:Log.nvcontainer.exe.log
+
+[!!] CRITICAL Первая серьёзная ошибка в этом логе → Проблема с папкой/диском записи  <log.first_severe>  ×3
+       Буфер Instant Replay пишется непрерывно; при отказе записи оверлей часто 'тихо' не стартует.
+       Считай эту строку корнем: всё, что написано ниже (таймауты, 'failed to start', 'retry') —
+       обычно последствия одной ошибки.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L191 ← первое серьёзное: [13:21:51:44:332][R][CNTNR:11048: 3908] Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE, 1008
+         - L192: [13:21:51:44:349][R][CNTNR:13644: 9472] KillProcess: Process 13388 terminated successfully
+         - L193: [13:21:51:44:349][R][CNTNR:13644: 9472] Starting nvosc.
+       что делать:
+         1) Освободи 20-30 ГБ и/или переназначь папку записи на локальный NTFS-диск.
+         2) Убери из OneDrive/сети; добавь исключения для *.mp4 в AV.
+         3) Проверь, что путь не длиннее 240 символов и не содержит запрещённых символов.
+       источник: log:CaptureCore.log
+
+[!!] CRITICAL Первая серьёзная ошибка в этом логе → Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')  <log.first_severe>  ×3
+       Разрешение 'показывать ли оверлей в этом приложении' идёт из DRS (база профилей драйвера).
+       Ошибки чтения → для ВСЕХ приложений получается -1/выключено: UI настроек при этом выглядит
+       нормально, а изменения ни на что не влияют. Классика после 'stripped'-драйверов, твикеров и
+       обрывов установки.
+       Считай эту строку корнем: всё, что написано ниже (таймауты, 'failed to start', 'retry') —
+       обычно последствия одной ошибки.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA App\CxNative_NVIDIA App.log
+         - L254 ← первое серьёзное: 2026-11-13T22:44:12.010[E]                 NvApiDrsWrapper.cpp:48   NVAPI error - (-132)
+         - L255: 2026-11-13T22:44:12.010[I]                  NvCplApiModule.cpp:84   Profilemap is instanced
+         - L256: 2026-11-13T22:44:12.011[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+       что делать:
+         1) Закрой NVIDIA App → переименуй C:\ProgramData\NVIDIA Corporation\Drs → перезагрузка (создастся заново).
+         2) NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.
+         3) Далее — чистая переустановка официального драйвера (полный пакет, без вырезаний).
+       источник: log:CxNative_NVIDIA App.log
+
+[!!] CRITICAL Первая серьёзная ошибка в этом логе → Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')  <log.first_severe>  ×3
+       Разрешение 'показывать ли оверлей в этом приложении' идёт из DRS (база профилей драйвера).
+       Ошибки чтения → для ВСЕХ приложений получается -1/выключено: UI настроек при этом выглядит
+       нормально, а изменения ни на что не влияют. Классика после 'stripped'-драйверов, твикеров и
+       обрывов установки.
+       Считай эту строку корнем: всё, что написано ниже (таймауты, 'failed to start', 'retry') —
+       обычно последствия одной ошибки.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA App\CxNative_NVIDIA App.1.log
+         - L213 ← первое серьёзное: 2026-11-13T22:43:51.269[E]                 NvApiDrsWrapper.cpp:48   NVAPI error - (-132)
+         - L214: 2026-11-13T22:43:51.269[I]                  NvCplApiModule.cpp:84   Profilemap is instanced
+         - L215: 2026-11-13T22:43:51.269[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+       что делать:
+         1) Закрой NVIDIA App → переименуй C:\ProgramData\NVIDIA Corporation\Drs → перезагрузка (создастся заново).
+         2) NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.
+         3) Далее — чистая переустановка официального драйвера (полный пакет, без вырезаний).
+       источник: log:CxNative_NVIDIA App.1.log
+
+[!!] CRITICAL Первая серьёзная ошибка в этом логе → Сбой обращения к контейнеру/сервису NVIDIA (IPC/pipe)  <log.first_severe>  ×4
+       Все функции NVIDIA App идут через nvcontainer. Нет контейнера — нет оверлея, независимо от
+       драйвера.
+       Считай эту строку корнем: всё, что написано ниже (таймауты, 'failed to start', 'retry') —
+       обычно последствия одной ошибки.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerWatchdog.log
+         - L69 ← первое серьёзное: #8(I)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildProcess>  Use quit event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_aiuser' (error = 0) for non-elevated 
+         - L70: #9(D)[2026-11-13 19:43:37,432]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl
+         - L71: #0(D)[2026-11-13 19:43:37,432]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+       что делать:
+         1) Start-Service NVDisplay.ContainerLocalSystem (от админа) и проверь, что он не падает через 5 сек.
+         2) Помогает переустановка 'только' компонентов: установщик драйвера → Выборочно → Graphics Driver + NVIDIA App.
+       источник: log:NvContainerWatchdog.log
+
+[!!] CRITICAL Первая серьёзная ошибка в этом логе → Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')  <log.first_severe>  ×3
+       Разрешение 'показывать ли оверлей в этом приложении' идёт из DRS (база профилей драйвера).
+       Ошибки чтения → для ВСЕХ приложений получается -1/выключено: UI настроек при этом выглядит
+       нормально, а изменения ни на что не влияют. Классика после 'stripped'-драйверов, твикеров и
+       обрывов установки.
+       Считай эту строку корнем: всё, что написано ниже (таймауты, 'failed to start', 'retry') —
+       обычно последствия одной ошибки.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA Overlay.1.log
+         - L234 ← первое серьёзное: 2026-11-13T21:55:07.661[E]                 NvApiDrsWrapper.cpp:48   NVAPI error - (-132)
+         - L235: 2026-11-13T21:55:07.661[I]                  NvCplApiModule.cpp:84   Profilemap is instanced
+         - L236: 2026-11-13T21:55:07.661[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+       что делать:
+         1) Закрой NVIDIA App → переименуй C:\ProgramData\NVIDIA Corporation\Drs → перезагрузка (создастся заново).
+         2) NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.
+         3) Далее — чистая переустановка официального драйвера (полный пакет, без вырезаний).
+       источник: log:CxNative_NVIDIA Overlay.1.log
+
+[!!] CRITICAL Для приложения выставлен 'isEnableHook: 0' — хук/оверлей запрещён настройкой профиля  <log.hooks_disabled>  ×12
+       CAppSettings::ComputeAppSettings показывает решение драйвера по конкретному приложению:
+       isEnableHook: 0 = в это приложение хук ставить нельзя → оверлей в игре не появится, запись не
+       начнётся, даже когда все сервисы и процессы живы.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L7: [13:21:51:42:767][R][NVIDIA App:4288:13664] CAppSettings::ComputeAppSettings: m_uiIndex: 357 isGame: 0 isLauncher: 0 isAppBlackListed: 1 isEnableHook: 0  isFSDEnabled: 0 isMouseClipEnabled: 0 isDx9FOEnabled: 0 isCAEnable
+         - L215: [13:21:51:44:485][R][dwm:1460: 2008] CAppSettings::ComputeAppSettings: m_uiIndex: -1 isGame: 0 isLauncher: 0 isAppBlackListed: 0 isEnableHook: 0  isFSDEnabled: 0 isMouseClipEnabled: 0 isDx9FOEnabled: 0 isCAEnabled: 0 m_b
+         - L244: [13:21:52:01:373][R][NVIDIA App:10628: 4472] CAppSettings::ComputeAppSettings: m_uiIndex: 357 isGame: 0 isLauncher: 0 isAppBlackListed: 1 isEnableHook: 0  isFSDEnabled: 0 isMouseClipEnabled: 0 isDx9FOEnabled: 0 isCAEnabl
+         - L1693: [13:21:54:10:107][R][dwm:1460: 2008] CAppSettings::ComputeAppSettings: m_uiIndex: -1 isGame: 0 isLauncher: 0 isAppBlackListed: 0 isEnableHook: 0  isFSDEnabled: 0 isMouseClipEnabled: 0 isDx9FOEnabled: 0 isCAEnabled: 0 m_b
+         - L1717: [13:21:54:17:978][R][NVIDIA App:6316: 6192] CAppSettings::ComputeAppSettings: m_uiIndex: 357 isGame: 0 isLauncher: 0 isAppBlackListed: 1 isEnableHook: 0  isFSDEnabled: 0 isMouseClipEnabled: 0 isDx9FOEnabled: 0 isCAEnable
+         - L1801: [13:21:57:02:586][R][gpu_encoder_helper:14588:13476] CAppSettings::ComputeAppSettings: m_uiIndex: -1 isGame: 1 isLauncher: 0 isAppBlackListed: 0 isEnableHook: 0  isFSDEnabled: 0 isMouseClipEnabled: 0 isDx9FOEnabled: 0 is
+         - --- контекст первого совпадения ---
+         ... ещё 13
+       что делать:
+         1) NVIDIA App → Настройки → 'Внутриигровой оверлей' → Вкл (и 'Запись'/'Instant Replay' → Вкл).
+         2) Крупный план: 'восстановить значения по умолчанию' в 3D-настройках и снять 'Off' для 'Внутриигровой оверлей' в профиле игры.
+         3) Если рядом есть 'm_uiIndex: -1' — настройка не читается, а не выключена: см. log.drs_broken (сброс папки Drs).
+       источник: log:CaptureCore.log
+
+[!!] CRITICAL Запрос 'открыть оверлей' отклонён на уровне GXP (0x80040228 / Unspecified failure)  <log.igo_open_failed>
+       Это точка, где всё и ломается: App передал хоткей в оверлей-хост, а подсистема
+       GameXperience/Overlay не смогла поднять сессию (0x80004005 + 0x80040228). Коды общие, но в
+       связке с 'WaitForOverlayReady failed' означают, что UI-рантайм оверлея не готов, а не то, что
+       клавиша не та.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA Overlay.log
+         - L473 2026-11-13T22:43:41.972: 2026-11-13T22:43:41.972[E] ShareSer TASK ShareServerPlugin.cpp:296  Share Task failed with 0x80004005[8004023a]: Method: GetCaptureProcessInfo Code: GXP: Unspecified failure Message: Unknown error
+         - --- контекст первого совпадения ---
+         -   2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method NvCameraFilterResponseNotification
+         -   2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method NgxAIUpResNotifications
+         -   2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method NvCameraUIControlNotificationData
+         -   2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method ChromaDataNotification
+         -   2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+         ... ещё 8
+       что делать:
+         1) Выгрузи стек начисто: выйди из App → taskkill /f /im "NVIDIA Overlay.exe" /t → перезапусти сервисы NVDisplay.ContainerLocalSystem, NvContainerLocalSystem → стартни App ОДИН раз.
+         2) Проверь целостность установки: HKLM\SOFTWARE\NVIDIA Corporation\Installer2\Stripped не должен содержать ShadowPlay/NvStream (иначе — переустановка полного пакета).
+         3) Переименуй кэш UI: %LOCALAPPDATA%\NVIDIA Corporation\NVIDIA App (CEF-кэш) — окно может не рисоваться из-за него.
+       источник: log:CxNative_NVIDIA Overlay.log
+
+[!!] CRITICAL NVIDIA App не может 'разбудить' оверлей: ShowGFEOverlay / WaitForOverlayReady падают  <log.overlay_not_ready>  ×397
+       Хост оверлея — отдельный процесс, App говорит с ним по IPC. 'WaitForOverlayReady failed'
+       вперемешку с 'IpcSyncCall error [0x80004005] for property [ShowGFEOverlay]' = процесс есть, а
+       UI-рантайм не отвечает, окно не создаётся НИКОГДА (Alt+Z нажимается, реакция есть, окна нет).
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L278: [13:21:52:06:151][E][NVIDIA App:7112: 3432] CShadowPlayApi::CheckAndWaitForOverlayReady: WaitForOverlayReady failed.
+         - L282: [13:21:52:06:151][E][CNTNR:13644: 9472] COscProcMgr::ShowOSC: OTE sending failed(0x00000000)
+         - L284: [13:21:52:06:151][E][NVIDIA App:7112: 3432] CShadowPlayApi::SetProperty: FAIL[0x80040228] name ShowGFEOverlay
+         - L291: [13:21:52:09:151][E][NVIDIA App:7112:10328] CShadowPlayApi::CheckAndWaitForOverlayReady: WaitForOverlayReady failed.
+         - L295: [13:21:52:09:151][E][CNTNR:13644: 9472] COscProcMgr::ShowOSC: OTE sending failed(0x00000000)
+         - L297: [13:21:52:09:151][E][NVIDIA App:7112:10328] CShadowPlayApi::SetProperty: FAIL[0x80040228] name ShowGFEOverlay
+         - --- контекст первого совпадения ---
+         ... ещё 13
+       что делать:
+         1) Выгрузи стек начисто: выйди из NVIDIA App (трей → Выход), затем taskkill /f /im "NVIDIA Overlay.exe" /t, PowerShell (админ): Restart-Service NVDisplay.ContainerLocalSystem,NvContainerLocalSystem -Force, и запусти App ОДИН раз (лишние экземпляры — типичный корень).
+         2) Далее удали кэш CEF: переименуй %LOCALAPPDATA%\NVIDIA Corporation\NVIDIA App и %LOCALAPPDATA%\NVIDIA Corporation\NVIDIA Overlay (если есть), стартни App снова.
+         3) Не помогло — смотри log.component_stripped и log.drs_broken: без компонента/профилей оверлей не поднимается независимо от перезапусков.
+       источник: log:CaptureCore.log
+
+[!!] HIGH     Отказано в доступе / не хватает привилегий  <log.access_denied>
+       Обычно значит: цель (игра/окно) в более высоком уровне целостности, чем оверлей, либо права на
+       файл/папку/ключ реестра.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L1830: [13:21:57:02:631][E][CNTNR:14940:13644] CEndProcessListener::Run: OpenProcess(pid 14588) failed 0x00000057
+         - --- контекст первого совпадения ---
+         -   [13:21:57:02:631][R][CNTNR:14940: 4684] CSharedDataManager::OnAppEntry: Slot[1] PID[14588] exe[D:\Users\79528\AppData\Local\Discord\app-1.0.9268\modules\discord_voice-1\discord_voice\gpu_encoder_helpe
+         -   [13:21:57:02:631][R][CNTNR:14940: 4684] CSPWorkerThread::CSPWorkerThread : given thread name[SharedDataListener]
+         -   [13:21:57:02:631][R][CNTNR:14940: 4684] CSPWorkerThread::Start: started [SharedDataListener]
+         -   [13:21:57:02:631][E][CNTNR:14940: 4684] OA:F36:E9013 1 14588 0x80070057
+         -   [13:21:57:02:631][R][CNTNR:14940: 4684] CCaptureControl::HandleEvent: IN(103, 1, 0)
+         ... ещё 8
+       что делать:
+         1) Запусти NVIDIA App от администратора на время теста; убери 'Запуск от имени администратора' с ярлыка игры.
+         2) Проверь права на папку записи и на C:\Program Files\NVIDIA Corporation\NVIDIA App.
+       источник: log:CaptureCore.log
+
+[!!] HIGH     Отказано в доступе / не хватает привилегий  <log.access_denied>
+       Обычно значит: цель (игра/окно) в более высоком уровне целостности, чем оверлей, либо права на
+       файл/папку/ключ реестра.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerLocalSystem.log
+         - L10 2026-11-13 19:43:36,194: #9(I)[2026-11-13 19:43:36,194]{00001204}<NvcServiceHost>   Created new DACL with added privileges 0x00100000
+         - --- контекст первого совпадения ---
+         -   #3(I)[2026-11-13 19:43:36,194]{00001204}<NvcHost>          Base host initialized successfully
+         -   #4(I)[2026-11-13 19:43:36,194]{00001204}<NvcHostWin32>     Dynamic loading of plugins is enabled
+         -   #5(I)[2026-11-13 19:43:36,194]{00001204}<NvcHostWin32>     Dynamic unloading of plugins is enabled
+         -   #6(I)[2026-11-13 19:43:36,194]{00001204}<NvcHostWin32>     Win32 host initialized successfully
+         -   #7(I)[2026-11-13 19:43:36,194]{000014A0}<NvcServiceHost>   Service host: 'Start-pending' status reported. Exit code 0
+         ... ещё 8
+       что делать:
+         1) Запусти NVIDIA App от администратора на время теста; убери 'Запуск от имени администратора' с ярлыка игры.
+         2) Проверь права на папку записи и на C:\Program Files\NVIDIA Corporation\NVIDIA App.
+       источник: log:NvContainerLocalSystem.log
+
+[!!] HIGH     Аварийное завершение (exception/assert/minidump)  <log.crash_generic>  ×4
+       Есть краш — нужен модуль-виновник: по нему понятно, чья это библиотека (nvidia / cef /
+       сторонняя).
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\UXD\Log.nvcontainer.exe.log
+         - L2046 2026-11-13 22:43:11.524: 2026-11-13 22:43:11.524 (   2942.274) |    ERROR: [UXDriver.UxdBase] 337@Nvidia::UXDriver::StateDataT<struct IStateData>::GetExceptionHResult : class Nvidia::UXDriver::UxdException. UxdException( HResult="0x80070005" Fun
+         - L2048 2026-11-13 22:43:11.523: 2026-11-13 22:43:11.523 (   2942.273) |    ERROR: [UXDriver.UxdBase] 337@Nvidia::UXDriver::StateDataT<struct IStateData>::GetExceptionHResult : class Nvidia::UXDriver::UxdException. UxdException( HResult="0x80070005" Fun
+         - L2049 2026-11-13 22:43:11.526: 2026-11-13 22:43:11.526 (   2942.276) |    ERROR: [UXDriver.UxdBase] 337@Nvidia::UXDriver::StateDataT<struct IStateData>::GetExceptionHResult : class Nvidia::UXDriver::UxdException. UxdException( HResult="0x80070005" Fun
+         - L2050 2026-11-13 22:43:11.528: 2026-11-13 22:43:11.528 (   2942.278) |    ERROR: [UXDriver.ApiX.StartupEngine] 92@Nvidia::UXDriver::ApiX::StartupEngine::SynchronousCall : Unexpected Exception during startup handling event :  49 ( AceCacheHDRInfo ) , e
+         - --- контекст первого совпадения ---
+         -   2026-11-13 22:43:11.522 (   2942.272) |    DEBUG: [UXDriver.ApiX.UxdService] 195@Nvidia::UXDriver::ApiX::UxdService::Stop : Stopping HotKeyHandler.
+         -   2026-11-13 22:43:11.518 (   2942.268) |    DEBUG: [UXDriver.Sync.Startup] 204@CNvXDSyncModule::MonitorShutdown : Monitorshutdown is done.
+         ... ещё 11
+       что делать:
+         1) Посмотри 'Имена сбойных пакетов' в Журнале Windows → Приложение (Application Error) — там Faulting module.
+         2) Если модуль не nvidia*.dll — это конфликт стороннего софта, удаляй/отключай его.
+       источник: log:Log.nvcontainer.exe.log
+
+[!!] HIGH     Компонент/плагин оверлея не установлен или не загрузился  <log.plugin_missing>  ×4
+       Оверлей в NVIDIA App — отдельный устанавливаемый компонент; 'выборочная установка' без него
+       даёт именно такую картину.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA Overlay.log
+         - L390 2026-11-13T22:43:41.592: 2026-11-13T22:43:41.592[I]     Rise fe69        RiseModule.cpp:47   Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE, 0
+         - L392 2026-11-13T22:43:41.592: 2026-11-13T22:43:41.592[E]     Rise fe69        RiseModule.cpp:120  Rise not found to be installed.
+         - L393 2026-11-13T22:43:41.592: 2026-11-13T22:43:41.592[I]     Rise 96ee        RiseModule.cpp:47   Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist.ASR, 0
+         - L398 2026-11-13T22:43:41.592: 2026-11-13T22:43:41.592[I]     Rise 53dc        RiseModule.cpp:47   Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist.ASR, 0
+         - --- контекст первого совпадения ---
+         -   2026-11-13T22:43:41.591[I] NvPerfMo ff20      NvapiWrapper.cpp:18   NvAPI_GPU_GetFullName : NVAPI_OK
+         -   2026-11-13T22:43:41.591[I] NvPerfMo ff20      NvapiWrapper.cpp:36   GPU name is NVIDIA GeForce RTX 3060 Laptop GPU
+         ... ещё 11
+       что делать:
+         1) Запусти установщик драйвера → 'Выборочная' → включи NVIDIA App (и 'Optimize...'/Video, если есть) → восстановление.
+         2) Или просто: NVIDIA App → Помощь → 'Переустановить приложение'.
+       источник: log:CxNative_NVIDIA Overlay.log
+
+[!!] HIGH     Запись/буфер реплея не стартует или обрывается  <log.record_fail>
+       Ключевой симптом твоей проблемы: конвейер захвата инициализируется, но не может начать поток
+       кадров.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA Overlay.log
+         - L473 2026-11-13T22:43:41.972: 2026-11-13T22:43:41.972[E] ShareSer TASK ShareServerPlugin.cpp:296  Share Task failed with 0x80004005[8004023a]: Method: GetCaptureProcessInfo Code: GXP: Unspecified failure Message: Unknown error
+         - --- контекст первого совпадения ---
+         -   2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method NvCameraFilterResponseNotification
+         -   2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method NgxAIUpResNotifications
+         -   2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method NvCameraUIControlNotificationData
+         -   2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method ChromaDataNotification
+         -   2026-11-13T22:43:41.957[D]               MessageCallbackManage:198  Registering notification listener for method RegisterGeneralNotifications
+         ... ещё 8
+       что делать:
+         1) Сравни: 'Захват игры' vs 'Захват рабочего стола' — если рабочий стол пишется, а игра нет, дело в инъекции (см. конфликт/привилегии).
+         2) Снизь качество до 1080p30/H.264/50 Мбит — проверь, не упирается ли в лимит.
+         3) Отключи 'Автовыключение записи при потере фокуса' и 'Запись только в полноэкранном режиме'.
+       источник: log:CxNative_NVIDIA Overlay.log
+
+[!!] HIGH     Запись/буфер реплея не стартует или обрывается  <log.record_fail>  ×411
+       Ключевой симптом твоей проблемы: конвейер захвата инициализируется, но не может начать поток
+       кадров.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L255: [13:21:52:03:080][R][NVIDIA App:7112:12248] CShadowPlayApi::GetHotkeyProperty: reg read failed, falling back to default value
+         - L278: [13:21:52:06:151][E][NVIDIA App:7112: 3432] CShadowPlayApi::CheckAndWaitForOverlayReady: WaitForOverlayReady failed.
+         - L284: [13:21:52:06:151][E][NVIDIA App:7112: 3432] CShadowPlayApi::SetProperty: FAIL[0x80040228] name ShowGFEOverlay
+         - L291: [13:21:52:09:151][E][NVIDIA App:7112:10328] CShadowPlayApi::CheckAndWaitForOverlayReady: WaitForOverlayReady failed.
+         - L297: [13:21:52:09:151][E][NVIDIA App:7112:10328] CShadowPlayApi::SetProperty: FAIL[0x80040228] name ShowGFEOverlay
+         - L320: [13:21:52:12:152][E][NVIDIA App:7112: 3512] CShadowPlayApi::CheckAndWaitForOverlayReady: WaitForOverlayReady failed.
+         - --- контекст первого совпадения ---
+         ... ещё 13
+       что делать:
+         1) Сравни: 'Захват игры' vs 'Захват рабочего стола' — если рабочий стол пишется, а игра нет, дело в инъекции (см. конфликт/привилегии).
+         2) Снизь качество до 1080p30/H.264/50 Мбит — проверь, не упирается ли в лимит.
+         3) Отключи 'Автовыключение записи при потере фокуса' и 'Запись только в полноэкранном режиме'.
+       источник: log:CaptureCore.log
+
+[!!] HIGH     Проблема с папкой/диском записи  <log.storage>  ×3
+       Буфер Instant Replay пишется непрерывно; при отказе записи оверлей часто 'тихо' не стартует.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA Overlay.log
+         - L390 2026-11-13T22:43:41.592: 2026-11-13T22:43:41.592[I]     Rise fe69        RiseModule.cpp:47   Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE, 0
+         - L393 2026-11-13T22:43:41.592: 2026-11-13T22:43:41.592[I]     Rise 96ee        RiseModule.cpp:47   Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist.ASR, 0
+         - L398 2026-11-13T22:43:41.592: 2026-11-13T22:43:41.592[I]     Rise 53dc        RiseModule.cpp:47   Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist.ASR, 0
+         - --- контекст первого совпадения ---
+         -   2026-11-13T22:43:41.591[I] NvPerfMo ff20      NvapiWrapper.cpp:18   NvAPI_GPU_GetFullName : NVAPI_OK
+         -   2026-11-13T22:43:41.591[I] NvPerfMo ff20      NvapiWrapper.cpp:36   GPU name is NVIDIA GeForce RTX 3060 Laptop GPU
+         -   2026-11-13T22:43:41.591[I] NvPerfMo ff20  FrameViewWrapper.cpp:1407 Gpu index : 0, Name : NVIDIA GeForce RTX 3060 Laptop GPU
+         ... ещё 10
+       что делать:
+         1) Освободи 20-30 ГБ и/или переназначь папку записи на локальный NTFS-диск.
+         2) Убери из OneDrive/сети; добавь исключения для *.mp4 в AV.
+         3) Проверь, что путь не длиннее 240 символов и не содержит запрещённых символов.
+       источник: log:CxNative_NVIDIA Overlay.log
+
+[!!] HIGH     Проблема с папкой/диском записи  <log.storage>  ×3
+       Буфер Instant Replay пишется непрерывно; при отказе записи оверлей часто 'тихо' не стартует.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L191: [13:21:51:44:332][R][CNTNR:11048: 3908] Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE, 1008
+         - L1670: [13:21:54:09:976][R][CNTNR:8884: 2412] Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE, 1008
+         - L2139: [13:22:43:38:606][R][CNTNR:4608: 8020] Regkeypath not found: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE, 1008
+         - --- контекст первого совпадения ---
+         -   [13:21:51:44:281][E][CNTNR:13644: 5596] CSettings::DeleteDVRTmpFiles: No temporary DVR files deleted, FindFirstFileW failed with error:0x2
+         -   [13:21:51:44:281][R][CNTNR:13644: 9472] CServerIpc::EnableNvFBC : IN
+         -   [13:21:51:44:281][E][CNTNR:11048: 3908] ShadowPlayController::GetRequestOrigin: Invalid request 0
+         ... ещё 10
+       что делать:
+         1) Освободи 20-30 ГБ и/или переназначь папку записи на локальный NTFS-диск.
+         2) Убери из OneDrive/сети; добавь исключения для *.mp4 в AV.
+         3) Проверь, что путь не длиннее 240 символов и не содержит запрещённых символов.
+       источник: log:CaptureCore.log
+
+[! ] MEDIUM   Не найден Settings.json/конфиг NVIDIA App в ожидаемых папках  <cfg.no_settings>
+       Искали в: C:\ProgramData\NVIDIA Corporation, C:\Program Files\NVIDIA Corporation, C:\Program
+       Files (x86)\NVIDIA Corporation, %LOCALAPPDATA%\NVIDIA Corporation
+       Если приложение ещё ни разу не запускалось (или профиль другой) — это объяснимо; иначе конфиг
+       потерян.
+       что делать:
+         1) Запусти NVIDIA App хотя бы раз; затем повтори сканирование.
+
+[! ] MEDIUM   Активно 2 видеоадаптеров — гибридная графика (Optimus/Multi-GPU)  <driver.hybrid>
+       Имена: Intel(R) UHD Graphics, NVIDIA GeForce RTX 3060 Laptop GPU
+       На гибридных схемах кадр игры часто идёт через iGPU, а NVENC/hook живут на dGPU → оверлей не
+       стартует или пишет чёрный экран.
+       что делать:
+         1) Параметры → Система → Дисплей → Графика → для нужной игры 'Высокая производительность' (NVIDIA).
+         2) Переключи ноутбук в dGPU-only/MUX и перезагрузись.
+         3) Вместо 'Захват игры' попробуй 'Захват рабочего стола' — если работает, это точно гибрид.
+
+[! ] MEDIUM   Версия драйвера 32.0.16.2124 выглядит устаревшей  <driver.old>
+       Старые ветки не знают текущих API NVIDIA App (иногда оверлей просто не стартует).
+       что делать:
+         1) Обнови драйвер до актуальной ветки (Studio или Game Ready), 'Чистая установка'.
+
+[! ] MEDIUM   Конфликт формата кадра (HDR/10-бит/color space)  <log.hdr>
+       Часть конвейеров NVIDIA App не умеет захват HDR-цепочки — оверлей молча отваливается.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\UXD\Log.nvcontainer.exe.log
+         - L2050 2026-11-13 22:43:11.528: 2026-11-13 22:43:11.528 (   2942.278) |    ERROR: [UXDriver.ApiX.StartupEngine] 92@Nvidia::UXDriver::ApiX::StartupEngine::SynchronousCall : Unexpected Exception during startup handling event :  49 ( AceCacheHDRInfo ) , e
+         - --- контекст первого совпадения ---
+         -   2026-11-13 22:43:11.523 (   2942.273) |    DEBUG: [UXDriver.ApiX.HotKeyHandler] 129@Nvidia::UXDriver::ApiX::HotKeyHandler::Poll : Exiting Polling thread .
+         -   2026-11-13 22:43:11.517 (   2942.267) |    DEBUG: [UXDriver.Sync] 644@Nvidia::UXDriver::Sync::CNvXDSyncEngine::NotifyThread : notify thread end.
+         -   2026-11-13 22:43:11.524 (   2942.274) |    ERROR: [UXDriver.UxdBase] 337@Nvidia::UXDriver::StateDataT<struct IStateData>::GetExceptionHResult : class Nvidia::UXDriver::UxdException. UxdException( HRes
+         -   2026-11-13 22:43:11.525 (   2942.275) |    DEBUG: [UXDriver.UI.NotificationIcon] 309@Nvidia::UXDriver::UI::NotificationIcon::StartNotificationIcon : Notification Icon ended..
+         -   2026-11-13 22:43:11.523 (   2942.273) |    ERROR: [UXDriver.UxdBase] 337@Nvidia::UXDriver::StateDataT<struct IStateData>::GetExceptionHResult : class Nvidia::UXDriver::UxdException. UxdException( HRes
+         ... ещё 8
+       что делать:
+         1) Параметры → Дисплей → HDR → выкл на тест; в NVIDIA App отключи 'HDR' в настройках записи.
+       источник: log:Log.nvcontainer.exe.log
+
+[! ] MEDIUM   Не удалось зарегистрировать горячую клавишу  <log.hotkey>  ×3
+       Оверлей работает, но ты его не вызываешь — ощущается как 'не запускается'.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L255: [13:21:52:03:080][R][NVIDIA App:7112:12248] CShadowPlayApi::GetHotkeyProperty: reg read failed, falling back to default value
+         - L1880: [13:22:43:02:723][R][NVIDIA App:10784:10628] CShadowPlayApi::GetHotkeyProperty: reg read failed, falling back to default value
+         - L2482: [13:22:44:50:221][R][NVIDIA App:9588: 7604] CShadowPlayApi::GetHotkeyProperty: reg read failed, falling back to default value
+         - --- контекст первого совпадения ---
+         -   [13:21:52:01:695][R][NVIDIA App:7112: 5668] IpcCommonInterface::OnConnected: MessageBus joined. System: Shadowplay, Module: ShadowPlayApi_NvAppUI
+         -   [13:21:52:03:080][R][NVIDIA App:7112: 3432] CSPNvAPIUtils::Initialize: IN
+         -   [13:21:52:03:080][R][NVIDIA App:7112: 3432] CSPNvAPIUtils::LoadNvApi: IN
+         ... ещё 10
+       что делать:
+         1) Смени клавишу в настройках NVIDIA App; освободи её от iCUE/Synapse/G Hub/PowerToys/AutoHotkey.
+       источник: log:CaptureCore.log
+
+[! ] MEDIUM   NVIDIA App не смог прочитать назначенные хоткеи из реестра (откат на значения по умолчанию)  <log.hotkey_reg_failed>  ×3
+       Сочетания клавиш живут в HKCU\SOFTWARE\NVIDIA Corporation\...\Hotkeys. Если чтение упало, App
+       работает с дефолтами — а у дефолтного слота имя пустое, и 'Alt+Z' фактически ни к чему не
+       привязан (в логе это видно как 'Hotkey:  State: OpenIGO').
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L255: [13:21:52:03:080][R][NVIDIA App:7112:12248] CShadowPlayApi::GetHotkeyProperty: reg read failed, falling back to default value
+         - L1880: [13:22:43:02:723][R][NVIDIA App:10784:10628] CShadowPlayApi::GetHotkeyProperty: reg read failed, falling back to default value
+         - L2482: [13:22:44:50:221][R][NVIDIA App:9588: 7604] CShadowPlayApi::GetHotkeyProperty: reg read failed, falling back to default value
+         - --- контекст первого совпадения ---
+         -   [13:21:52:01:695][R][NVIDIA App:7112: 5668] IpcCommonInterface::OnConnected: MessageBus joined. System: Shadowplay, Module: ShadowPlayApi_NvAppUI
+         -   [13:21:52:03:080][R][NVIDIA App:7112: 3432] CSPNvAPIUtils::Initialize: IN
+         -   [13:21:52:03:080][R][NVIDIA App:7112: 3432] CSPNvAPIUtils::LoadNvApi: IN
+         ... ещё 10
+       что делать:
+         1) NVIDIA App → Настройки → Горячие клавиши → назначить заново Alt+Z и Alt+\, затем перезапустить App.
+         2) Проверь, что HKCU не перенесён/не заблокирован (политики, Roaming-профиль, антивирус-защита реестра).
+       источник: log:CaptureCore.log
+
+[! ] MEDIUM   Хоткей оверлея не назначен (в логе пустое имя клавиши)  <log.hotkey_unbound>  ×10
+       Строка вида 'Hotkey:  State: OpenIGO' означает: сообщение о нажатии дошло, но у слота пустое
+       имя сочетания — привязка клавиш не записана в настройки (или затёрта). НажатиеAlt+Z
+       обрабатывается 'в никуда'.
+       улики:
+         - файл: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA Overlay.1.log
+         - L364 2026-11-13T22:18:44.544: 2026-11-13T22:18:44.544[I]                       Callbacks.cpp:626  Hotkey: Hotkey:  State: OpenIGO
+         - L366 2026-11-13T22:18:44.728: 2026-11-13T22:18:44.728[I]                       Callbacks.cpp:626  Hotkey: Hotkey:  State: OpenIGO
+         - L368 2026-11-13T22:18:44.863: 2026-11-13T22:18:44.863[I]                       Callbacks.cpp:626  Hotkey: Hotkey:  State: OpenIGO
+         - L370 2026-11-13T22:18:44.992: 2026-11-13T22:18:44.992[I]                       Callbacks.cpp:626  Hotkey: Hotkey:  State: OpenIGO
+         - L372 2026-11-13T22:18:45.104: 2026-11-13T22:18:45.104[I]                       Callbacks.cpp:626  Hotkey: Hotkey:  State: OpenIGO
+         - L446 2026-11-13T22:42:59.221: 2026-11-13T22:42:59.221[I]                       Callbacks.cpp:626  Hotkey: Hotkey:  State: OpenIGO
+         - --- контекст первого совпадения ---
+         ... ещё 13
+       что делать:
+         1) NVIDIA App → Настройки → 'Горячие клавиши' → назначить заново Alt+Z (оверлей) и Alt+\ (реплей); после смены — перезапустить App.
+         2) Если поле не сохраняется (слетает после перезапуска) — это конфиг/кэш: переименуй %LOCALAPPDATA%\NVIDIA Corporation\NVIDIA App и переустанови пакет.
+       источник: log:CxNative_NVIDIA Overlay.1.log
+
+[! ] MEDIUM   DWM-прокси оверлея не открыл общий MMF (обычно гонка старта)  <log.mmf_race>  ×6
+       Секцию создаёт хост оверлея, а dwm.exe успевает попросить её раньше — одиночная запись
+       безвредна. Повторяется в каждом запуске = хост так и не инициализировался (зомби-экземпляры
+       или кривая установка).
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L219: [13:21:51:44:485][E][dwm:1460: 2008] CProxyOverlayManager::OpenCommonMMF: Failed to open common overlay MMF
+         - L220: [13:21:51:44:485][E][dwm:1460: 2008] CProxyOverlayManager::Init: OpenCommonMMF failed
+         - L1697: [13:21:54:10:107][E][dwm:1460: 2008] CProxyOverlayManager::OpenCommonMMF: Failed to open common overlay MMF
+         - L1698: [13:21:54:10:107][E][dwm:1460: 2008] CProxyOverlayManager::Init: OpenCommonMMF failed
+         - L2161: [13:22:43:38:722][E][dwm:1460: 1956] CProxyOverlayManager::OpenCommonMMF: Failed to open common overlay MMF
+         - L2162: [13:22:43:38:722][E][dwm:1460: 1956] CProxyOverlayManager::Init: OpenCommonMMF failed
+         - --- контекст первого совпадения ---
+         ... ещё 13
+       что делать:
+         1) Полная перезагрузка (не 'Завершение работы' с Fast Startup), затем один запуск NVIDIA App.
+         2) Если сохраняется — убей все 'NVIDIA Overlay.exe' и стартни App один раз; смотри log.overlay_not_ready.
+       источник: log:CaptureCore.log
+
+[! ] MEDIUM   Оверлей выключен в настройках  <log.overlay_disabled>  ×3
+       Компонент цел, но взведён флаг 'выключено' — процесс не поднимается по настройке.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L229: [13:21:51:44:503][R][rundll32:7924:10100] CShadowPlayApi::EnableShadowPlay: OUT: INFO Event Capture: Overlay enabled
+         - L1707: [13:21:54:10:122][R][rundll32:14896:15024] CShadowPlayApi::EnableShadowPlay: OUT: INFO Event Capture: Overlay enabled
+         - L2169: [13:22:43:38:753][R][rundll32:7532: 7516] CShadowPlayApi::EnableShadowPlay: OUT: INFO Event Capture: Overlay enabled
+         - --- контекст первого совпадения ---
+         -   [13:21:51:44:492][R][dwm:1460: 2008] CreateSession_V2: Profilename = Desktop Windows Manager
+         -   [13:21:51:44:492][R][dwm:1460: 2008] CSPShareStateManager::Init: Added new app in Slot {0}:  dwm[1], game[1], uwp[0], D3dver[0xb6], pflags1[0x0] pflags2[0x0]
+         -   [13:21:51:44:497][R][dwm:1460: 2008] CShadowPlayProxyShim::ShimPrePresent: Updated SurfaceFormat = 87 SurfaceformatChangeLog count: 0
+         ... ещё 10
+       что делать:
+         1) NVIDIA App → Настройки → внутриигровой оверлей → Вкл; затем полный выход из приложения и запуск.
+       источник: log:CaptureCore.log
+
+[! ] MEDIUM   Гибридная графика/энергосбережение режет оверлей  <log.power_graphic>  ×137
+       На Optimus кадр игры идёт через iGPU, а NVENC/hook хотят dGPU → 'оверлей не запускается' или
+       чёрный кадр.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\UXD\Log.nvcontainer.exe.log
+         - L17 2026-11-13 21:51:43.548: 2026-11-13 21:51:43.548 (      0.520) |  WARNING: [NvXDCore] 44@PowerOnDGpu : Failed to open NvPciFilter driver interface.
+         - L18 2026-11-13 21:51:43.548: 2026-11-13 21:51:43.548 (      0.520) |  WARNING: [UXD.NvXDCore.Module] 1258@Nvidia::UXDriver::Core::NvXDCorePlugin::WorkerThreadProc : Power-On DGPU control failed.
+         - L131 2026-11-13 21:51:43.858: 2026-11-13 21:51:43.858 (      0.243) |    ERROR: [UXDriver.Utility.SliUtil] 1277@Nvidia::UXDriver::ApiX::Features::GpuMemoryAllocationSettings::ReadGpuMemoryAllocationFirmwareConfig : GpuMemoryAllocation failed to read 
+         - L137 2026-11-13 21:51:43.972: 2026-11-13 21:51:43.972 (      0.357) |    ERROR: [UXDriver.ApiX.MessageTranslator] 1149@Nvidia::UXDriver::ApiX::MessageTranslator::TranslateActiveProcessCountChanged : OptimusIconWindowClass not found .
+         - L140 2026-11-13 21:51:44.039: 2026-11-13 21:51:44.039 (      0.424) |    ERROR: [UXDriver.ApiX.MessageTranslator] 1149@Nvidia::UXDriver::ApiX::MessageTranslator::TranslateActiveProcessCountChanged : OptimusIconWindowClass not found .
+         - L188 2026-11-13 21:51:44.191: 2026-11-13 21:51:44.191 (      0.576) |    DEBUG: [UXDriver.UI.ACEIcon] 479@Nvidia::UXDriver::UI::ACEIcon::IsAvailable : Imux not supported. Not starting tray icon.
+         - --- контекст первого совпадения ---
+         ... ещё 13
+       что делать:
+         1) Параметры → Дисплей → Графика → выставь для игры 'Высокая производительность (NVIDIA)'.
+         2) В BIOS/фирменной утилите (Legion Toolkit, MyASUS, Alienware Command) переключи 'dGPU only'/MUX.
+         3) Питание → 'Максимальная производительность', не 'Экономия' на тест.
+       источник: log:Log.nvcontainer.exe.log
+
+[! ] MEDIUM   В Log.NVIDIA Overlay.exe.log нет ни одной ошибки/сигнатуры  <log.quiet>
+       Лог выглядит 'чистым' — значит проблема либо до начала логирования оверлея (процесс не
+       запускают), либо пишутся другие файлы. Проверь, что время последнего изменения близко к
+       моменту нажатия Alt+Z.
+       что делать:
+         1) Нажми Alt+Z, подожди 20 с, затем сразу снова запусти `scan` — свежие строки появятся.
+         2) Включи расширенное логирование: NVIDIA App → Помощь → 'Собрать файлы отладки'.
+
+[! ] MEDIUM   В AudioDriver_nvcontainer_261113_224337__0.log нет ни одной ошибки/сигнатуры  <log.quiet>
+       Лог выглядит 'чистым' — значит проблема либо до начала логирования оверлея (процесс не
+       запускают), либо пишутся другие файлы. Проверь, что время последнего изменения близко к
+       моменту нажатия Alt+Z.
+       что делать:
+         1) Нажми Alt+Z, подожди 20 с, затем сразу снова запусти `scan` — свежие строки появятся.
+         2) Включи расширенное логирование: NVIDIA App → Помощь → 'Собрать файлы отладки'.
+
+[! ] MEDIUM   В AudioDriver_nvcontainer_261113_215409__0.log нет ни одной ошибки/сигнатуры  <log.quiet>
+       Лог выглядит 'чистым' — значит проблема либо до начала логирования оверлея (процесс не
+       запускают), либо пишутся другие файлы. Проверь, что время последнего изменения близко к
+       моменту нажатия Alt+Z.
+       что делать:
+         1) Нажми Alt+Z, подожди 20 с, затем сразу снова запусти `scan` — свежие строки появятся.
+         2) Включи расширенное логирование: NVIDIA App → Помощь → 'Собрать файлы отладки'.
+
+[! ] MEDIUM   В AudioDriver_nvcontainer_261113_215143__0.log нет ни одной ошибки/сигнатуры  <log.quiet>
+       Лог выглядит 'чистым' — значит проблема либо до начала логирования оверлея (процесс не
+       запускают), либо пишутся другие файлы. Проверь, что время последнего изменения близко к
+       моменту нажатия Alt+Z.
+       что делать:
+         1) Нажми Alt+Z, подожди 20 с, затем сразу снова запусти `scan` — свежие строки появятся.
+         2) Включи расширенное логирование: NVIDIA App → Помощь → 'Собрать файлы отладки'.
+
+[! ] MEDIUM   В Additional1794010655132170700_DE486298-2CEF-4EA7-B601-F633D0303459.log нет ни одной ошибки/сигнатуры  <log.quiet>
+       Лог выглядит 'чистым' — значит проблема либо до начала логирования оверлея (процесс не
+       запускают), либо пишутся другие файлы. Проверь, что время последнего изменения близко к
+       моменту нажатия Alt+Z.
+       что делать:
+         1) Нажми Alt+Z, подожди 20 с, затем сразу снова запусти `scan` — свежие строки появятся.
+         2) Включи расширенное логирование: NVIDIA App → Помощь → 'Собрать файлы отладки'.
+
+[! ] MEDIUM   В NVIDIA App.json нет ни одной ошибки/сигнатуры  <log.quiet>
+       Лог выглядит 'чистым' — значит проблема либо до начала логирования оверлея (процесс не
+       запускают), либо пишутся другие файлы. Проверь, что время последнего изменения близко к
+       моменту нажатия Alt+Z.
+       что делать:
+         1) Нажми Alt+Z, подожди 20 с, затем сразу снова запусти `scan` — свежие строки появятся.
+         2) Включи расширенное логирование: NVIDIA App → Помощь → 'Собрать файлы отладки'.
+
+[! ] MEDIUM   В NVIDIA Overlay.json нет ни одной ошибки/сигнатуры  <log.quiet>
+       Лог выглядит 'чистым' — значит проблема либо до начала логирования оверлея (процесс не
+       запускают), либо пишутся другие файлы. Проверь, что время последнего изменения близко к
+       моменту нажатия Alt+Z.
+       что делать:
+         1) Нажми Alt+Z, подожди 20 с, затем сразу снова запусти `scan` — свежие строки появятся.
+         2) Включи расширенное логирование: NVIDIA App → Помощь → 'Собрать файлы отладки'.
+
+[! ] MEDIUM   Ошибочные строки, не описанные базой сигнатур  <log.unknown_errors>  ×10
+       Всего ошибкоподобных строк: 26. Частые шаблоны (цифры свёрнуты в N):
+       inf:                               Error Control = N ×298
+       Пришли этот лог целиком (или --bundle) — шаблоны разберём и добавим в базу.
+       улики:
+         - файл: C:\Windows\INF\setupapi.dev.log
+         - L299: inf:                               Error Control = N
+       что делать:
+         1) Ищи ПЕРВОЕ вхождение 'fail'/'error' сверху лога — обычно корень там, а всё после — каскад.
+       источник: log:setupapi.dev.log
+
+[! ] MEDIUM   Скрипт/сессия без повышенных прав  <priv.not_admin>
+       Часть проверок (сервисы, журнал защиты, папки других профилей) будет беднее. Кроме того, если
+       сама игра запущена 'от имени администратора', оверлей без повышения в неё не попадёт.
+       что делать:
+         1) Запусти PowerShell от администратора и повтори: python nvidia_overlay_diag.py scan
+
+[! ] MEDIUM   Похожий на 'выключено' параметр: Software\NVIDIA Corporation\Ansel\IPCenabled = 0  <reg.switch_off>
+       Совпадение по имени — проверь вручную, что оно значит, прежде чем менять.
+       улики:
+         - Software\NVIDIA Corporation\Ansel :: IPCenabled = 0
+       что делать:
+         1) Экспортируй ключ (.reg), потом ставь 1/0 по одному и проверяй Alt+Z.
+
+[! ] MEDIUM   Похожий на 'выключено' параметр: Software\NVIDIA Corporation\Ansel\FreestyleEnabled = False  <reg.switch_off>
+       Совпадение по имени — проверь вручную, что оно значит, прежде чем менять.
+       улики:
+         - Software\NVIDIA Corporation\Ansel :: FreestyleEnabled = False
+       что делать:
+         1) Экспортируй ключ (.reg), потом ставь 1/0 по одному и проверяй Alt+Z.
+
+[~ ] LOW      Сетевой/авторизационный сбой  <log.net>  ×3
+       Локальную запись сеть не требует, но часть UI NVIDIA App не поднимается без ответа
+       серверов/входа — выглядит как 'оверлей не открывается'.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\UXD\Log.nvcontainer.exe.log
+         - L43 2026-11-13 21:51:43.807: 2026-11-13 21:51:43.807 (      0.779) |    DEBUG: [UXD.SyncProxy] 199@Nvidia::UXDriver::Core::SyncProxy::RegisterWorker : creating sync mutex handle error 183.
+         - L968 2026-11-13 21:54:09.433: 2026-11-13 21:54:09.433 (      0.809) |    DEBUG: [UXD.SyncProxy] 199@Nvidia::UXDriver::Core::SyncProxy::RegisterWorker : creating sync mutex handle error 183.
+         - L2119 2026-11-13 22:43:37.711: 2026-11-13 22:43:37.711 (      1.580) |    DEBUG: [UXD.SyncProxy] 199@Nvidia::UXDriver::Core::SyncProxy::RegisterWorker : creating sync mutex handle error 183.
+         - --- контекст первого совпадения ---
+         -   2026-11-13 21:51:43.804 (      0.189) |    DEBUG: [UXDriver.Sync] 105@Nvidia::UXDriver::Sync::CNvXDSyncEngine::WorkerThreadProc : waiting for sync plugin to stop in worker thread.
+         -   2026-11-13 21:51:43.804 (      0.189) |    DEBUG: [UXDriver.Sync] 96@Nvidia::UXDriver::Sync::CNvXDSyncEngine::FinalConstruct : unload event was created for sync engine.
+         -   2026-11-13 21:51:43.805 (      0.190) |    DEBUG: [UXDriver.Sync.Startup] 382@CNvXDSyncModule::RegisterWithSyncProxy : Found Class object for Sync class and created an instance.
+         ... ещё 10
+       что делать:
+         1) Проверь время/дат (ошибки TLS), DNS, отсутствие MITM-прокси (Kaspersky Web Traffic, Palo Alto, Zscaler).
+         2) Попробуй 'Не входить'/'локальный режим', если доступен.
+       источник: log:Log.nvcontainer.exe.log
+
+[~ ] LOW      Сетевой/авторизационный сбой  <log.net>  ×157
+       Локальную запись сеть не требует, но часть UI NVIDIA App не поднимается без ответа
+       серверов/входа — выглядит как 'оверлей не открывается'.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L219: [13:21:51:44:485][E][dwm:1460: 2008] CProxyOverlayManager::OpenCommonMMF: Failed to open common overlay MMF
+         - L220: [13:21:51:44:485][E][dwm:1460: 2008] CProxyOverlayManager::Init: OpenCommonMMF failed
+         - L890: [13:21:53:54:808][E][NVIDIA App:7112: 7092] IpcProxyInterface::IpcSyncCall: PostMessage failed with error(0x80004005).
+         - L894: [13:21:53:54:808][E][NVIDIA App:7112: 6912] IpcProxyInterface::IpcSyncCall: PostMessage failed with error(0x80004005).
+         - L898: [13:21:53:54:808][E][NVIDIA App:7112: 9100] IpcProxyInterface::IpcSyncCall: PostMessage failed with error(0x80004005).
+         - L902: [13:21:53:54:808][E][NVIDIA App:7112: 7536] IpcProxyInterface::IpcSyncCall: PostMessage failed with error(0x80004005).
+         - --- контекст первого совпадения ---
+         ... ещё 13
+       что делать:
+         1) Проверь время/дат (ошибки TLS), DNS, отсутствие MITM-прокси (Kaspersky Web Traffic, Palo Alto, Zscaler).
+         2) Попробуй 'Не входить'/'локальный режим', если доступен.
+       источник: log:CaptureCore.log
+
+[~ ] LOW      Сетевой/авторизационный сбой  <log.net>
+       Локальную запись сеть не требует, но часть UI NVIDIA App не поднимается без ответа
+       серверов/входа — выглядит как 'оверлей не открывается'.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser1.log
+         - L141 2026-11-13 19:43:39,275: #0(I)[2026-11-13 19:43:39,275]{00002228}<NvcPluginManager> NvcPluginLoadStats for 'NvAppIgoIpcProxy' => LibraryLoadTime = 31243 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 31243, InitializeProcTime = 0 us, InitializeT
+         - --- контекст первого совпадения ---
+         -   #4(I)[2026-11-13 19:43:39,219]{00002224}<NvcPluginManager> NvcPluginLoadStats for 'DriverUpdateRecommendation' => LibraryLoadTime = 15621 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 15621, Initiali
+         -   #5(I)[2026-11-13 19:43:39,219]{00002224}<NvcTelemetryHelp> NvcPluginLoadStats for DriverUpdateRecommendation returned 1
+         -   #6(I)[2026-11-13 19:43:39,219]{00002224}<NvcPluginManager> Transition to Started state for DriverUpdateRecommendation completed
+         -   #7(I)[2026-11-13 19:43:39,275]{00001D70}<NvcPluginManager> Transition to Starting state for NvAppIgoIpcProxy is in progress
+         -   #8(I)[2026-11-13 19:43:39,275]{00001D70}<NvcPluginManager> Initiate transition to Starting state for NvKVStorage
+         ... ещё 8
+       что делать:
+         1) Проверь время/дат (ошибки TLS), DNS, отсутствие MITM-прокси (Kaspersky Web Traffic, Palo Alto, Zscaler).
+         2) Попробуй 'Не входить'/'локальный режим', если доступен.
+       источник: log:NvContainerUser1.log
+
+[~ ] LOW      В логе есть активность хоста оверлея (процесс живёт — это хорошо)  <log.overlay_activity>  ×286
+       Строки [OVERLAY:<pid>] значат, что хост запускался и что-то делал. Несколько разных pid в
+       одной сессии — размножение экземпляров: App может обращаться не к тому процессу, и окно не
+       появится.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+         - L1: [13:21:51:39:077][R][OVERLAY:13388: 1392] NVSP2::CreateOverlayApiInterface: Creating interface. PID[13388]
+         - L2: [13:21:51:39:077][R][OVERLAY:13388: 1392] NVSP2::CreateOverlayApiInterface: nvspapi64.dll version [11.0.9.585]
+         - L3: [13:21:51:39:077][R][OVERLAY:13388: 1392] COverlayApi::CreateOrGetInstance: Empty GUID from NVIDIA Overlay.exe - using default NVIDIA Overlay GUID for backward compat
+         - L4: [13:21:51:39:077][R][OVERLAY:13388: 1392] OA:F08:S1005 PID[13388]
+         - L5: [13:21:51:39:077][R][OVERLAY:13388: 1392] OA:F01:S1002 PID[13388]
+         - L198: [13:21:51:44:415][R][OVERLAY:2480: 3092] NVSP2::CreateOverlayApiInterface: Creating interface. PID[2480]
+         - --- контекст первого совпадения ---
+         ... ещё 7
+       что делать:
+         1) taskkill /f /im "NVIDIA Overlay.exe"; убедиться, что App запускается ровно одним экземпляром (автозапуск + ручной запуск = два).
+       источник: log:CaptureCore.log
+
+[~ ] LOW      Активные защитники: Windows Defender  <sec.av>
+       Поведенческие блокировки 'инъекция в процесс/запись экрана' — частая причина 'оверлей не
+       запускается' при живых сервисах.
+       улики:
+         - Windows Defender state=397568
+       что делать:
+         1) Добавь ИСКЛЮЧЕНИЕ на папку C:\Program Files\NVIDIA Corporation (целиком) и на папку записи.
+         2) На 5 минут отключи защиту и проверь Alt+Z: если заработало — точно блокировка, оформляй исключение постоянно.
+         3) UAC/защита памяти в ESET/Kaspersky/Avast/Dr.Web: 'Мониторинг прямого доступа', 'Anti-STEALTH', 'Блокировка скриншотов' — выключить.
+
+[i ] INFO     За последние 3 дн. релевантных событий в журнале нет  <ev.clean>
+
+[i ] INFO     Разобран лог CxNative_NVIDIA Overlay.log  <log.file_summary>
+       путь: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA
+       Overlay.log
+       изменён: 2026-11-13 22:50:40   размер: 62 КБ   кодировка: utf-8
+       строк прочитано: 539   ошибкоподобных: 34
+       уровни: не размечены   метки времени: 2026-11-13T22:43:40.601 → 2026-11-13T22:50:40.650
+       совпадения: {'log.drs_broken': 3, 'log.storage': 3, 'log.plugin_missing': 4,
+       'log.record_fail': 1, 'log.igo_open_failed': 1}
+       источник: log:CxNative_NVIDIA Overlay.log
+
+[i ] INFO     Разобран лог Log.nvcontainer.exe.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NVIDIA App\UXD\Log.nvcontainer.exe.log
+       изменён: 2026-11-13 22:46:28   размер: 580 КБ   кодировка: utf-8
+       строк прочитано: 3126   ошибкоподобных: 177
+       уровни: не размечены   метки времени: 2026-11-13 21:51:43.231 → 2026-11-13 22:46:28.075
+       совпадения: {'log.power_graphic': 137, 'log.net': 3, 'log.driver': 11,
+       'log.optimus_icon_noise': 105, 'log.crash_generic': 4, 'log.hdr': 1}
+       источник: log:Log.nvcontainer.exe.log
+
+[i ] INFO     Разобран лог CaptureCore.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore.log
+       изменён: 2026-11-13 22:46:11   размер: 254 КБ   кодировка: utf-8
+       строк прочитано: 2491   ошибкоподобных: 616
+       уровни: не размечены   метки времени: ? → ?
+       совпадения: {'log.overlay_activity': 286, 'log.drs_broken': 25, 'log.hooks_disabled': 12,
+       'log.storage': 3, 'log.net': 157, 'log.mmf_race': 6, 'log.overlay_disabled': 3,
+       'log.record_fail': 411, 'log.hotkey': 3, 'log.hotkey_reg_failed': 3, 'log.overlay_not_ready':
+       397, 'log.access_denied': 1}
+       источник: log:CaptureCore.log
+
+[i ] INFO     Разобран лог CxNative_NVIDIA App.log  <log.file_summary>
+       путь: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA App\CxNative_NVIDIA App.log
+       изменён: 2026-11-13 22:44:50   размер: 78 КБ   кодировка: utf-8
+       строк прочитано: 536   ошибкоподобных: 105
+       уровни: не размечены   метки времени: 2026-11-13T22:44:11.557 → 2026-11-13T22:44:50.230
+       совпадения: {'log.drs_broken': 3}
+       источник: log:CxNative_NVIDIA App.log
+
+[i ] INFO     Разобран лог Log.NVIDIA App.exe.log  <log.file_summary>
+       путь: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA App\UXD\Log.NVIDIA App.exe.log
+       изменён: 2026-11-13 22:44:12   размер: 79 КБ   кодировка: utf-8
+       строк прочитано: 507   ошибкоподобных: 40
+       уровни: не размечены   метки времени: 2026-11-13 21:47:37.329 → 2026-11-13 22:44:12.296
+       совпадения: нет
+       источник: log:Log.NVIDIA App.exe.log
+
+[i ] INFO     Разобран лог CxNative_NVIDIA App.1.log  <log.file_summary>
+       путь: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA App\CxNative_NVIDIA App.1.log
+       изменён: 2026-11-13 22:44:08   размер: 77 КБ   кодировка: utf-8
+       строк прочитано: 566   ошибкоподобных: 83
+       уровни: не размечены   метки времени: 2026-11-13T22:43:50.659 → 2026-11-13T22:44:08.890
+       совпадения: {'log.drs_broken': 3}
+       источник: log:CxNative_NVIDIA App.1.log
+
+[i ] INFO     Разобран лог NvContainerLocalSystem.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerLocalSystem.log
+       изменён: 2026-11-13 22:43:47   размер: 13 КБ   кодировка: utf-8
+       строк прочитано: 101   ошибкоподобных: 1
+       уровни: не размечены   метки времени: 2026-11-13 19:43:36,194 → 2026-11-13 19:43:47,375
+       совпадения: {'log.access_denied': 1}
+       источник: log:NvContainerLocalSystem.log
+
+[i ] INFO     Разобран лог NvContainerWatchdog.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerWatchdog.log
+       изменён: 2026-11-13 22:43:45   размер: 32 КБ   кодировка: utf-8
+       строк прочитано: 225   ошибкоподобных: 6
+       уровни: не размечены   метки времени: 2026-11-13 19:43:37,329 → 2026-11-13 19:43:45,778
+       совпадения: {'log.container': 4}
+       источник: log:NvContainerWatchdog.log
+
+[i ] INFO     Разобран лог Log.NVIDIA Overlay.exe.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NVIDIA App\UXD\Log.NVIDIA Overlay.exe.log
+       изменён: 2026-11-13 22:43:41   размер: 5 КБ   кодировка: utf-8
+       строк прочитано: 47   ошибкоподобных: 0
+       уровни: не размечены   метки времени: 2026-11-13 21:52:41.812 → 2026-11-13 22:43:41.597
+       совпадения: нет
+       источник: log:Log.NVIDIA Overlay.exe.log
+
+[i ] INFO     Разобран лог NvContainerUser1.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser1.log
+       изменён: 2026-11-13 22:43:39   размер: 19 КБ   кодировка: utf-8
+       строк прочитано: 151   ошибкоподобных: 1
+       уровни: не размечены   метки времени: 2026-11-13 19:43:37,532 → 2026-11-13 19:43:39,335
+       совпадения: {'log.net': 1}
+       источник: log:NvContainerUser1.log
+
+[i ] INFO     Разобран лог NvContainerUser1SPUser.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser1SPUser.log
+       изменён: 2026-11-13 22:43:38   размер: 6 КБ   кодировка: utf-8
+       строк прочитано: 54   ошибкоподобных: 1
+       уровни: не размечены   метки времени: 2026-11-13 19:43:37,501 → 2026-11-13 19:43:38,153
+       совпадения: нет
+       источник: log:NvContainerUser1SPUser.log
+
+[i ] INFO     Разобран лог NvContainerSession1.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerSession1.log
+       изменён: 2026-11-13 22:43:37   размер: 6 КБ   кодировка: utf-8
+       строк прочитано: 53   ошибкоподобных: 1
+       уровни: не размечены   метки времени: 2026-11-13 19:43:37,463 → 2026-11-13 19:43:37,795
+       совпадения: нет
+       источник: log:NvContainerSession1.log
+
+[i ] INFO     Разобран лог AudioDriver_nvcontainer_261113_224337__0.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NvVAD\AudioDriver_nvcontainer_261113_224337__0.log
+       изменён: 2026-11-13 22:43:37   размер: 0 КБ   кодировка: utf-8
+       строк прочитано: 3   ошибкоподобных: 0
+       уровни: {'info': 3}   метки времени: ? → ?
+       совпадения: нет
+       источник: log:AudioDriver_nvcontainer_261113_224337__0.log
+
+[i ] INFO     Разобран лог NvContainerAIUser1.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerAIUser1.log
+       изменён: 2026-11-13 22:43:37   размер: 4 КБ   кодировка: utf-8
+       строк прочитано: 38   ошибкоподобных: 1
+       уровни: не размечены   метки времени: 2026-11-13 19:43:37,432 → 2026-11-13 19:43:37,633
+       совпадения: нет
+       источник: log:NvContainerAIUser1.log
+
+[i ] INFO     Разобран лог CxNative_NVIDIA Overlay.1.log  <log.file_summary>
+       путь: C:\Users\G5KC\AppData\Local\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA
+       Overlay.1.log
+       изменён: 2026-11-13 22:43:11   размер: 59 КБ   кодировка: utf-8
+       строк прочитано: 490   ошибкоподобных: 28
+       уровни: не размечены   метки времени: 2026-11-13T21:55:07.272 → 2026-11-13T22:43:11.584
+       совпадения: {'log.drs_broken': 3, 'log.hotkey_unbound': 10}
+       источник: log:CxNative_NVIDIA Overlay.1.log
+
+[i ] INFO     Разобран лог AudioDriver_nvcontainer_261113_215409__0.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NvVAD\AudioDriver_nvcontainer_261113_215409__0.log
+       изменён: 2026-11-13 21:54:09   размер: 0 КБ   кодировка: utf-8
+       строк прочитано: 3   ошибкоподобных: 0
+       уровни: {'info': 3}   метки времени: ? → ?
+       совпадения: нет
+       источник: log:AudioDriver_nvcontainer_261113_215409__0.log
+
+[i ] INFO     Разобран лог AudioDriver_nvcontainer_261113_215143__0.log  <log.file_summary>
+       путь: C:\ProgramData\NVIDIA Corporation\NvVAD\AudioDriver_nvcontainer_261113_215143__0.log
+       изменён: 2026-11-13 21:51:43   размер: 0 КБ   кодировка: utf-8
+       строк прочитано: 3   ошибкоподобных: 0
+       уровни: {'info': 3}   метки времени: ? → ?
+       совпадения: нет
+       источник: log:AudioDriver_nvcontainer_261113_215143__0.log
+
+[i ] INFO     Разобран лог setupapi.dev.log  <log.file_summary>
+       путь: C:\Windows\INF\setupapi.dev.log
+       изменён: 2026-11-13 21:42:13   размер: 3584 КБ   кодировка: utf-8
+       строк прочитано: 6559   ошибкоподобных: 26
+       уровни: {'error': 10}   метки времени: 26/11/10 00:59:52.743 → 26/11/13 21:42:13.378
+       совпадения: нет
+       источник: log:setupapi.dev.log
+
+[i ] INFO     Разобран лог Additional1794010655132170700_DE486298-2CEF-4EA7-B601-F633D0303459.log  <log.file_summary>
+       путь: C:\Users\G5KC\AppData\Local\Temp\Diagnostics\WINWORD\Additional\Additional17940106551321
+       70700_DE486298-2CEF-4EA7-B601-F633D0303459.log
+       изменён: 2026-11-07 03:38:28   размер: 0 КБ   кодировка: utf-8
+       строк прочитано: 1   ошибкоподобных: 0
+       уровни: не размечены   метки времени: ? → ?
+       совпадения: нет
+       источник: log:Additional1794010655132170700_DE486298-2CEF-4EA7-B601-F633D0303459.log
+
+[i ] INFO     Разобран лог NVIDIA App.json  <log.file_summary>
+       путь: C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\Resources\NVIDIA App.json
+       изменён: 2026-10-30 11:34:09   размер: 0 КБ   кодировка: utf-8
+       строк прочитано: 22   ошибкоподобных: 0
+       уровни: не размечены   метки времени: ? → ?
+       совпадения: нет
+       источник: log:NVIDIA App.json
+
+[i ] INFO     Разобран лог NVIDIA Overlay.json  <log.file_summary>
+       путь: C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\Resources\NVIDIA Overlay.json
+       изменён: 2026-10-30 11:34:09   размер: 0 КБ   кодировка: utf-8
+       строк прочитано: 12   ошибкоподобных: 0
+       уровни: не размечены   метки времени: ? → ?
+       совпадения: нет
+       источник: log:NVIDIA Overlay.json
+
+[i ] INFO     Файл не похож на лог NVIDIA — пропущен: Primary1794010655122118600_DE486298-2CEF-4EA7-B601-F633D0303459.log  <log.not_nvidia>
+       В первых строках нет ни одного NVIDIA-маркера, зато видны признаки чужого лога (телеметрия
+       Office/браузера и т.п.). Его разбор только добавляет ложных ошибок; разбери его отдельно своим
+       проф. инструментом. Нужен разбор и таких файлов — запусти с --keep-foreign.
+       улики:
+         - Timestamp	Process	TID	Area	Category	EventID	Level	Message	Correlation
+         11/07/2026 00:17:35.145	WINWORD (0x3EFC)	0x1AE8	Microsoft Word	Telemetry Event	b7vzq	Medium	SendEvent {"EventName":"Office.Text.Re
+       источник: log
+
+[i ] INFO     Шум 'OptimusIconWindowClass not found' в nvcontainer (само по себе не ошибка)  <log.optimus_icon_noise>  ×105
+       Контейнер ищет окно иконки переключения графики, которого в этой сборке нет. Ничего не ломает,
+       но подтверждает гибридную графику (Optimus) — её надо учитывать при настройке захвата.
+       улики:
+         - файл: C:\ProgramData\NVIDIA Corporation\NVIDIA App\UXD\Log.nvcontainer.exe.log
+         - L137 2026-11-13 21:51:43.972: 2026-11-13 21:51:43.972 (      0.357) |    ERROR: [UXDriver.ApiX.MessageTranslator] 1149@Nvidia::UXDriver::ApiX::MessageTranslator::TranslateActiveProcessCountChanged : OptimusIconWindowClass not found .
+         - L140 2026-11-13 21:51:44.039: 2026-11-13 21:51:44.039 (      0.424) |    ERROR: [UXDriver.ApiX.MessageTranslator] 1149@Nvidia::UXDriver::ApiX::MessageTranslator::TranslateActiveProcessCountChanged : OptimusIconWindowClass not found .
+         - L318 2026-11-13 21:51:44.241: 2026-11-13 21:51:44.241 (      0.626) |    ERROR: [UXDriver.ApiX.MessageTranslator] 1149@Nvidia::UXDriver::ApiX::MessageTranslator::TranslateActiveProcessCountChanged : OptimusIconWindowClass not found .
+         - L358 2026-11-13 21:51:44.727: 2026-11-13 21:51:44.727 (      1.112) |    ERROR: [UXDriver.ApiX.MessageTranslator] 1149@Nvidia::UXDriver::ApiX::MessageTranslator::TranslateActiveProcessCountChanged : OptimusIconWindowClass not found .
+         - L361 2026-11-13 21:51:44.728: 2026-11-13 21:51:44.728 (      1.113) |    ERROR: [UXDriver.ApiX.MessageTranslator] 1149@Nvidia::UXDriver::ApiX::MessageTranslator::TranslateActiveProcessCountChanged : OptimusIconWindowClass not found .
+         - L500 2026-11-13 21:51:55.401: 2026-11-13 21:51:55.401 (     11.786) |    ERROR: [UXDriver.ApiX.MessageTranslator] 1149@Nvidia::UXDriver::ApiX::MessageTranslator::TranslateActiveProcessCountChanged : OptimusIconWindowClass not found .
+         - --- контекст первого совпадения ---
+         ... ещё 13
+       что делать:
+         1) Игнорируй. Но на гибридном ноутбуке проверь, что игра рендерится на NVIDIA: Параметры -> Дисплей -> Графика -> 'Высокая производительность'.
+       источник: log:Log.nvcontainer.exe.log
+
+[i ] INFO     Сервисов NVIDIA: 3, запущено: 2  <svc.summary>
+       FvSvc=Stopped/Manual; NvContainerLocalSystem=Running/Auto;
+       NVDisplay.ContainerLocalSystem=Running/Auto
+
+[ok] OK       Файл оверлея на месте  <app.overlay_present>
+       C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\NVIDIA Overlay.exe (3569 КБ)
+       улики:
+         - C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\NVIDIA Overlay.exe
+
+[ok] OK       Типовых конкурентов оверлея в процессах не видно  <conflict.none>
+
+[ok] OK       Свободно 196 ГБ на диске папки 'C:\Users\G5KC\Videos'  <disk.space>
+
+[ok] OK       GPU NVIDIA активен: NVIDIA GeForce RTX 3060 Laptop GPU (драйвер 32.0.16.2124)  <driver.present>
+
+[ok] OK       nvidia-smi отвечает: NVIDIA GeForce RTX 3060 Laptop GPU, 621.24, 6144 MiB  <driver.smi>
+
+[ok] OK       Ни один компонент драйвера не помечен 'Stripped' (установка полная)  <inst.not_stripped>
+
+[ok] OK       Сборка Windows 19045 подходит NVIDIA App  <os.build_ok>
+
+[ok] OK       Процесс оверлея запущен  <proc.overlay_running>
+       NVIDIA Overlay.exe pid=9328 cmd="C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\NVIDIA
+       Overlay.exe"; NVIDIA Overlay.exe pid=10692 cmd="C:\Program Files\NVIDIA Corporation\NVIDIA
+       App\CEF\NVIDIA Overlay.exe" --type=gpu-process --no-sandbox --start-stack-pr; NVIDIA
+       Overlay.exe pid=10728 cmd="C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\NVIDIA
+       Overlay.exe" --type=utility --utility-sub-type=network.mojom.; NVIDIA Overlay.exe pid=10856
+       cmd="C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\NVIDIA Overlay.exe" --type=utility
+       --utility-sub-type=storage.mojom.; NVIDIA Overlay.exe pid=10368 cmd="C:\Program Files\NVIDIA
+       Corporation\NVIDIA App\CEF\NVIDIA Overlay.exe" --type=renderer --user-data-
+       dir="C:\Users\G5KC\A
+       что делать:
+         1) Если процесс есть, но окна нет — оно или на другом мониторе/в другой сессии, или не удалось отрисоваться (CEF/GPU).
+         2) Проверь, не 'свёрнут' ли оверлей в неактивный слой: Alt+Z, затем Alt+X (скрыть/показать).
+
+[ok] OK       Все нужные сервисы NVIDIA запущены  <svc.ok>
+       NvContainerLocalSystem; NVDisplay.ContainerLocalSystem
+
+====================================================================================================
+ЧТО ПРИСЛАТЬ, ЧТОБЫ Я ДОРЕШИЛ ПРОБЛЕМУ
+====================================================================================================
+1) python nvidia_overlay_diag.py scan --bundle diag.zip      — один архив: отчёт + свежие логи
+2) или только отчёт: python nvidia_overlay_diag.py scan -o report.txt   (файл в UTF-8)
+3) или кусок лога:   python nvidia_overlay_diag.py logs - < fragment.log
+После моих правок — проверка: python nvidia_overlay_diag.py verify --wait 40
+
+Команды-подсказки (ВЫПОЛНЯЙ САМ — скрипт ничего в системе не меняет):
+  sc query type= all | findstr /i "nvidia"
+  powershell -c "Get-Service *NVIDIA*,*Nv* | Select Name,Status,StartType"
+  powershell -c "Restart-Service NVDisplay.ContainerLocalSystem -Force"
+  powershell -c "Get-Process | Where-Object { $_.Path -like '*NVIDIA*' } | Select Name,Id,Path"
+  nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv
+  powershell -c "Get-MpThreatDetection | Select-Object -First 10 InitialDetectionTime,Resources"
+  powershell -c "Get-AppxPackage *NVIDIA* | Select Name,Version"
+  powershell -c "Get-Process RTSS,MSIAfterburner -ErrorAction SilentlyContinue | Select Name,Id"

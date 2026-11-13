@@ -1,0 +1,54 @@
+#0(I)[2026-11-13 19:43:37,501]{00001D24}<NvContainer>      Container main v1.51
+#1(I)[2026-11-13 19:43:37,501]{00001D24}<NvContainer>      Telemetry API initialized
+#2(I)[2026-11-13 19:43:37,501]{00001D24}<NvcHost>          Base host initialized successfully
+#3(I)[2026-11-13 19:43:37,501]{00001D24}<NvcHostWin32>     Dynamic loading of plugins is enabled
+#4(I)[2026-11-13 19:43:37,501]{00001D24}<NvcHostWin32>     Dynamic unloading of plugins is enabled
+#5(I)[2026-11-13 19:43:37,501]{00001D24}<NvcHostWin32>     Open parent process 0000000000000218 for PID 4608
+#6(I)[2026-11-13 19:43:37,501]{00001D24}<NvcHostWin32>     Win32 host initialized successfully
+#7(I)[2026-11-13 19:43:37,501]{00001D24}<NvcHostWin32>     Use external event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_spuser' for quitting
+#8(I)[2026-11-13 19:43:37,501]{00001D24}<NvcHost>          Load plugins from C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser
+#9(I)[2026-11-13 19:43:37,501]{00001D4C}<NvcHostWin32>     Parent process tracking thread started with timeout: 4294967295
+#0(I)[2026-11-13 19:43:37,501]{00001D24}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#1(I)[2026-11-13 19:43:37,501]{00001D24}<NvcRegistryStora> Creating RegistryStorage
+#2(I)[2026-11-13 19:43:37,501]{00001D24}<NvcRegistryStora> Successfully initialized RegistryStorage
+#3(I)[2026-11-13 19:43:37,595]{00001D24}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll - 11.0.9.585 at 00007FFE7A320000 took 93733 microseconds
+#4(I)[2026-11-13 19:43:37,595]{00001D24}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#5(I)[2026-11-13 19:43:37,595]{00001D24}<NvcPluginManager> Loaded optional plugin ShadowPlayContainerPlugin, version 1
+#6(I)[2026-11-13 19:43:37,595]{00001D24}<NvcHost>          Creating directory listener to represent current folder state
+#7(I)[2026-11-13 19:43:37,595]{00001D24}<DirectoryListene> Adding directory C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser.
+#8(I)[2026-11-13 19:43:37,595]{00001D24}<NvcHost>          Successfully updated directory change listener
+#9(I)[2026-11-13 19:43:37,595]{00001D24}<NvcHost>          Container is initializing
+#0(I)[2026-11-13 19:43:37,595]{00001D24}<NvcPluginManager> Initiate transition to Initializing state for ShadowPlayContainerPlugin
+#1(I)[2026-11-13 19:43:37,664]{00001D24}<NvcPluginManager> Transition to Initialized state for ShadowPlayContainerPlugin completed
+#2(I)[2026-11-13 19:43:37,664]{00001D24}<NvcHost>          Container is initialized with 1. State: normal
+#3(I)[2026-11-13 19:43:37,664]{00001D24}<NvcHost>          Base host core
+#4(I)[2026-11-13 19:43:37,664]{00001D24}<NvcHost>          Container is starting
+#5(I)[2026-11-13 19:43:37,664]{00001D24}<NvcPluginManager> Initiate transition to Starting state for ShadowPlayContainerPlugin
+#6(I)[2026-11-13 19:43:37,664]{00001D24}<NvcPluginManager> NvcPluginLoadStats for 'ShadowPlayContainerPlugin' => LibraryLoadTime = 93733 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 93733, InitializeProcTime = 68998 us, InitializeTimeTotal = 68998 us, StartProcTime = 0 us, StartTimeTotal = 0 us. 
+#7(I)[2026-11-13 19:43:37,664]{00001D24}<NvcTelemetryHelp> NvcPluginLoadStats for ShadowPlayContainerPlugin returned 1
+#8(I)[2026-11-13 19:43:37,664]{00001D24}<NvcPluginManager> Transition to Started state for ShadowPlayContainerPlugin completed
+#9(I)[2026-11-13 19:43:37,664]{00001D24}<NvcHost>          Container is started with 1. State: normal
+#0(I)[2026-11-13 19:43:37,664]{00001D24}<NvcTelemetryHelp> NvcLoadStats => LibraryLoadTime = 93733 us, InitializeTime = 68998 us, StartTime = 0 us, TotalLoadTime = 175262 us
+#1(I)[2026-11-13 19:43:37,664]{00001D24}<NvcTelemetryHelp> NvcLoadStats returned 1
+#2(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Creating directory listener to represent current folder state
+#3(I)[2026-11-13 19:43:38,153]{00001D24}<DirectoryListene> Adding directory C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser.
+#4(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Tearing down current listener before replacing with new one
+#5(I)[2026-11-13 19:43:38,153]{00001D24}<DirectoryListene> Waiting for the listener thread to finish...
+#6(I)[2026-11-13 19:43:38,153]{00001EE8}<DirectoryListene> Quit event signaled. Ending thread function.
+#7(I)[2026-11-13 19:43:38,153]{00001D24}<DirectoryListene> Listener thread finished...
+#8(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Successfully updated directory change listener
+#9(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Update plugins
+#0(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Container marked plugins as unverified. State: normal
+#1(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Load plugins from C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser
+#2(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Mark plugin ShadowPlayContainerPlugin as verified
+#3(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Stopping plugins with status 'Unverified'
+#4(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          No plugins in state transition
+#5(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Plugins are stopped. State: normal
+#6(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Uninitializing plugins with status 'Unverified'
+#7(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          No plugins in state transition
+#8(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Plugins are uninitialized. State: normal
+#9(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Container processed disabled plugins. State: normal
+#0(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Container is initializing
+#1(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Container is initialized with 1. State: normal
+#2(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Container is starting
+#3(I)[2026-11-13 19:43:38,153]{00001D24}<NvcHost>          Container is started with 1. State: normal

@@ -1,0 +1,53 @@
+#0(I)[2026-11-13 19:43:37,463]{00001CF8}<NvContainer>      Container main v1.51
+#1(I)[2026-11-13 19:43:37,463]{00001CF8}<NvContainer>      Enabled EnforceRedirectionTrust policy
+#2(I)[2026-11-13 19:43:37,463]{00001CF8}<NvContainer>      Telemetry API initialized
+#3(I)[2026-11-13 19:43:37,463]{00001CF8}<NvcHost>          Base host initialized successfully
+#4(I)[2026-11-13 19:43:37,463]{00001CF8}<NvcHostWin32>     Dynamic loading of plugins is enabled
+#5(I)[2026-11-13 19:43:37,463]{00001CF8}<NvcHostWin32>     Dynamic unloading of plugins is enabled
+#6(I)[2026-11-13 19:43:37,463]{00001CF8}<NvcHostWin32>     Open parent process 000000000000021C for PID 4608
+#7(I)[2026-11-13 19:43:37,463]{00001CF8}<NvcHostWin32>     Win32 host initialized successfully
+#8(I)[2026-11-13 19:43:37,463]{00001CF8}<NvcHostWin32>     Use external event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_session' for quitting
+#9(I)[2026-11-13 19:43:37,463]{00001CF8}<NvcHost>          Load plugins from C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session
+#0(I)[2026-11-13 19:43:37,463]{00001D28}<NvcHostWin32>     Parent process tracking thread started with timeout: 4294967295
+#1(I)[2026-11-13 19:43:37,463]{00001CF8}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#2(I)[2026-11-13 19:43:37,463]{00001CF8}<NvcRegistryStora> Creating RegistryStorage
+#3(I)[2026-11-13 19:43:37,463]{00001CF8}<NvcRegistryStora> Successfully initialized RegistryStorage
+#4(I)[2026-11-13 19:43:37,532]{00001CF8}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll - 8.17.15.5527 at 00007FFE7AE90000 took 68998 microseconds
+#5(I)[2026-11-13 19:43:37,532]{00001CF8}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#6(I)[2026-11-13 19:43:37,532]{00001CF8}<NvcPluginManager> Loaded mandatory plugin NvXDSyncPlugin, version 1
+#7(I)[2026-11-13 19:43:37,532]{00001CF8}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NVIDIA App/NvDriverDiagnostics.dll
+#8(I)[2026-11-13 19:43:37,532]{00001CF8}<NvcJsonFileStora> Creating JsonFileStorage
+#9(I)[2026-11-13 19:43:37,532]{00001CF8}<NvcJsonFileStora> Loaded configuration from JSON file
+#0(I)[2026-11-13 19:43:37,564]{00001CF8}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\dependencies/CrimsonUtil.dll - 11.0.9.585 at 00007FFE8A620000 took 31242 microseconds
+#1(I)[2026-11-13 19:43:37,564]{00001CF8}<NvcPluginLoadHel> Loaded dependency module CrimsonUtil.dll
+#2(I)[2026-11-13 19:43:37,617]{00001CF8}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NVIDIA App/NvDriverDiagnostics.dll - 11.0.9.585 at 00007FFE79FF0000 took 53376 microseconds
+#3(I)[2026-11-13 19:43:37,617]{00001CF8}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NVIDIA App/NvDriverDiagnostics.dll
+#4(I)[2026-11-13 19:43:37,617]{00001CF8}<NvcPluginManager> Loaded mandatory plugin NvDriverDiagnostics, version 1
+#5(I)[2026-11-13 19:43:37,617]{00001CF8}<NvcHost>          Creating directory listener to represent current folder state
+#6(I)[2026-11-13 19:43:37,617]{00001CF8}<DirectoryListene> Adding directory C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session.
+#7(I)[2026-11-13 19:43:37,617]{00001CF8}<NvcHost>          Successfully updated directory change listener
+#8(I)[2026-11-13 19:43:37,617]{00001CF8}<NvcHost>          Container is initializing
+#9(I)[2026-11-13 19:43:37,617]{00001CF8}<NvcPluginManager> Initiate transition to Initializing state for NvXDSyncPlugin
+#0(I)[2026-11-13 19:43:37,617]{00001CF8}<NvcPluginManager> Transition to Initialized state for NvXDSyncPlugin completed
+#1(I)[2026-11-13 19:43:37,617]{00001CF8}<NvcPluginManager> Initiate transition to Initializing state for NvDriverDiagnostics
+#2(I)[2026-11-13 19:43:37,617]{00001CF8}<NvcPluginManager> Transition to Initializing state for NvDriverDiagnostics is in progress
+#3(I)[2026-11-13 19:43:37,702]{00001FA8}<NvcPluginManager> Notification 1 / 0000000000000000 from NvDriverDiagnostics
+#4(I)[2026-11-13 19:43:37,702]{00001FA8}<NvcPluginManager> Transition to Initialized state for NvDriverDiagnostics completed
+#5(I)[2026-11-13 19:43:37,702]{00001CF8}<NvcHost>          Container is initialized with 1. State: normal
+#6(I)[2026-11-13 19:43:37,702]{00001CF8}<NvcHost>          Base host core
+#7(I)[2026-11-13 19:43:37,702]{00001CF8}<NvcHost>          Container is starting
+#8(I)[2026-11-13 19:43:37,702]{00001CF8}<NvcPluginManager> Initiate transition to Starting state for NvXDSyncPlugin
+#9(I)[2026-11-13 19:43:37,702]{00001CF8}<NvcPluginManager> Transition to Starting state for NvXDSyncPlugin is in progress
+#0(I)[2026-11-13 19:43:37,702]{00001CF8}<NvcPluginManager> Initiate transition to Starting state for NvDriverDiagnostics
+#1(I)[2026-11-13 19:43:37,780]{00001CF8}<NvcPluginManager> Transition to Starting state for NvDriverDiagnostics is in progress
+#2(I)[2026-11-13 19:43:37,780]{00001FA8}<NvcPluginManager> Notification 1 / 0000000000000000 from NvDriverDiagnostics
+#3(I)[2026-11-13 19:43:37,780]{00001FA8}<NvcPluginManager> NvcPluginLoadStats for 'NvDriverDiagnostics' => LibraryLoadTime = 84618 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 53376, InitializeProcTime = 0 us, InitializeTimeTotal = 84614 us, StartProcTime = 78110 us, StartTimeTotal = 78110 us. 
+#4(I)[2026-11-13 19:43:37,780]{00001FA8}<NvcTelemetryHelp> NvcPluginLoadStats for NvDriverDiagnostics returned 1
+#5(I)[2026-11-13 19:43:37,780]{00001FA8}<NvcPluginManager> Transition to Started state for NvDriverDiagnostics completed
+#6(I)[2026-11-13 19:43:37,795]{00000D04}<NvcPluginManager> Notification 1 / 0000000000000000 from NvXDSyncPlugin
+#7(I)[2026-11-13 19:43:37,795]{00000D04}<NvcPluginManager> NvcPluginLoadStats for 'NvXDSyncPlugin' => LibraryLoadTime = 68998 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 68998, InitializeProcTime = 0 us, InitializeTimeTotal = 0 us, StartProcTime = 0 us, StartTimeTotal = 93732 us. 
+#8(I)[2026-11-13 19:43:37,795]{00000D04}<NvcTelemetryHelp> NvcPluginLoadStats for NvXDSyncPlugin returned 1
+#9(I)[2026-11-13 19:43:37,795]{00000D04}<NvcPluginManager> Transition to Started state for NvXDSyncPlugin completed
+#0(I)[2026-11-13 19:43:37,795]{00001CF8}<NvcHost>          Container is started with 1. State: normal
+#1(I)[2026-11-13 19:43:37,795]{00001CF8}<NvcTelemetryHelp> NvcLoadStats => LibraryLoadTime = 153616 us, InitializeTime = 84614 us, StartTime = 93732 us, TotalLoadTime = 334912 us
+#2(I)[2026-11-13 19:43:37,795]{00001CF8}<NvcTelemetryHelp> NvcLoadStats returned 1

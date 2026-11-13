@@ -1,0 +1,12 @@
+{"switches":[
+    "nv-combine-processes=false",
+    "nv-osc=true",
+    "nv-gpu-accel=true",
+    "nv-url-relative=../osc/index.html",
+    "nv-plugin-folder-relative=./plugins/NVIDIA Overlay;./plugins/Base",
+    "nv-plugin-dependencies-relative=./dependencies",
+    "nv-nvtelemetry-config-path=%ProgramFiles%\\NVIDIA Corporation\\NvTelemetry\\plugin\\NvTelemetry.json",
+    "nv-telemetry-api-binary-path=%ProgramFiles%\\NVIDIA Corporation\\NvTelemetry",
+    "nv-shared-storage-name=NVIDIA App"
+    ]
+}
