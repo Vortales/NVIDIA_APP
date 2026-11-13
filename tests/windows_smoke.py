@@ -254,6 +254,11 @@ def main() -> int:
         diag.LOG_ROOTS_WIN = [str(base / "NVIDIA Corporation")]
         diag.LOG_EXTRA_FILES_WIN = []
 
+        # папка результатов: проверяем, что main-подобный сценарий пишет всё в одну папку
+        out_base = tmp / "out" / "Результат"
+        sink = diag.RunSink(base=out_base, keep=3)
+        assert sink.active, "RunSink не создал папку прогона"
+
         rep = diag.Report(mode="scan")
         rep.snapshot["_days"] = 3
         col = diag.WinCollector(rep, timeout=25)
@@ -287,6 +292,23 @@ def main() -> int:
         assert any(f.code == "log.first_severe" for f in rep.findings), "не сработала эвристика первой ошибки"
         assert "overlay_proc" in {h["id"] for h in hyps}, "нет гипотезы по CEF-крашу"
         assert json.dumps(rep.to_json(), ensure_ascii=False), "JSON не сериализуется"
+        # sink: отчёты + копии логов + манифест + resolve_input из incoming
+        used = [Path(x) for x in rep.snapshot.get("log_files_used", []) if Path(x).exists()]
+        sink.copy_logs(used)
+        sink.write_text("report.txt", txt)
+        sink.write_json("report.json", rep.to_json())
+        sink.write_text("verdict.txt", diag.render_verdict(rep, 90) + "\n" + diag.render_fixes(rep))
+        sink.write_text("manifest.txt", sink.manifest(rep, "scan", ["--out-dir", str(out_base)]))
+        for name in ("report.txt", "report.json", "verdict.txt", "manifest.txt"):
+            assert (sink.dir / name).exists(), f"нет {name} в папке прогона"
+        assert (sink.dir / "logs").exists() and list((sink.dir / "logs").iterdir()), "логи не скопированы в прогон"
+        inc = sink.incoming / "hand.log"
+        inc.write_text("2026-11-13 09:00:00 ERROR CEF gpu process crashed\n", encoding="utf-8")
+        assert sink.grab_incoming(), "incoming не подхватывается"
+        assert Path(diag.resolve_input("hand.log", sink)).exists(), "resolve_input не ищет в incoming"
+        assert diag.place_output(sink, "x.txt", "report.txt").startswith(str(sink.dir)), "-o должен писать в папку прогона"
+        assert "ЧТО В ЭТОЙ ПАПКЕ" in (sink.dir / "manifest.txt").read_text(encoding="utf-8-sig")
+
         m = diag.render_fixes(rep)
         assert "ПЛАН ДЕЙСТВИЙ" in m and len(m) > 200
         assert "Команды-подсказки" in diag.render_commands()

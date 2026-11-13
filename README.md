@@ -8,7 +8,7 @@
 | файл | зачем |
 |---|---|
 | `nvidia_overlay_diag.py` | самодостатический скрипт (только стандартная библиотека, ничего не ставит и не меняет в системе) |
-| `run_diag.bat` | «двойной клик» для Windows: сам поднимает права админа, гоняет `selftest` + `scan`, кладёт отчёт и архив логов на Рабочий стол |
+| `run_diag.bat` | «двойной клик» для Windows: сам поднимает права админа, гоняет `selftest` + `scan`, в конце открывает папку `Результат` |
 | `tests/windows_smoke.py` | смоук-тест Windows-веток на Linux/macOS (фейковый `powershell.exe` + фейковый `winreg`): `python3 tests/windows_smoke.py` |
 
 ---
@@ -16,12 +16,36 @@
 ## 1. Быстрый старт (Windows)
 
 ```powershell
-# PowerShell, из папки репозитория
-python nvidia_overlay_diag.py scan --bundle diag.zip
+# PowerShell, из папки, где лежат скрипты
+python nvidia_overlay_diag.py scan
 ```
 
-Готово: на выходе текстовый отчёт с **вердиктом** (ранжированный список вероятных причин + план действий),
-а `diag.zip` — то, что нужно прислать мне: отчёт + самые свежие логи NVIDIA внутри.
+Готово: в консоли — отчёт с **вердиктом** (ранжированный список причин + план действий), а рядом со скриптом
+создана папка **`Результат`** — её и архивируй целиком, этого мне достаточно:
+
+```
+Результат/
+├── incoming/                 ← сюда кидаешь свои логи/архивы — подхватываются сами
+│   └── processed/            ← сюда уходят разобранные (запуск с --inbox-done)
+└── run_20261113-193008/      ← один прогон = одна папка (ротация старых: --keep-runs N)
+    ├── report.txt            полный отчёт: находки, улики, план, команды
+    ├── verdict.txt           только вердикт + план (короткий, для чтения)
+    ├── report.json           машиночитаемая версия (находки, snapshot систем, гипотезы, argv)
+    ├── manifest.txt          что внутри, чего не хватило, хэш скрипта, как отправить
+    ├── logs/                 копии именно тех логов, которые разбирались
+    ├── logs_from_zip/        содержимое .zip/.gz из incoming (распаковка без path-slip)
+    └── send_to_assistant.zip если хочется один файл вместо папки (--bundle)
+```
+
+Вне `Результат/` файлов не появляется: `-o my.txt` пишется внутрь папки прогона (абсолютный путь уважаем),
+`--no-sink` — не писать вообще ничего.
+
+Поток «положил лог → разобрал»:
+
+```powershell
+copy C:\NVIDIA\Logs\nvlog*.log Результат\incoming\    # или перетащи файлы в incoming мышкой
+python nvidia_overlay_diag.py logs --inbox-done         # разберёт всё из incoming и почистит его
+```
 
 Полезные варианты:
 
@@ -34,11 +58,22 @@ python nvidia_overlay_diag.py scan --no-logs --no-events   # только жив
 python nvidia_overlay_diag.py scan --elevate           # перезапуститься с правами админа
 python nvidia_overlay_diag.py logs "C:\ProgramData\NVIDIA Corporation" --context 8
 python nvidia_overlay_diag.py logs - < fragment.log    # разобрать вставленный кусок лога
-python nvidia_overlay_diag.py hypotheses --from report.json   # перезаказать вердикт из уже сохранённого отчёта
+python nvidia_overlay_diag.py hypotheses --from report.json   # перезаказать вердикт из сохранённого отчёта
+python nvidia_overlay_diag.py logs --inbox-done               # разобрать incoming и почистить его
+python nvidia_overlay_diag.py scan --out-dir D:\Diag --keep-runs 5 --copy-mb 40
 python nvidia_overlay_diag.py verify --wait 40         # после правок: дожидается процесса NVIDIA Overlay.exe
 python nvidia_overlay_diag.py selftest                 # проверка, что сам парсер/база исправны
 python nvidia_overlay_diag.py list-signatures          # что именно ищется в логах
 ```
+
+Флаги: `--json`, `-o FILE`, `--bundle [ZIP]`, `--only-problems`, `--quiet`, `--width`, `--context`, `--tail-kb`,
+`--max-files`, `--all-files`, `--days`, `--no-logs`, `--no-events`, `--elevate`, `--out-dir DIR`, `--no-sink`,
+`--no-zip`, `--inbox-done`, `--keep-runs N`, `--copy-mb N`, `--kb FILE`.
+
+Папка результатов по умолчанию — `<откуда запустил>\Результат` (переопределение: `--out-dir` или переменная
+окружения `NVIDIA_DIAG_OUT`). Если создать её нельзя (права, сетевой путь) — скрипт пишет только в консоль
+и сообщает причину в `manifest.txt` и в блоке «Заметки сбора». Объём копий логов ограничен `--copy-mb`
+(по умолчанию 18 МБ) — для «всего сразу» ставь `--copy-mb 60`.
 
 Только Python, без зависимостей: **Python 3.9+**. `logs`, `list-signatures`, `selftest`, `--from`
 работают на любой ОС (можно разобрать логи, снятые с Windows, из-под Linux/macOS).
@@ -115,14 +150,16 @@ python nvidia_overlay_diag.py scan "D:\Logs" "C:\Users\me\Downloads\nvlog_2026-1
 
 ## 4. Как со мной работать (поток «лог → решение»)
 
-1. `python nvidia_overlay_diag.py scan --bundle diag.zip` (или `run_diag.bat`).
-2. Пришли **`diag.zip`** целиком. Не выжимай цитаты — мне нужен `report.json` (вся картина) и `logs/` (первоисточник).
+1. `python nvidia_overlay_diag.py scan` (или `run_diag.bat` — он то же самое + откроет папку `Результат`).
+2. Заархивируй **папку `Результат`** (или только `run_<дата>/`) и пришли целиком. Не выжимай цитаты: мне нужен
+   `report.json` (вся картина) и `logs/` (первоисточник), а `manifest.txt` покажет, если чего-то не хватило.
 3. Я скажу, какую правку сделать, и добавлю новую сигнатуру в базу, если твой случай не описан.
 4. Проверяем: `python nvidia_overlay_diag.py verify --wait 40` (он ждёт появления `NVIDIA Overlay.exe` пока ты жмёшь Alt+Z)
    и затем `scan` ещё раз — сравним «до/после».
 
-Если прислать нечего (пусто/не нашлись логи) — минимально полезный фрагмент: 200+ строк лога от момента запуска
-NVIDIA App до нажатия Alt+Z, либо `logs -` с вставкой в stdin.
+Если логи не нашлись (в `manifest.txt` будет «копий логов 0») — минимум, который уже решает: 200+ строк лога от
+момента запуска NVIDIA App до нажатия Alt+Z. Положи их в `Результат\incoming\` и запусти `logs`, либо вставь прямо
+в консоль: `python nvidia_overlay_diag.py logs -` (PowerShell: Ctrl+Z + Enter; bash: Ctrl+D).
 
 ## 5. Расширение базы сигнатур
 

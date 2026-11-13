@@ -21,14 +21,24 @@ nvidia_overlay_diag.py — диагностика оверлея NVIDIA App (з�
   selftest        самопроверка парсера/базы на встроенной фикстуре (полезно после правок сигнатур)
 
 Примеры (PowerShell):
-  python nvidia_overlay_diag.py scan --bundle diag.zip
-  python nvidia_overlay_diag.py scan --json -o report.json
+  python nvidia_overlay_diag.py scan              — полная диагностика; папка Результат/ готова к отправке
+  python nvidia_overlay_diag.py logs               — разобрать всё, что ты положил в Результат\incoming\
   python nvidia_overlay_diag.py logs "C:\\ProgramData\\NVIDIA Corporation" --only-problems
+  python nvidia_overlay_diag.py logs --inbox-done  — и убрать разобранные файлы из incoming
+  python nvidia_overlay_diag.py scan --json -o report.json
   python nvidia_overlay_diag.py verify --wait 40
   python nvidia_overlay_diag.py selftest
 
-Выход — текстовый отчёт с вердиктом (ТОП гипотез + план действий). Прикладывай report.txt/zip —
-разберу и подскажу правку.
+Куда что пишется (можно не читать пути — просто архивируй папку):
+  ./Результат/run_<ГГГГММДД-ЧЧММСС>/  — report.txt (полный отчёт), verdict.txt (гипотезы+план),
+                            report.json (для машины), manifest.txt (что внутри и чего не хватило),
+                            logs/ (копии разобранных логов), send_to_assistant.zip (если --bundle)
+  ./Результат/incoming/    — приёмник: сюда кидаешь свои логи/архивы (.log/.txt/.json/.etl/.zip/.gz),
+                            они подхватываются автоматом (в т.ч. если путь не указан)
+  Переопределение: --out-dir D:\Diag, --no-sink (только консоль), --copy-mb 40, --keep-runs 5.
+
+Выход — текстовый отчёт с вердиктом (ТОП гипотез + план действий). Прикладывай архив папки
+Результат — разберу и подскажу правку.
 
 Права: скрипт ничего не меняет в системе, только читает. Флагов "почини сам" намеренно нет.
 """
@@ -41,6 +51,7 @@ import ctypes
 import dataclasses
 import datetime as dt
 import glob
+import hashlib
 import json
 import os
 import platform
@@ -2314,6 +2325,288 @@ def time_sleep(s: float) -> None:
 
 
 # --------------------------------------------------------------------------------------
+# Папка результатов: весь вывод в одно место, чтобы его можно было заархивировать целиком.
+#   <cwd>/Результат/run_<YYYYmmdd-HHMMSS>/   +   <cwd>/Результат/incoming/  (сюда кидаешь свои логи)
+# --------------------------------------------------------------------------------------
+
+OUT_DIR_NAME = "Результат"
+OUT_DIR_ENV = "NVIDIA_DIAG_OUT"
+INCOMING_NAME = "incoming"
+KEEP_RUNS_DEFAULT = 10
+COPY_TOTAL_CAP_MB = 18
+
+
+def script_sha256(limit: int = 400_000) -> str:
+    """Хэш самого скрипта — по нему видно, какой версией снят отчёт."""
+    try:
+        data = Path(__file__).resolve().read_bytes()[:limit]
+        return hashlib.sha256(data).hexdigest()[:16]
+    except OSError:
+        return "unknown"
+
+
+class RunSink:
+    """Пишет всё в <base>/run_<stamp>/. Если папку создать нельзя — деградируем в консоль, не падая."""
+
+    def __init__(self, base: Path | None, keep: int = KEEP_RUNS_DEFAULT, enabled: bool = True) -> None:
+        self.enabled = enabled
+        self.notes: list[str] = []
+        self.written: list[tuple[str, int]] = []
+        self.copied: list[tuple[str, int]] = []
+        self.skipped: list[tuple[str, str]] = []
+        self.stamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+        self.base: Path | None = None
+        self.dir: Path | None = None
+        if not enabled:
+            return
+        self.base = base = self._prepare(base)
+        if base is None:
+            return
+        self.dir = base / f"run_{self.stamp}"
+        if self.dir.exists():  # два запуска в одну секунду — не сливаем их
+            self.dir = base / f"run_{self.stamp}-{dt.datetime.now().microsecond // 1000:03d}"
+            self.stamp = self.dir.name[4:]
+        try:
+            self.dir.mkdir(parents=True, exist_ok=True)
+            (self.dir / "logs").mkdir(exist_ok=True)
+        except OSError as exc:
+            self.notes.append(f"не удалось создать {self.dir}: {type(exc).__name__}: {exc}")
+            self.dir = None
+            return
+        self._prune(keep)
+
+    @staticmethod
+    def _prepare(base: Path | None) -> Path | None:
+        try:
+            if base is None:
+                env = os.environ.get(OUT_DIR_ENV, "").strip()
+                base = Path(env) if env else Path.cwd() / OUT_DIR_NAME
+            base = base.expanduser()
+            if not base.is_absolute():
+                base = Path.cwd() / base
+            (base / INCOMING_NAME).mkdir(parents=True, exist_ok=True)
+            return base
+        except OSError as exc:
+            print(f"[warn] папка результатов недоступна ({exc}); вывод только в консоль", file=sys.stderr)
+            return None
+
+    @property
+    def incoming(self) -> Path | None:
+        return (self.base / INCOMING_NAME) if self.base else None
+
+    @property
+    def active(self) -> bool:
+        return self.dir is not None
+
+    def _prune(self, keep: int) -> None:
+        if not self.base or keep <= 0:
+            return
+        try:
+            runs = sorted(
+                [d for d in self.base.iterdir() if d.is_dir() and d.name.startswith("run_")],
+                key=lambda d: d.name,
+                reverse=True,
+            )
+        except OSError:
+            return
+        for old in runs[keep:]:
+            try:
+                shutil.rmtree(old)
+                self.notes.append(f"удалён старый прогон {old.name} (keep={keep})")
+            except OSError:
+                pass
+
+    def write_text(self, name: str, text: str, bom: bool = True) -> Path | None:
+        if not self.active:
+            return None
+        fp = self.dir / name
+        try:
+            fp.write_text(text.rstrip() + "\n", encoding="utf-8-sig" if bom else "utf-8")
+            self.written.append((name, fp.stat().st_size))
+            return fp
+        except OSError as exc:
+            self.notes.append(f"не записан {name}: {exc}")
+            return None
+
+    def write_json(self, name: str, obj: Any) -> Path | None:
+        return self.write_text(name, json.dumps(obj, ensure_ascii=False, indent=1), bom=False)
+
+    def copy_logs(self, files: Sequence[Path], cap_mb: int = COPY_TOTAL_CAP_MB) -> None:
+        """Копии разобранных логов рядом с отчётом: архив папки = полный пакет для разбора."""
+        if not self.active:
+            return
+        budget = cap_mb * 1024 * 1024
+        used = sum(sz for _, sz in self.copied)
+        for f in files:
+            try:
+                size = f.stat().st_size
+            except OSError:
+                self.skipped.append((f.name, "нет доступа (stat)"))
+                continue
+            if used + size > budget:
+                self.skipped.append((f.name, f"пропущен: превышен лимит {cap_mb} МБ на копии логов"))
+                continue
+            dest = self.dir / "logs" / f.name
+            n = 1
+            while dest.exists():
+                dest = self.dir / "logs" / f"{f.stem}_{n}{f.suffix}"
+                n += 1
+            try:
+                shutil.copy2(f, dest)
+            except OSError as exc:
+                self.skipped.append((f.name, f"{type(exc).__name__}: {exc}"))
+                continue
+            used += size
+            self.copied.append((str(dest.relative_to(self.dir)), size))
+
+    def grab_incoming(self) -> list[Path]:
+        """Файлы, положенные в diagnostics/incoming — они тоже уходят в разбор и в архив."""
+        d = self.incoming
+        if not d or not d.exists():
+            return []
+        out: list[Path] = []
+        exts = set(LOG_EXTS) | {".zip", ".7z", ".gz", ".rar", ".dmp", ".etl"}
+        try:
+            for f in sorted(d.iterdir(), key=lambda x: x.stat().st_mtime, reverse=True):
+                try:
+                    if f.is_file() and f.suffix.lower() in exts:
+                        out.append(f)
+                except OSError:
+                    continue
+        except OSError as exc:
+            self.notes.append(f"incoming: {exc}")
+        return out
+
+    def harvest(self, files: Sequence[Path]) -> list[Path]:
+        """Разворачивает архивы из incoming/ в пригон-папку и возвращает список логов для разбора.
+
+        Только .zip/.gz/.log.gz; .7z/.rar не трогаем (нет гарантированной распаковки) —
+        попросим пользователя распаковать самому. От path-slip защищаемся: имя = basename.
+        """
+        out: list[Path] = []
+        cap = 120 * 1024 * 1024
+        for f in files:
+            suf = f.suffix.lower()
+            if suf in (".7z", ".rar"):
+                self.notes.append(f"{f.name}: архив {suf} не распаковываю — распакуй и положи .log/.txt рядом")
+                continue
+            if suf == ".zip":
+                dest = (self.dir or (self.base or Path.cwd())) / "logs_from_zip" / f.stem
+                got = 0
+                try:
+                    dest.mkdir(parents=True, exist_ok=True)
+                    with zipfile.ZipFile(f) as zf:
+                        for info in zf.infolist():
+                            if info.is_dir() or info.file_size > 40 * 1024 * 1024:
+                                continue
+                            if Path(info.filename).suffix.lower() not in LOG_EXTS:
+                                continue
+                            if cap - got <= 0:
+                                self.notes.append(f"{f.name}: лимит распаковки, остальные файлы из архива пропущены")
+                                break
+                            safe = re.sub(r"[^A-Za-z0-9._-]", "_", Path(info.filename).name)[:120] or "member.log"
+                            target = dest / f"{got}_{safe}"
+                            try:
+                                target.write_bytes(zf.read(info))
+                            except (OSError, KeyError, zipfile.BadZipFile):
+                                continue
+                            got += 1
+                            cap -= info.file_size
+                            out.append(target)
+                    if got:
+                        self.notes.append(f"{f.name}: распаковано логов {got} → {dest.name}/")
+                    else:
+                        self.notes.append(f"{f.name}: в архиве нет файлов логов (.log/.txt/.json/.etl/.csv)")
+                except (OSError, zipfile.BadZipFile) as exc:
+                    self.notes.append(f"{f.name}: не удалось прочитать zip ({type(exc).__name__}: {exc})")
+                continue
+            if suf == ".gz":
+                try:
+                    import gzip
+
+                    dest = (self.dir or Path.cwd()) / "logs_from_zip" / (f.stem)
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    with gzip.open(f, "rb") as src:
+                        dest.write_bytes(src.read(8 * 1024 * 1024))
+                    out.append(dest)
+                    continue
+                except (OSError, EOFError) as exc:
+                    self.notes.append(f"{f.name}: не удалось распаковать gz ({exc})")
+                    continue
+            out.append(f)
+        return out
+
+    def manifest(self, report: Report, cmd: str, extra: Sequence[str] = ()) -> str:
+        bar = "=" * 72
+        dash = "-" * 72
+        L = [
+            "ЧТО В ЭТОЙ ПАПКЕ И ЗАЧЕМ",
+            bar,
+            f"прогон:   {self.dir if self.active else '<не записан>'}",
+            f"дата:     {now_iso()}",
+            f"скрипт:   nvidia_overlay_diag.py  sha256[:16]={script_sha256()}",
+            f"аргументы:  python nvidia_overlay_diag.py {' '.join(extra)}".rstrip(),
+            f"среда:    python {platform.python_version()} / {platform.system()} {platform.release()} / cwd={Path.cwd()}",
+            f"итог:     находок {len(report.findings)}, файлов отчёта {len(self.written)}, копий логов {len(self.copied)}",
+            "",
+            "КАК ОТПРАВИТЬ",
+            dash,
+            f"1) Архивируй либо всю папку {OUT_DIR_NAME}, либо только {self.dir.name} — имена файлов внутри ASCII, при упаковке не поедут.",
+            "2) Приложи архив к сообщению ассистенту — внутри есть отчёт, JSON и копии логов, этого хватает.",
+            f"3) Логи не попали (копий = 0)? Положи файлы в {OUT_DIR_NAME}\incoming\ и повтори: python nvidia_overlay_diag.py logs",
+            "",
+            "СОДЕРЖИМОЕ",
+            dash,
+        ]
+        for name, size in self.written:
+            L.append(f"  {size:>10,} Б  {name}")
+        for name, size in self.copied:
+            L.append(f"  {size:>10,} Б  {name}")
+        if self.skipped:
+            L += ["", "ПРОПУЩЕНО (не влезло/нет доступа)"]
+            L += [f"  {n}: {why}" for n, why in self.skipped]
+        if self.notes or report.notes:
+            L += ["", "ЗАМЕТКИ СБОРА"]
+            L += ["  " + n for n in (self.notes + report.notes)[:20]]
+        L += ["", bar, "Скрипт ничего в системе не меняет — только читает. Правки по плану из report.txt делаешь сам."]
+        return "\n".join(L)
+
+    def mark_incoming_done(self, files: Sequence[Path]) -> int:
+        """--inbox-done: разобранные файлы в incoming/processed/, чтобы следующий прогон не пережёвывал их."""
+        moved = 0
+        dest = (self.base / INCOMING_NAME / "processed") if self.base else None
+        if not dest:
+            return 0
+        for f in files:
+            if self.dir and self.dir in f.parents:  # распакованное из архива и так в прогоне
+                continue
+            try:
+                dest.mkdir(parents=True, exist_ok=True)
+                tgt = dest / f.name
+                n = 1
+                while tgt.exists():
+                    tgt = dest / f"{f.stem}_{n}{f.suffix}"
+                    n += 1
+                shutil.move(str(f), str(tgt))
+                moved += 1
+            except OSError as exc:
+                self.notes.append(f"не перенесён в processed {f.name}: {exc}")
+        if moved:
+            self.notes.append(f"incoming/: {moved} файл(ов) перенесено в incoming/processed/ (флаг --inbox-done)")
+        return moved
+
+    def summary_line(self) -> str:
+        if not self.active:
+            return "папка результатов не создана (вывод только в консоль)"
+        kb = sum(s for _, s in self.copied) // 1024
+        return (
+            f"ВСЁ В ПАПКЕ: {self.dir}\n"
+            f"  архивируй её и отправь ассистенту — отчёты {len(self.written)} шт, логов {len(self.copied)} шт ({kb} КБ)"
+            + (f", пропущено копий: {len(self.skipped)}" if self.skipped else "")
+        )
+
+
+# --------------------------------------------------------------------------------------
 # Пакет для отправки ("мне лог — я решаю")
 # --------------------------------------------------------------------------------------
 
@@ -2328,7 +2621,8 @@ def write_bundle(zip_path: Path, report: Report, text: str, log_files: Sequence[
         zf.writestr(
             "README.txt",
             "Что это\n"
-            "Архив собран nvidia_overlay_diag.py: отчёт + свежие логи NVIDIA в одном месте.\n"
+            "Архив собран nvidia_overlay_diag.py: отчёт + копии самых свежих логов NVIDIA в одном месте.\n"
+            "(обычно достаточно заархивировать всю папку Результат — там то же самое плюс manifest.txt)\n"
             "Пришли этот файл ассистенту одним сообщением — разберу строки перед первым 'fail' и дам конкретную правку.\n"
             "Если хочешь ускорить: добавь в архив скриншот раздела 'Настройки → Запись' NVIDIA App.\n",
         )
@@ -2368,7 +2662,7 @@ def report_from_json(path: Path) -> Report:
 
 
 def render_verdict(r: Report, width: int) -> str:
-    L = ["=", *["" * 0], "ВЕРОЯТНЫЕ ПРИЧИНЫ И ПОРЯДОК ДЕЙСТВИЙ", "=" * width]
+    L = ["=" * width, "ВЕРОЯТНЫЕ ПРИЧИНЫ И ПОРЯДОК ДЕЙСТВИЙ", "=" * width]
     hyps = r.hypotheses()
     if not hyps:
         L.append("Находок-кандидатов нет — нужен свежий лог (scan --bundle).")
@@ -2546,6 +2840,43 @@ def run_selftest(sigs: Sequence[dict[str, Any]]) -> int:
     if not zipfile.is_zipfile(bundle):
         problems.append("не собирается --bundle архив")
 
+    # RunSink: папка результатов (то, что пользователь архивирует и отправляет)
+    with tempfile.TemporaryDirectory() as td2:
+        base = Path(td2) / "diagnostics"
+        sink = RunSink(base=base, keep=2)
+        if not sink.active:
+            problems.append("RunSink не создал папку прогона")
+        else:
+            (base / "incoming" / "dropped.log").write_text("2026-01-01 00:00:00 ERROR CEF gpu process crashed\n", encoding="utf-8")
+            sink.write_text("report.txt", "x" * 50)
+            sink.write_json("report.json", r.to_json())
+            sink.copy_logs([base / "incoming" / "dropped.log", Path(td2) / "нет.csv"])
+            if not (sink.dir / "report.txt").exists() or not (sink.dir / "report.json").exists():
+                problems.append("RunSink не записал отчёты")
+            if not (sink.dir / "logs" / "dropped.log").exists():
+                problems.append("RunSink не скопировал лог из incoming")
+            if not any(s[0] == "нет.csv" for s in sink.skipped):
+                problems.append("RunSink не сообщил о пропущенном файле")
+            got = sink.grab_incoming()
+            if [g.name for g in got] != ["dropped.log"]:
+                problems.append(f"grab_incoming вернул {got}")
+            if resolve_input("dropped.log", sink) != str(base / "incoming" / "dropped.log"):
+                problems.append("resolve_input не нашёл файл в incoming")
+            if Path(place_output(sink, None, "report.txt")).parent != sink.dir:
+                problems.append("place_output пишет мимо папки прогона")
+            sink.write_text("manifest.txt", sink.manifest(r, "selftest"))
+            # прогоны-дубликаты + ротация
+            (base / "run_00000000-000000").mkdir()
+            (base / "run_00000001-000000").mkdir()
+            (base / "run_00000002-000000").mkdir()
+            RunSink(base=base, keep=2)._prune(2)
+            left = sorted(d.name for d in base.iterdir() if d.is_dir() and d.name.startswith("run_"))
+            # keep=2 → остаются два самых свежих по имени (текущий и run_00000002)
+            if len(left) != 2 or "run_00000000-000000" in left or sink.dir.name not in left:
+                problems.append(f"ротация прогонов работает странно: {left}")
+            if "ВСЁ В ПАПКЕ" not in sink.summary_line():
+                problems.append("summary_line неинформативна")
+
     print(f"проверено сигнатур: {len(SIGNATURES)}, строк фикстуры: {len(lines)}, сработало кодов: {len(got)}")
     print(f"топ-гипотеза по фикстуре: {hyps[0]['id'] if hyps else '-'}")
     if problems:
@@ -2572,7 +2903,14 @@ def build_parser() -> argparse.ArgumentParser:
               hypotheses          только вердикт по последнему отчёту (см. --from)
               list-signatures     печать базы сигнатур (для расширения)
 
+            после ЛЮБОГО прогона весь вывод лежит в './Результат/run_<дата-время>/':
+              report.txt (полный отчёт) · verdict.txt (причины + план) · report.json · manifest.txt (что внутри)
+              logs/ (копии разобранных логов) · send_to_assistant.zip (если --bundle). Эту папку и архивируй.
+              свои логи кидай в './Результат/incoming/' — подхватятся сами (режим logs без аргументов).
+
             примеры:
+              python nvidia_overlay_diag.py scan
+              python nvidia_overlay_diag.py logs                      — разобрать всё из Результат/incoming
               python nvidia_overlay_diag.py scan --bundle diag.zip
               python nvidia_overlay_diag.py scan --json -o report.json
               python nvidia_overlay_diag.py logs "C:\\ProgramData\\NVIDIA Corporation" --only-problems
@@ -2586,8 +2924,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     def common(sp: argparse.ArgumentParser) -> argparse.ArgumentParser:
         sp.add_argument("--json", action="store_true", help="вывести машиночитаемый JSON вместо текста")
-        sp.add_argument("-o", "--out", metavar="FILE", help="сохранить отчёт в файл (UTF-8)")
-        sp.add_argument("--bundle", metavar="ZIP", help="архив: отчёт + самые свежие логи (пришли его ассистенту)")
+        sp.add_argument("-o", "--out", metavar="FILE", help="имя файла отчёта (пишется ВНУТРЬ папки результатов)")
+        sp.add_argument("--out-dir", metavar="DIR", help=f"куда складывать вывод (по умолчанию './{OUT_DIR_NAME}' рядом со скриптом)")
+        sp.add_argument("--no-sink", action="store_true", help="ничего не сохранять на диск, только консоль")
+        sp.add_argument("--no-zip", action="store_true", help="не собирать send_to_assistant.zip в папке прогона")
+        sp.add_argument("--inbox-done", action="store_true", help=f"после разбора убрать файлы из {OUT_DIR_NAME}\{INCOMING_NAME} в \processed (чтобы не пережёвывать их снова)")
+        sp.add_argument("--keep-runs", type=int, default=KEEP_RUNS_DEFAULT, metavar="N", help="сколько прогонов хранить (0 = все)")
+        sp.add_argument("--copy-mb", type=int, default=COPY_TOTAL_CAP_MB, metavar="MB", help="лимит размера копий логов в папке прогона")
+        sp.add_argument("--bundle", metavar="ZIP", nargs="?", const="send_to_assistant.zip", help="собрать ZIP (по умолчанию — в папке прогона)")
         sp.add_argument("--width", type=int, default=100, help="ширина текстового вывода (по умолчанию 100)")
         sp.add_argument("--quiet", "-q", action="store_true", help="только вердикт и план, без деталей")
         sp.add_argument("--only-problems", action="store_true", help="скрыть INFO/OK-находки")
@@ -2637,6 +2981,29 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
+def resolve_input(raw: str, sink: "RunSink | None" = None) -> str:
+    """Пользователь кинул файл в diagnostics/incoming — найдём его там, чтобы не вводить путь."""
+    pp = Path(expand(raw))
+    if pp.exists() or sink is None:
+        return str(pp)
+    for cand in (sink.incoming, sink.dir):
+        if cand:
+            hit = cand / pp.name
+            if hit.exists():
+                return str(hit)
+    return str(pp)
+
+
+def place_output(sink: "RunSink | None", out: str | None, default_name: str) -> str:
+    """Куда писать текстовый отчёт: абсолютный путь уважаем, голое имя — в папку прогона."""
+    if not out:
+        out = default_name
+    pp = Path(expand(out))
+    if not pp.is_absolute() and sink is not None and sink.active:
+        pp = sink.dir / pp.name
+    return str(pp)
+
+
 def _emit(text: str, out: str | None) -> None:
     if out:
         # BOM ставим только для .txt: Notepad корректно покажет кириллицу, а JSON читают парсеры
@@ -2668,9 +3035,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             except Exception as exc:  # noqa: BLE001
                 print(f"[warn] не удалось повыситься: {exc}")
 
+    sink = RunSink(
+        base=Path(expand(args.out_dir)) if getattr(args, "out_dir", None) else None,
+        keep=int(getattr(args, "keep_runs", KEEP_RUNS_DEFAULT) or 0),
+        enabled=not bool(getattr(args, "no_sink", False)),
+    )
+
     extra_sigs: list[dict[str, Any]] = []
     if getattr(args, "kb", None):
-        extra_sigs = load_extra_kb(Path(args.kb))
+        extra_sigs = load_extra_kb(Path(resolve_input(args.kb, sink)))
     sigs = compile_signatures(SIGNATURES + extra_sigs)
 
     if cmd == "selftest":
@@ -2688,7 +3061,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if getattr(args, "src", None):
         try:
-            report = report_from_json(Path(args.src))
+            report = report_from_json(Path(resolve_input(args.src, sink)))
             report.mode = f"{cmd} (из {Path(args.src).name})"
         except Exception as exc:  # noqa: BLE001
             print(f"[error] не удалось прочитать --from {args.src}: {exc}", file=sys.stderr)
@@ -2697,6 +3070,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         paths = list(args.paths or [])
         stdin_mode = "-" in paths
         paths = [p for p in paths if p != "-"]
+        incoming = sink.grab_incoming() if sink else []
+        if incoming and sink:
+            incoming = sink.harvest(incoming)
+        if incoming:
+            report.note(f"incoming/: подхвачено файлов {len(incoming)}: " + ", ".join(f.name for f in incoming[:6]))
+        if not paths and incoming:
+            paths = [str(f) for f in incoming]
+            report.note("путь не указан — разбираю всё из incoming/")
+        elif paths and incoming:
+            paths = paths + [str(f) for f in incoming]
         if stdin_mode:
             data = sys.stdin.buffer.read().decode("utf-8", "replace").splitlines()
             findings, stats = scan_lines(data, sigs, context=getattr(args, "context", 6))
@@ -2715,7 +3098,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         if paths:
             analyze_paths(report, paths, sigs=sigs, context=getattr(args, "context", 6), tail_kb=getattr(args, "tail_kb", 1500), max_files=getattr(args, "max_files", 25), any_files=getattr(args, "all_files", False))
         if not stdin_mode and not paths:
-            print("нужно указать файл или папку с логом (или '-' для stdin). Пример: logs \"C:\\ProgramData\\NVIDIA Corporation\"")
+            inc = sink.incoming if (sink and sink.incoming) else Path(OUT_DIR_NAME) / INCOMING_NAME
+            print(
+                "нужно указать файл/папку с логом (или '-' для stdin), либо положить логи в incoming/ и запустить снова:\n"
+                f"  {inc}\n"
+                'пример: python nvidia_overlay_diag.py logs "C:\\ProgramData\\NVIDIA Corporation"'
+            )
             return 2
     elif cmd == "verify":
         run_verify(int(getattr(args, "wait", 25) or 25), report)
@@ -2730,6 +3118,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                 col.check_services()
                 col.check_processes()
             extra_paths = list(getattr(args, "paths", []) or [])
+            if sink:
+                inc = sink.grab_incoming()
+                if inc:
+                    inc = sink.harvest(inc)
+                    extra_paths += [str(f) for f in inc]
+                    if inc:
+                        report.note(f"incoming/: добавлено в разбор {len(inc)} файл(ов): " + ", ".join(f.name for f in inc[:6]))
             if not getattr(args, "no_logs", False) and IS_WIN:
                 roots = [str(x) for x in LOG_ROOTS_WIN] + [expand(x) for x in LOG_EXTRA_FILES_WIN] + extra_paths
                 found = find_log_files(roots, limit=int(getattr(args, "max_files", 25)), hints=None if getattr(args, "all_files", False) else LOG_NAME_HINTS)
@@ -2768,14 +3163,56 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         text += "\n" + render_commands()
 
-    _emit(text, getattr(args, "out", None))
+    # ---- всё в папку результатов (её и архивируешь) ----
+    payload = report.to_json()
+    payload["log_files"] = [str(p) for p in log_files]
+    payload["argv"] = " ".join(sys.argv[1:])
+    payload["script_sha256_16"] = script_sha256()
+
+    default_name = "report.json" if getattr(args, "json", False) else ("hypotheses.txt" if cmd == "hypotheses" else "report.txt")
+    save_anyway = sink is not None and sink.active
+    out_arg = getattr(args, "out", None)
+
+    if out_arg:
+        # явный -o: Уважаем абсолютный путь, голое имя кладём в папку прогона
+        dest = Path(place_output(sink if save_anyway else None, out_arg, default_name))
+        enc = "utf-8-sig" if dest.suffix.lower() in (".txt", ".md", "") else "utf-8"
+        try:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(text + "\n", encoding=enc)
+            print(f"отчёт сохранён: {dest}")
+            if save_anyway and sink.dir in dest.parents:
+                sink.written.append((dest.name, dest.stat().st_size))
+        except OSError as exc:
+            print(f"[warn] не удалось записать {dest}: {exc}", file=sys.stderr)
+            print(text)
+    else:
+        print(text)
+        if save_anyway:
+            sink.write_text(default_name, text, bom=default_name.endswith(".txt"))
+            print(f"\nкопия отчёта: {sink.dir / default_name}")
+
+    if save_anyway:
+        sink.write_json("report.json", payload)
+        sink.write_text("verdict.txt", render_verdict(report, width) + "\n\n" + render_fixes(report))
+        sink.copy_logs(log_files, cap_mb=int(getattr(args, "copy_mb", COPY_TOTAL_CAP_MB) or COPY_TOTAL_CAP_MB))
+        sink.write_text("manifest.txt", sink.manifest(report, cmd, sys.argv[1:]))
+        print(sink.summary_line())
+    elif out_arg is None and getattr(args, "no_sink", False):
+        print("\n(--no-sink: на диск ничего не писалось)")
+
+    if getattr(args, "inbox_done", False) and sink:
+        sink.mark_incoming_done(sink.grab_incoming())
 
     if getattr(args, "bundle", None):
-        zp = Path(args.bundle)
-        included = write_bundle(zp, report, text, log_files)
-        print(f"\nархив готов: {zp}  (файлов логов: {len(included)}) — пришли его ассистенту")
+        raw_bundle = args.bundle
+        bp = Path(expand(raw_bundle))
+        if sink and sink.active and not bp.is_absolute():
+            bp = sink.dir / bp.name
+        included = write_bundle(bp, report, text, log_files)
+        print(f"архив готов: {bp}  (логи внутри: {len(included)}) — можно отправить и его целиком")
         if not included:
-            print("  внимание: логи не найдены — добавь путь вручную: scan \"C:\\Путь\\к\\логу\" --bundle diag.zip")
+            print('  внимание: логи не найдены — добавь путь вручную: scan "C:\\Путь\\к\\логу"  или кинь файл в incoming/')
     return 0
 
 
