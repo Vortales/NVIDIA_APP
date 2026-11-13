@@ -68,7 +68,11 @@ python nvidia_overlay_diag.py list-signatures          # что именно и�
 
 Флаги: `--json`, `-o FILE`, `--bundle [ZIP]`, `--only-problems`, `--quiet`, `--width`, `--context`, `--tail-kb`,
 `--max-files`, `--all-files`, `--days`, `--no-logs`, `--no-events`, `--elevate`, `--out-dir DIR`, `--no-sink`,
-`--no-zip`, `--inbox-done`, `--keep-runs N`, `--copy-mb N`, `--kb FILE`.
+`--no-zip`, `--inbox-done`, `--keep-runs N`, `--copy-mb N`, `--kb FILE`, `--keep-foreign`.
+
+`--keep-foreign` — не пропускать заведомо чужие логи. По умолчанию файл, в первых 400 строках которого нет ни
+одного NVIDIA-маркера (или видны признаки телеметрии Office/браузера), помечается как `log.not_nvidia` и не
+разбирается: такие файлы рождают ложные CRITICAL («краш», «NVENC»), которых у NVIDIA нет.
 
 Папка результатов по умолчанию — `<откуда запустил>\Результат` (переопределение: `--out-dir` или переменная
 окружения `NVIDIA_DIAG_OUT`). Если создать её нельзя (права, сетевой путь) — скрипт пишет только в консоль

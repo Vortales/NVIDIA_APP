@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
+r"""
 nvidia_overlay_diag.py — диагностика оверлея NVIDIA App (запись / Instant Replay / Studio Mode).
 
 Зачем:
@@ -61,6 +61,7 @@ import subprocess
 import sys
 import tempfile
 import textwrap
+import warnings
 import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -117,14 +118,22 @@ class Finding:
     fixes: list[str] = dataclasses.field(default_factory=list)
     source: str = "system"   # system | log:<имя файла> | events
     hypothesis: str = "?"    # id гипотезы, к которой относится находка
+    hits: int = 1            # сколько раз это событие повторилось в логах (масса улик)
 
     def to_dict(self) -> dict[str, Any]:
         d = dataclasses.asdict(self)
         d["weight"] = SEV_WEIGHT.get(self.severity, 1)
         return d
 
+    def weight_bonus(self) -> int:
+        """Повторы — это доказательство: 207 одинаковых ошибок важнее одной."""
+        if self.source.startswith("log") and self.hits > 1:
+            return min(12, max(0, self.hits.bit_length() - 1))
+        return 0
+
     def render(self, width: int = 100, verbose: bool = True) -> str:
-        out = [f"{SEV_MARK.get(self.severity, '[? ]')} {self.severity:<8} {self.title}  <{self.code}>"]
+        times = f"  ×{self.hits}" if self.hits > 1 else ""
+        out = [f"{SEV_MARK.get(self.severity, '[? ]')} {self.severity:<8} {self.title}  <{self.code}>{times}"]
         if self.detail:
             out.append(_indent(_wrap(self.detail, width - 6), "       "))
         if verbose and self.evidence:
@@ -279,6 +288,24 @@ HYPOTHESES: dict[str, dict[str, Any]] = {
             "Проверь, что служба автозапуска не отключена оптимизаторами (Watcher/Predator/'ускорители Windows').",
         ],
     },
+    "drs_profiles": {
+        "title": "Сломаны/не установлены DRS-профили драйвера → 'isEnableHook: 0' для всех приложений",
+        "fixes": [
+            "Закрой NVIDIA App и переименуй C:\\ProgramData\\NVIDIA Corporation\\Drs (nvdrsdb0.bin, nvdrsdb1.bin, BaseProfileDB.xml …) — драйвер пересоздаст базу.",
+            "Перезагрузись, затем NVIDIA App → Настройки → 'Восстановить значения по умолчанию' для 3D-настроек; после этого включи оверлей/запись заново.",
+            "Проверь, что у твоей учётки есть доступ на запись к HKLM\\SOFTWARE\\NVIDIA Corporation и к папке Drs: без прав профили читаются как 'пусто' (m_uiIndex: -1).",
+            "Не помогло — переустановка драйвера 'Чистая установка' (кривые/модифицированные пакеты регулярно ломают DRS).",
+        ],
+    },
+    "component_stripped": {
+        "title": "Компонент захвати (ShadowPlay/NvStream) вырезан из установки драйвера или не выбран",
+        "fixes": [
+            "Установщик драйвера → 'Выборочная установка' → включи всё: Graphics Driver + NVIDIA App + Video Capture/ShadowPlay + NVIDIA Container → 'Чистая установка' → перезагрузка.",
+            "Если ставил NVCleanstInstall/'stripped'-сборку: перестань вырезать NvStream/ShadowPlay (телеметрию резать можно, захват — нет).",
+            "Контроль: HKLM\\SOFTWARE\\NVIDIA Corporation\\Installer2\\Stripped — если там лежит ShadowPlay/…, компонент в систему не установлен.",
+            "После переустановки проверь `verify --wait 40` и `scan`: строки 'WaitForOverlayReady failed'/'isEnableHook: 0' должны исчезнуть.",
+        ],
+    },
     "unknown": {
         "title": "Причина не сводится к типовым — нужен разбор лога",
         "fixes": [
@@ -410,6 +437,8 @@ SIGNATURES: list[dict[str, Any]] = [
         re=r"(?i)(nvenc|nvv4l2|encoders?d|encode.{0,15}(fail|error)|NvEncodeAPI|MaxNumTranscode|session\s*(limit|creation)\s*(failed|error)|too\s+many\s+(concurrent\s+)?sessions)",
         sev="CRITICAL",
         code="log.nvenc",
+        ctx=True,
+        not_re=r"(?i)SaveNVEncHWCaps|IsNVEncoderSupported|requested caps|HW NVEnc caps|Copying |flq:|inf:",
         hyp="encoder",
         title="Ошибка NVENC (кодировщик недоступен/занят/не поддерживается)",
         why="Запись невозможна без кодера. Либо лимит параллельных NVENC-сессий, либо GPU/драйвер не даёт создать сессию.",
@@ -424,6 +453,8 @@ SIGNATURES: list[dict[str, Any]] = [
         re=r"(?i)(device\s*lost|DXGI_ERROR_DEVICE_REMOVED|DXGI_ERROR_DEVICE_HUNG|TDR|nvlddmkm|display\s+driver\s+.*(stopped|crash)|GPU.*\bhang\b)",
         sev="CRITICAL",
         code="log.gpu_lost",
+        ctx=True,
+        not_re=r"(?i)ForcedTDRHandler|SYNC_FORCED|TdrLevel|ForcedTDR|NvLevelSet|\bDEBUG:\b",
         hyp="encoder",
         title="ГПУ/драйвер роняет устройство в момент захвата (device lost / TDR)",
         why="Драйвер не выдерживает нагрузку или разгон — оверлей умирает вместе с ним.",
@@ -540,6 +571,8 @@ SIGNATURES: list[dict[str, Any]] = [
     dict(
         re=r"(?i)(unhandled|uncaught|\bfatal\b|exception|\babort(ed)?\b|assert(ion)\s?fail|stack\s?trace|crashpad|minidump|\bWER\b|faulting\s+(module|application)|\.dmp\b)",
         sev="HIGH",
+        ctx=True,
+        not_re=r"(?i)(CloudSync\.cpp|ShareServerWorker|\[[IDV]\][^\n]{0,120}\bAbort!!!)",
         code="log.crash_generic",
         hyp="unknown",
         title="Аварийное завершение (exception/assert/minidump)",
@@ -553,6 +586,8 @@ SIGNATURES: list[dict[str, Any]] = [
     dict(
         re=r"(?i)(instant\s?replay|shadow ?play|replay\s?buffer|record(ing|er)?|capture|\.mp4|\.mov).{0,60}(fail|error|unable|could\s?not|start(ed)?\s?fail|stopped\s+unexpected|not\s+available|denied|discard|corrupt|too\s+small|empty\s+file|0\s+bytes)",
         sev="HIGH",
+        ctx=True,
+        not_re=r"(?i)Registering notification listener|\[D\]\s",
         code="log.record_fail",
         hyp="capture_target",
         title="Запись/буфер реплея не стартует или обрывается",
@@ -575,6 +610,8 @@ SIGNATURES: list[dict[str, Any]] = [
     dict(
         re=r"(?i)(hdr|WCG|advanced\s+color|10[- ]?bit|yuv ?4:2:0|color\s?(space|format|depth)).{0,50}(fail|error|unsuppor|not\s+support|invalid|mismatch)",
         sev="MEDIUM",
+        ctx=True,
+        not_re=r"(?i)Advanced color settings not supported|DEBUG: \[UXDriver",
         code="log.hdr",
         hyp="capture_target",
         title="Конфликт формата кадра (HDR/10-бит/color space)",
@@ -606,6 +643,8 @@ SIGNATURES: list[dict[str, Any]] = [
         re=r"(?i)(power\s?plan|powermizer|battery\s?saver|eco\s?mode|hybrid\s?mode|dGPU|iGPU|Optimus|MUX|switchable\s?graphics)",
         sev="MEDIUM",
         code="log.power_graphic",
+        ctx=True,
+        not_re=r"(?i)Copying |flq:|inf:|AddService=|\bnvidia\.(optimus|mux)\b",
         hyp="capture_target",
         title="Гибридная графика/энергосбережение режет оверлей",
         why="На Optimus кадр игры идёт через iGPU, а NVENC/hook хотят dGPU → 'оверлей не запускается' или чёрный кадр.",
@@ -613,6 +652,167 @@ SIGNATURES: list[dict[str, Any]] = [
             "Параметры → Дисплей → Графика → выставь для игры 'Высокая производительность (NVIDIA)'.",
             "В BIOS/фирменной утилите (Legion Toolkit, MyASUS, Alienware Command) переключи 'dGPU only'/MUX.",
             "Питание → 'Максимальная производительность', не 'Экономия' на тест.",
+        ],
+    ),
+
+    # ---- уровень "App <-> оверлей": готовность UI, транспорт, профили ----
+    dict(
+        re=r"(?i)(WaitForOverlayReady\s+failed|CheckAndWaitForOverlayReady|SetProperty:\s*FAIL\[0x80040228\]|IpcSyncCall\s+error\s+\[0x80004005\].{0,40}ShowGFEOverlay|COscProcMgr::ShowOSC.{0,40}OTE\s+sending\s+failed)",
+        sev="CRITICAL",
+        code="log.overlay_not_ready",
+        hyp="overlay_proc",
+        title="NVIDIA App не может 'разбудить' оверлей: ShowGFEOverlay / WaitForOverlayReady падают",
+        why=(
+            "Хост оверлея — отдельный процесс, App говорит с ним по IPC. 'WaitForOverlayReady failed' вперемешку с "
+            "'IpcSyncCall error [0x80004005] for property [ShowGFEOverlay]' = процесс есть, а UI-рантайм не отвечает, "
+            "окно не создаётся НИКОГДА (Alt+Z нажимается, реакция есть, окна нет)."
+        ),
+        fixes=[
+            "Выгрузи стек начисто: выйди из NVIDIA App (трей → Выход), затем taskkill /f /im \"NVIDIA Overlay.exe\" /t, "
+            "PowerShell (админ): Restart-Service NVDisplay.ContainerLocalSystem,NvContainerLocalSystem -Force, "
+            "и запусти App ОДИН раз (лишние экземпляры — типичный корень).",
+            "Далее удали кэш CEF: переименуй %LOCALAPPDATA%\\NVIDIA Corporation\\NVIDIA App и %LOCALAPPDATA%\\NVIDIA Corporation\\NVIDIA Overlay (если есть), стартни App снова.",
+            "Не помогло — смотри log.component_stripped и log.drs_broken: без компонента/профилей оверлей не поднимается независимо от перезапусков.",
+        ],
+    ),
+    dict(
+        re=r"(?i)isEnableHook:\s*0",
+        sev="CRITICAL",
+        code="log.hooks_disabled",
+        hyp="drs_profiles",
+        title="Для приложения выставлен 'isEnableHook: 0' — хук/оверлей запрещён настройкой профиля",
+        why=(
+            "CAppSettings::ComputeAppSettings показывает решение драйвера по конкретному приложению: "
+            "isEnableHook: 0 = в это приложение хук ставить нельзя → оверлей в игре не появится, запись не начнётся, "
+            "даже когда все сервисы и процессы живы."
+        ),
+        fixes=[
+            "NVIDIA App → Настройки → 'Внутриигровой оверлей' → Вкл (и 'Запись'/'Instant Replay' → Вкл).",
+            "Крупный план: 'восстановить значения по умолчанию' в 3D-настройках и снять 'Off' для 'Внутриигровой оверлей' в профиле игры.",
+            "Если рядом есть 'm_uiIndex: -1' — настройка не читается, а не выключена: см. log.drs_broken (сброс папки Drs).",
+        ],
+    ),
+    dict(
+        re=r"(?i)(NvApiDrsWrapper.{0,50}NVAPI error|not found in m_oGpuProps|ComputeAppSettings.{0,60}m_uiIndex:\s*-1|QueryShadowPlayDdiShimStatus)",
+        sev="CRITICAL",
+        code="log.drs_broken",
+        hyp="drs_profiles",
+        title="Не читается база DRS-профилей драйвера (NVAPI error -132, m_uiIndex: -1, 'Driver name none')",
+        why=(
+            "Разрешение 'показывать ли оверлей в этом приложении' идёт из DRS (база профилей драйвера). "
+            "Ошибки чтения → для ВСЕХ приложений получается -1/выключено: UI настроек при этом выглядит нормально, "
+            "а изменения ни на что не влияют. Классика после 'stripped'-драйверов, твикеров и обрывов установки."
+        ),
+        fixes=[
+            "Закрой NVIDIA App → переименуй C:\\ProgramData\\NVIDIA Corporation\\Drs → перезагрузка (создастся заново).",
+            "NVIDIA App → Настройки → сброс 3D-параметров → включить оверлей и запись заново.",
+            "Далее — чистая переустановка официального драйвера (полный пакет, без вырезаний).",
+        ],
+    ),
+    dict(
+        re=r"(?i)(Installer2\\Stripped|Stripped\\ShadowPlay|component\s+(was\s+)?(stripped|removed))",
+        sev="HIGH",
+        code="log.component_stripped",
+        hyp="component_stripped",
+        title="Компонент записи помечен 'Stripped' — он не установлен вместе с драйвером",
+        why=(
+            "NVIDIA Installer пишет HKLM\\SOFTWARE\\NVIDIA Corporation\\Installer2\\Stripped\\<Компонент> для того, что НЕ клали "
+            "в систему (снятая галка или NVCleanstInstall). Без драйверного компонента захвата у оверлея нет DDI-shim и "
+            "профилей — App ругается 0x80040228/'OTE sending failed' и окно не показывается."
+        ),
+        fixes=[
+            "Установщик драйвера → 'Выборочная установка' → Graphics Driver + NVIDIA App + захват (ShadowPlay/NvStream) + 'Чистая установка'.",
+            "Телеметрию резать можно, NvStream/ShadowPlay — нет.",
+            "Проверка после: кключ 'Stripped\\ShadowPlay...' исчез, 'verify' видит оверлей, в CaptureCore.log нет WaitForOverlayReady failed.",
+        ],
+    ),
+    dict(
+        re=r"(?i)(OpenCommonMMF|common overlay MMF)",
+        sev="MEDIUM",
+        code="log.mmf_race",
+        hyp="overlay_proc",
+        title="DWM-прокси оверлея не открыл общий MMF (обычно гонка старта)",
+        why=(
+            "Секцию создаёт хост оверлея, а dwm.exe успевает попросить её раньше — одиночная запись безвредна. "
+            "Повторяется в каждом запуске = хост так и не инициализировался (зомби-экземпляры или кривая установка)."
+        ),
+        fixes=[
+            "Полная перезагрузка (не 'Завершение работы' с Fast Startup), затем один запуск NVIDIA App.",
+            "Если сохраняется — убей все 'NVIDIA Overlay.exe' и стартни App один раз; смотри log.overlay_not_ready.",
+        ],
+    ),
+    dict(
+        re=r"(?i)\[(OVERLAY|NVIDIA Overlay)[:. ]",
+        sev="LOW",
+        code="log.overlay_activity",
+        hyp="overlay_proc",
+        title="В логе есть активность хоста оверлея (процесс живёт — это хорошо)",
+        why=(
+            "Строки [OVERLAY:<pid>] значат, что хост запускался и что-то делал. Несколько разных pid в одной сессии — "
+            "размножение экземпляров: App может обращаться не к тому процессу, и окно не появится."
+        ),
+        fixes=[
+            "taskkill /f /im \"NVIDIA Overlay.exe\"; убедиться, что App запускается ровно одним экземпляром (автозапуск + ручной запуск = два).",
+        ],
+    ),
+    dict(
+        re=r"(?i)OptimusIconWindowClass not found",
+        sev="INFO",
+        code="log.optimus_icon_noise",
+        hyp="capture_target",
+        title="Шум 'OptimusIconWindowClass not found' в nvcontainer (само по себе не ошибка)",
+        why=(
+            "Контейнер ищет окно иконки переключения графики, которого в этой сборке нет. Ничего не ломает, "
+            "но подтверждает гибридную графику (Optimus) — её надо учитывать при настройке захвата."
+        ),
+        fixes=["Игнорируй. Но на гибридном ноутбуке проверь, что игра рендерится на NVIDIA: Параметры -> Дисплей -> Графика -> 'Высокая производительность'."],
+    ),
+    dict(
+        re=r"(?i)Hotkey:\s+State:\s*\w",
+        sev="MEDIUM",
+        code="log.hotkey_unbound",
+        hyp="hotkey",
+        title="Хоткей оверлея не назначен (в логе пустое имя клавиши)",
+        why=(
+            "Строка вида 'Hotkey:  State: OpenIGO' означает: сообщение о нажатии дошло, но у слота пустое имя сочетания — "
+            "привязка клавиш не записана в настройки (или затёрта). НажатиеAlt+Z обрабатывается 'в никуда'."
+        ),
+        fixes=[
+            "NVIDIA App → Настройки → 'Горячие клавиши' → назначить заново Alt+Z (оверлей) и Alt+\\ (реплей); после смены — перезапустить App.",
+            "Если поле не сохраняется (слетает после перезапуска) — это конфиг/кэш: переименуй %LOCALAPPDATA%\\NVIDIA Corporation\\NVIDIA App и переустанови пакет.",
+        ],
+    ),
+    dict(
+        re=r"(?i)(Method:\s*OpenIGO|NvIGOUtil Task failed).{0,120}(0x80040228|0x80004005|GXP: Unspecified failure)|GXP: Unspecified failure",
+        sev="CRITICAL",
+        code="log.igo_open_failed",
+        hyp="overlay_proc",
+        title="Запрос 'открыть оверлей' отклонён на уровне GXP (0x80040228 / Unspecified failure)",
+        why=(
+            "Это точка, где всё и ломается: App передал хоткей в оверлей-хост, а подсистема GameXperience/Overlay "
+            "не смогла поднять сессию (0x80004005 + 0x80040228). Коды общие, но в связке с "
+            "'WaitForOverlayReady failed' означают, что UI-рантайм оверлея не готов, а не то, что клавиша не та."
+        ),
+        fixes=[
+            "Выгрузи стек начисто: выйди из App → taskkill /f /im \"NVIDIA Overlay.exe\" /t → перезапусти сервисы NVDisplay.ContainerLocalSystem, NvContainerLocalSystem → стартни App ОДИН раз.",
+            "Проверь целостность установки: HKLM\\SOFTWARE\\NVIDIA Corporation\\Installer2\\Stripped не должен содержать ShadowPlay/NvStream (иначе — переустановка полного пакета).",
+            "Переименуй кэш UI: %LOCALAPPDATA%\\NVIDIA Corporation\\NVIDIA App (CEF-кэш) — окно может не рисоваться из-за него.",
+        ],
+    ),
+    dict(
+        re=r"(?i)(GetHotkeyProperty|hotkey).{0,40}(reg read failed|falling back to default)",
+        sev="MEDIUM",
+        code="log.hotkey_reg_failed",
+        hyp="hotkey",
+        title="NVIDIA App не смог прочитать назначенные хоткеи из реестра (откат на значения по умолчанию)",
+        why=(
+            "Сочетания клавиш живут в HKCU\\SOFTWARE\\NVIDIA Corporation\\...\\Hotkeys. Если чтение упало, App "
+            "работает с дефолтами — а у дефолтного слота имя пустое, и 'Alt+Z' фактически ни к чему не привязан "
+            "(в логе это видно как 'Hotkey:  State: OpenIGO')."
+        ),
+        fixes=[
+            "NVIDIA App → Настройки → Горячие клавиши → назначить заново Alt+Z и Alt+\\, затем перезапустить App.",
+            "Проверь, что HKCU не перенесён/не заблокирован (политики, Roaming-профиль, антивирус-защита реестра).",
         ],
     ),
 ]
@@ -625,10 +825,13 @@ GENERIC_ERROR_RE = re.compile(
 
 
 def compile_signatures(sigs: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+    """not_re — «anti-сигнатурный» регексп: попадающая под него строка не считается совпадением."""
     out = []
     for s in sigs:
         c = dict(s)
         c["_re"] = re.compile(s["re"])
+        c["_neg"] = re.compile(s["not_re"]) if s.get("not_re") else None
+        c["_ctx"] = bool(s.get("ctx"))
         out.append(c)
     return out
 
@@ -707,6 +910,7 @@ class Report:
             # Лог-улики чуть слабее живых проверок: то же событие в логе видели один раз.
             if f.source.startswith("log"):
                 w = max(1, w - 1)
+            w += f.weight_bonus()
             weights[h] += w
             support[h].append(f)
         total = sum(weights.values()) or 1
@@ -719,14 +923,16 @@ class Report:
                 for fix in f.fixes:
                     if fix not in fixes:
                         fixes.append(fix)
+            uniq_ev = list(dict.fromkeys(f"{SEV_MARK.get(f.severity,'[? ]')} {f.title}" for f in fs))
             out.append(
                 {
                     "id": h,
                     "title": meta.get("title", h),
                     "weight": w,
                     "confidence": round(100.0 * w / total),
-                    "finding_codes": [f.code for f in fs],
-                    "evidence": [f"{SEV_MARK.get(f.severity,'[? ]')} {f.title}" for f in fs],
+                    "finding_codes": list(dict.fromkeys(f.code for f in fs)),
+                    "hits": len(fs),
+                    "evidence": uniq_ev,
                     "fixes": fixes,
                 }
             )
@@ -756,7 +962,8 @@ class Report:
         for i, h in enumerate(hyps, 1):
             L.append(f"\n{i}. {h['title']}")
             tag = "   ← начинай отсюда" if i == 1 else ""
-            L.append(f"   вес улик {h['weight']} (доля {h['confidence']}%): {', '.join(h['finding_codes'][:6])}{tag}")
+            extra = f", повторов {h['hits']}" if h.get("hits", 1) > 1 else ""
+            L.append(f"   вес улик {h['weight']} (доля {h['confidence']}%{extra}): {', '.join(h['finding_codes'][:6])}{tag}")
             if verbose and h["evidence"]:
                 for e in h["evidence"][:6]:
                     L.append(f"     • {e}")
@@ -885,11 +1092,15 @@ def scan_lines(lines: Sequence[str], sigs: Sequence[dict[str, Any]], context: in
             level_counts[lvl] += 1
         if GENERIC_ERROR_RE.search(line):
             err_lines += 1
+        looks_bad = lvl in ("error", "fatal", "warn") or bool(GENERIC_ERROR_RE.search(line))
         matched = False
         for s in sigs:
-            if s["_re"].search(line):
-                hits[s["code"]].append(idx)
-                matched = True
+            if not s["_re"].search(line) or (s["_neg"] and s["_neg"].search(line)):
+                continue
+            if s["_ctx"] and not looks_bad:
+                continue  # шум:关键词 встретился в INFO/DEBUG-строке, ошибкой не считаем
+            hits[s["code"]].append(idx)
+            matched = True
         if not matched and lvl in ("error", "fatal"):
             key = re.sub(r"\d+", "N", line.strip())[:160]
             unknown_errors.append((key, idx))
@@ -933,6 +1144,7 @@ def scan_lines(lines: Sequence[str], sigs: Sequence[dict[str, Any]], context: in
                 fixes=list(s.get("fixes", [])),
                 hypothesis=s.get("hyp", "unknown"),
                 source="log",
+                hits=len(idxs),
             )
         )
 
@@ -971,6 +1183,7 @@ def scan_lines(lines: Sequence[str], sigs: Sequence[dict[str, Any]], context: in
                 fixes=list(first_sig.get("fixes", [])),
                 hypothesis=first_sig.get("hyp", "unknown"),
                 source="log",
+                hits=len(hits.get(first_sig["code"], [])),
             )
         )
 
@@ -998,6 +1211,7 @@ def scan_lines(lines: Sequence[str], sigs: Sequence[dict[str, Any]], context: in
                 fixes=["Ищи ПЕРВОЕ вхождение 'fail'/'error' сверху лога — обычно корень там, а всё после — каскад."],
                 hypothesis="unknown",
                 source="log",
+                hits=len(unknown_errors),
             )
         )
 
@@ -1048,6 +1262,13 @@ LOG_NAME_HINTS = re.compile(
 LOG_EXTS = (".log", ".txt", ".json", ".etl", ".csv")
 
 SETTINGS_NAME_RE = re.compile(r"(?i)^(settings?|config|nvidiaapp.*json|.*overlay.*json)\.json$")
+
+# «чужие» логи в папке: их разбор рождает ложные CRITICAL (в Office-телеметрии тоже есть слово error)
+FOREIGN_RE = re.compile(r"(?i)(Telemetry Event\t|WINWORD|Microsoft\.Office|Outlook|OneDrive|Chrome/\d|Squirrel)")
+NV_CONTENT_RE = re.compile(
+    r"(?i)\b(nvidia\w*|nvcontainer\w*|nvstream\w*|shadowplay|geforce\w*|gameforce|overlay|capturecore"
+    r"|dwm|cef|osc|nvenc|nvapi\w*|drs|gfe|NvApiDrsWrapper|nvlddmkm|nvldumdx|nvcvegpu|nvpriv|nvfltmgr|DriverStore|ProgramData[^\"]{0,40}NVIDIA)\\b"
+)
 
 
 def expand(p: str) -> str:
@@ -1255,6 +1476,7 @@ class WinCollector:
         self.check_security_software()
         self.check_conflicting_processes()
         self.check_storage()
+        self.check_installer_stripped()
         # журнал событий добавляет main() (чтобы --no-events и --from работали предсказуемо)
 
     # ---------- 1. ОС, привилегии, сессия ----------
@@ -2009,6 +2231,49 @@ class WinCollector:
                     hypothesis="conflict",
                 )
 
+    # ---------- 11b. Вырезанные при установке компоненты ----------
+    CRITICAL_COMPONENTS = re.compile(r"(?i)^(ShadowPlay|NvStream|NvNodejs|NVIDIA\s?App|NvContainer|Display.LDR|NvTelemetry)")
+    NEED_COMPONENTS = re.compile(r"(?i)^(ShadowPlay|NvStream)")
+
+    def check_installer_stripped(self) -> None:
+        r"""HKLM\...\Installer2\Stripped = компонент НЕ положили при установке. Для захвата это смерть."""
+        r = self.r
+        if not HAS_WINREG or winreg is None:
+            return
+        key = r"SOFTWARE\NVIDIA Corporation\Installer2\Stripped"
+        subs = self.reg_subkeys(winreg.HKEY_LOCAL_MACHINE, key)
+        if not subs:
+            r.add("OK", "inst.not_stripped", "Ни один компонент драйвера не помечен 'Stripped' (установка полная)")
+            return
+        r.snapshot["stripped_components"] = subs
+        names = [re.split(r"/", s)[0].strip() for s in subs]
+        hard = [n for n in names if self.NEED_COMPONENTS.search(n)]
+        soft = [n for n in names if n not in hard]
+        if hard:
+            r.add(
+                "CRITICAL",
+                "inst.component_stripped",
+                "Из установки драйвера вырезан компонент, без которого захват не работает: " + ", ".join(sorted(set(hard))),
+                detail=(
+                    "Ключи: " + "; ".join(subs[:8]) + f"\nПуть: HKLM\\{key}\n"
+                    "Такая пометка появляется, когда компонент сняли при установке (или ставили 'stripped'/NVCleanstInstall-сборку). "
+                    "Итог: нет драйверного DDI-shim/профилей DRS → NVIDIA App не может показать оверлей "
+                    "(в логах 'WaitForOverlayReady failed', 'ShowGFEOverlay FAIL[0x80040228]'), запись не стартует."
+                ),
+                fixes=HYPOTHESES["component_stripped"]["fixes"],
+                evidence=[f"HKLM\\{key}\\{s}" for s in subs[:8]],
+                hypothesis="component_stripped",
+            )
+        if soft:
+            r.add(
+                "LOW",
+                "inst.optional_stripped",
+                "Вырезаны необязательные компоненты: " + ", ".join(sorted(set(soft))[:6]),
+                detail="На захват влиять не должно (телеметрия и т.п.) — но если проблемы останутся, на время теста поставь полный пакет.",
+                evidence=[f"HKLM\\{key}\\{s}" for s in subs[:8]],
+                hypothesis="component_stripped",
+            )
+
     # ---------- 11. Журнал событий ----------
     def check_event_log(self) -> None:
         r = self.r
@@ -2115,6 +2380,7 @@ def analyze_paths(
     max_files: int = 25,
     any_files: bool = False,
     per_file_limit: int = 6,
+    skip_foreign: bool = True,
 ) -> list[Path]:
     """Разбирает файлы/папки, добавляет находки в report. Возвращает список разобранных файлов."""
     files: list[Path] = []
@@ -2164,6 +2430,26 @@ def analyze_paths(
             continue
         if not lines:
             continue
+        if skip_foreign:
+            sample = "\n".join(lines[:400])
+            foreign = bool(FOREIGN_RE.search(sample))
+            named_like_nvidia = bool(LOG_NAME_HINTS.search(f.name))
+            if not NV_CONTENT_RE.search(sample) and (foreign or (not named_like_nvidia and size >= 200 * 1024)):
+                report.add(
+                    "INFO",
+                    "log.not_nvidia",
+                    f"Файл не похож на лог NVIDIA — пропущен: {f.name}",
+                    detail=(
+                        "В первых строках нет ни одного NVIDIA-маркера"
+                        + (", зато видны признаки чужого лога (телеметрия Office/браузера и т.п.)" if foreign else "")
+                        + ". Его разбор только добавляет ложных ошибок; разбери его отдельно своим проф. инструментом."
+                        " Нужен разбор и таких файлов — запусти с --keep-foreign."
+                    ),
+                    evidence=[sample[:200]] if sample else [],
+                    hypothesis="unknown",
+                    source="log",
+                )
+                continue
         total_bytes += size
         analyzed += 1
         findings, stats = scan_lines(lines, sigs, context=context)
@@ -2553,7 +2839,7 @@ class RunSink:
             dash,
             f"1) Архивируй либо всю папку {OUT_DIR_NAME}, либо только {self.dir.name} — имена файлов внутри ASCII, при упаковке не поедут.",
             "2) Приложи архив к сообщению ассистенту — внутри есть отчёт, JSON и копии логов, этого хватает.",
-            f"3) Логи не попали (копий = 0)? Положи файлы в {OUT_DIR_NAME}\incoming\ и повтори: python nvidia_overlay_diag.py logs",
+            f"3) Логи не попали (копий = 0)? Положи файлы в {OUT_DIR_NAME}\\incoming\\ и повтори: python nvidia_overlay_diag.py logs",
             "",
             "СОДЕРЖИМОЕ",
             dash,
@@ -2653,7 +2939,7 @@ def report_from_json(path: Path) -> Report:
     r.snapshot = obj.get("snapshot", {})
     r.notes = obj.get("notes", [])
     r.started = obj.get("started", now_iso())
-    keep = {"severity", "code", "title", "detail", "evidence", "fixes", "source", "hypothesis"}
+    keep = {"severity", "code", "title", "detail", "evidence", "fixes", "source", "hypothesis", "hits"}
     for f in obj.get("findings", []):
         data = {k: v for k, v in f.items() if k in keep}
         data.setdefault("severity", "INFO")
@@ -2732,7 +3018,7 @@ def render_kb(sigs: Sequence[dict[str, Any]]) -> str:
 # --------------------------------------------------------------------------------------
 
 
-SELFTEST_FIXTURE = """\
+SELFTEST_FIXTURE = r"""
 2026-11-13 10:00:01:001 INFO  NVIDIA App 11.0.5.253, driver 572.16, session Console
 2026-11-13 10:00:01:210 INFO  NvContainerClient: connecting to NVDisplay.ContainerLocalSystem
 2026-11-13 10:00:02:010 WARN  Service NVDisplay.Container failed to start: The service has not started after timeout
@@ -2794,6 +3080,17 @@ SELFTEST_EXPECT = {
 def run_selftest(sigs: Sequence[dict[str, Any]]) -> int:
     """Проверка, что парсер и база сигнатур работают: прогон встроенного фейкового лога."""
     problems: list[str] = []
+
+    # сам исходник не должен плодить SyntaxWarning (\C, \i в строках) и падать на -W error
+    try:
+        src = Path(__file__).resolve().read_text(encoding="utf-8")
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            compile(src, "nvidia_overlay_diag.py", "exec")
+    except (SyntaxWarning, SyntaxError) as exc:
+        problems.append(f"в исходнике предупреждение при компиляции: {exc}")
+    except OSError as exc:
+        print(f"[warn] не смог перечитать себя для проверки: {exc}")
     for sg in SIGNATURES:
         for field in ("code", "sev", "title", "hyp"):
             if not sg.get(field):
@@ -2857,9 +3154,9 @@ def run_selftest(sigs: Sequence[dict[str, Any]]) -> int:
                 problems.append("RunSink не скопировал лог из incoming")
             if not any(s[0] == "нет.csv" for s in sink.skipped):
                 problems.append("RunSink не сообщил о пропущенном файле")
-            got = sink.grab_incoming()
-            if [g.name for g in got] != ["dropped.log"]:
-                problems.append(f"grab_incoming вернул {got}")
+            inbox = sink.grab_incoming()
+            if [g.name for g in inbox] != ["dropped.log"]:
+                problems.append(f"grab_incoming вернул {inbox}")
             if resolve_input("dropped.log", sink) != str(base / "incoming" / "dropped.log"):
                 problems.append("resolve_input не нашёл файл в incoming")
             if Path(place_output(sink, None, "report.txt")).parent != sink.dir:
@@ -2928,7 +3225,7 @@ def build_parser() -> argparse.ArgumentParser:
         sp.add_argument("--out-dir", metavar="DIR", help=f"куда складывать вывод (по умолчанию './{OUT_DIR_NAME}' рядом со скриптом)")
         sp.add_argument("--no-sink", action="store_true", help="ничего не сохранять на диск, только консоль")
         sp.add_argument("--no-zip", action="store_true", help="не собирать send_to_assistant.zip в папке прогона")
-        sp.add_argument("--inbox-done", action="store_true", help=f"после разбора убрать файлы из {OUT_DIR_NAME}\{INCOMING_NAME} в \processed (чтобы не пережёвывать их снова)")
+        sp.add_argument("--inbox-done", action="store_true", help=f"после разбора перенести файлы из {OUT_DIR_NAME}/{INCOMING_NAME} в {INCOMING_NAME}/processed, чтобы не пережёвывать их снова")
         sp.add_argument("--keep-runs", type=int, default=KEEP_RUNS_DEFAULT, metavar="N", help="сколько прогонов хранить (0 = все)")
         sp.add_argument("--copy-mb", type=int, default=COPY_TOTAL_CAP_MB, metavar="MB", help="лимит размера копий логов в папке прогона")
         sp.add_argument("--bundle", metavar="ZIP", nargs="?", const="send_to_assistant.zip", help="собрать ZIP (по умолчанию — в папке прогона)")
@@ -2949,6 +3246,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--tail-kb", type=int, default=900, help="сколько КБ хвоста читать из каждого лога")
     sp.add_argument("--max-files", type=int, default=25, help="максимум лог-файлов к разбору")
     sp.add_argument("--all-files", action="store_true", help="в папках брать все .log/.txt, а не только nvidia-имена")
+    sp.add_argument("--keep-foreign", action="store_true", help="в папках не пропускать заведомо чужие логи (Office/браузер-телеметрия и т.п.)")
     sp.add_argument("--elevate", action="store_true", help="перезапустить себя с правами администратора (Windows)")
 
     sub.add_parser("scan", parents=[sp], help="полная диагностика (рекомендую)")
@@ -2959,6 +3257,7 @@ def build_parser() -> argparse.ArgumentParser:
     lp.add_argument("--tail-kb", type=int, default=1500)
     lp.add_argument("--max-files", type=int, default=25)
     lp.add_argument("--all-files", action="store_true")
+    lp.add_argument("--keep-foreign", action="store_true", help="не пропускать файлы, явно не относящиеся к NVIDIA")
     sub.add_parser("logs", parents=[lp], help="разбор логов")
 
     vp = common(argparse.ArgumentParser(add_help=False))
@@ -2977,7 +3276,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("selftest", help="проверить, что сам скрипт/база сигнатур исправны")
 
-    p.add_argument("extra", nargs="*", help=argparse.SUPPRESS)
+    sub.required = False          # без подкоманды = scan (см. cmd = args.cmd or "scan")
+    sub.dest = "cmd"
     return p
 
 
@@ -3096,7 +3396,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     hypothesis="log_nothing",
                 )
         if paths:
-            analyze_paths(report, paths, sigs=sigs, context=getattr(args, "context", 6), tail_kb=getattr(args, "tail_kb", 1500), max_files=getattr(args, "max_files", 25), any_files=getattr(args, "all_files", False))
+            analyze_paths(report, paths, sigs=sigs, context=getattr(args, "context", 6), tail_kb=getattr(args, "tail_kb", 1500), max_files=getattr(args, "max_files", 25), any_files=getattr(args, "all_files", False), skip_foreign=not getattr(args, "keep_foreign", False))
         if not stdin_mode and not paths:
             inc = sink.incoming if (sink and sink.incoming) else Path(OUT_DIR_NAME) / INCOMING_NAME
             print(
@@ -3137,6 +3437,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     tail_kb=int(getattr(args, "tail_kb", 900)),
                     max_files=int(getattr(args, "max_files", 25)),
                     any_files=bool(getattr(args, "all_files", False)),
+                    skip_foreign=not getattr(args, "keep_foreign", False),
                 )
                 report.snapshot["log_files_used"] = [str(p) for p in found]
             elif extra_paths:
