@@ -126,6 +126,13 @@ def install_fake_winreg() -> types.ModuleType:
             "DisplayVersion": (1, "23H2"),
             "UBR": (4, 3000),
         },
+        (0x2, r"SOFTWARE\NVIDIA Corporation\NVIDIA App\UXDriver"): {"AppEXEPath": (1, "C:\\fake\\NVIDIA App.exe")},
+        (0x2, r"SOFTWARE\NVIDIA Corporation\Installer2\Stripped"): {
+            "ShadowPlay/11.0.9.0": (4, 1),
+            "NvTelemetry/19.8.6.0": (4, 1),
+            "NvNodejs/1.5.0.0": (4, 0),
+        },
+        (0x2, r"SOFTWARE\NVIDIA Corporation\NVIDIA App\HotkeyStrings"): {"OpenIGO": (1, ""), "ToggleRecord": (1, "")},
         (0x2, r"SOFTWARE\NVIDIA Corporation\Global"): {
             "OverlayEnabled": (4, 0),
             "DesktopCapture": (4, 1),
@@ -173,8 +180,13 @@ def install_fake_winreg() -> types.ModuleType:
     mod.HKEY_LOCAL_MACHINE = 0x2
     mod.HKEY_CURRENT_USER = 0x1
     mod.KEY_READ = 0
+    mod.KEY_SET_VALUE = 2
+    mod.KEY_WOW64_64KEY = 0x0100
 
-    def OpenKey(hive, key, reserved=0):  # noqa: N802
+    opened: list[tuple[str, int]] = []
+
+    def OpenKey(hive, key, reserved=0, flags=0):  # noqa: N802
+        opened.append((key, flags))
         return KeyCtx(hive, key)
 
     def EnumValue(k, i):  # noqa: N802
@@ -190,7 +202,8 @@ def install_fake_winreg() -> types.ModuleType:
             raise OSError(2, "no more data")
         return subs[i]
 
-    mod.OpenKey, mod.EnumValue, mod.EnumKey = OpenKey, EnumValue, EnumKey
+    mod.OpenKey, mod.mod_opened = OpenKey, opened
+    mod.EnumValue, mod.EnumKey = EnumValue, EnumKey
     sys.modules["winreg"] = mod
     return mod
 
@@ -317,6 +330,30 @@ def main() -> int:
             assert (fdir / name).exists(), f"fix: нет {name} в папке прогона"
         ftxt = (fdir / "fix_report.txt").read_text(encoding="utf-8-sig")
         assert "ЧТО СДЕЛАЛ РЕЖИМ FIX" in ftxt and "wait_overlay_ready" in ftxt, "fix_report пустой"
+        assert "fix.step_error" not in ftxt, "fix: шаг упал с исключением"
+        scan_json = json.loads((sink.dir / "report.json").read_text(encoding="utf-8-sig"))
+        scodes = {f["code"] for f in scan_json["findings"]}
+        assert "inst.component_stripped" in scodes, "Stripped-значения в реестре не замечены (только подключи?)"
+        stripped = scan_json["snapshot"].get("stripped_components") or []
+        assert any("ShadowPlay" in x for x in stripped), f"snapshot.stripped_components: {stripped}"
+        assert not any("NvNodejs" in x for x in stripped), "значение =0 нельзя считать вырезанным"
+        w64flag = diag.winreg.KEY_WOW64_64KEY
+        flags = {k: f for (k, f) in diag.winreg.mod_opened if "Installer2" in k}
+        assert flags and all(f & w64flag for f in flags.values()), f"NVIDIA-ключ не открыт в 64-битном узле: {flags}"
+        fjson = json.loads((fdir / "report.json").read_text(encoding="utf-8-sig"))
+        codes = {f["code"] for f in fjson["findings"]}
+        assert "fix.watch_empty" in codes, f"fix: нет честного вывода о непрослеживаемых логах: {sorted(codes)[:8]}"
+        assert "основа сравнения" in ftxt, "fix_report: не показано, что именно сравнивалось"
+        fm = fjson["snapshot"]["fix_metrics"]
+        assert set(fm["delta_since_start"]) == {c for c, _ in diag.FIX_METRICS}, "fix_metrics неполный"
+        assert all("BS" not in g and chr(92) in g for g in diag.FIX_WATCH_GLOBS), "битые шаблоны FIX_WATCH_GLOBS"
+        fx = diag.Fixer(diag.Report(mode="smoke-fix"), dry_run=True, assume_yes=True, only=["hotkey", "app"])
+        w64 = fx.W64
+        assert w64 == 0x0100, f"Fixer.W64 = {w64} — 64-битный узел реестра не запрашивается"
+        vals = fx.values64(diag.winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\NVIDIA Corporation\NVIDIA App\HotkeyStrings")
+        assert set(vals) == {"OpenIGO", "ToggleRecord"}, f"values64 читает не то: {vals}"
+        subs = fx.subkeys64(diag.winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\NVIDIA Corporation\NVIDIA App")
+        assert "UXDriver" in subs and "HotkeyStrings" in subs, f"subkeys64: {subs}"
         assert diag.parse_key_combo("alt+z") == ([18], 90), "разбор комбинации клавиш сломан"
         assert diag.parse_key_combo("alt+\\")[1] == 220, "Alt+\\ не парсится"
 

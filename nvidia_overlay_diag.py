@@ -1239,7 +1239,7 @@ def scan_lines(lines: Sequence[str], sigs: Sequence[dict[str, Any]], context: in
             if not s["_re"].search(line) or (s["_neg"] and s["_neg"].search(line)):
                 continue
             if s["_ctx"] and not looks_bad:
-                continue  # шум:关键词 встретился в INFO/DEBUG-строке, ошибкой не считаем
+                continue  # шум: ключевое слово встретилось в INFO/DEBUG-строке, ошибкой не считаем
             hits[s["code"]].append(idx)
             matched = True
         if not matched and lvl in ("error", "fatal") and not BENIGN_ERROR_RE.search(line):
@@ -1518,22 +1518,45 @@ class WinCollector:
         return []
 
     # ---------- реестр ----------
+    @staticmethod
+    def _reg_open(hive: Any, key_path: str, access: int = 0) -> Any:
+        """Открыть ключ реестра.
+
+        NVIDIA пишет своё в 64-битный куст HKLM\\SOFTWARE\\NVIDIA Corporation; 32-битный Python
+        без KEY_WOW64_64KEY увидел бы пустой/перенаправленный куст и отчёты «не найдено» были бы
+        враньём. Поэтому для NVIDIA-ключей флаг добавляем всегда.
+        """
+        if not HAS_WINREG or winreg is None:
+            raise OSError(2, "winreg недоступен")
+        if hive == getattr(winreg, "HKEY_LOCAL_MACHINE", None) and key_path.upper().startswith(r"SOFTWARE\NVIDIA"):
+            access |= getattr(winreg, "KEY_WOW64_64KEY", 0)
+        if access:
+            try:
+                return winreg.OpenKey(hive, key_path, 0, access)  # type: ignore[union-attr]
+            except TypeError:  #winreg-заглушка без аргумента flags
+                pass
+        return winreg.OpenKey(hive, key_path)  # type: ignore[union-attr]
+
     def reg_values(self, hive: Any, key_path: str) -> dict[str, tuple[int, Any]]:
         out: dict[str, tuple[int, Any]] = {}
         if not HAS_WINREG:
             return out
         try:
-            with winreg.OpenKey(hive, key_path) as k:  # type: ignore[union-attr]
-                i = 0
-                while True:
-                    try:
-                        name, value, typ = winreg.EnumValue(k, i)  # type: ignore[union-attr]
-                    except OSError:
-                        break
-                    out[name] = (typ, value)
-                    i += 1
+            k = self._reg_open(hive, key_path, winreg.KEY_READ)
         except OSError:
             return out
+        try:
+            i = 0
+            while True:
+                try:
+                    name, value, typ = winreg.EnumValue(k, i)  # type: ignore[union-attr]
+                except (OSError, AttributeError):
+                    break
+                out[name] = (typ, value)
+                i += 1
+        finally:
+            with contextlib.suppress(Exception):
+                k.Close()  # type: ignore[union-attr]
         return out
 
     def reg_subkeys(self, hive: Any, key_path: str) -> list[str]:
@@ -1541,16 +1564,20 @@ class WinCollector:
         if not HAS_WINREG:
             return names
         try:
-            with winreg.OpenKey(hive, key_path) as k:  # type: ignore[union-attr]
-                i = 0
-                while True:
-                    try:
-                        names.append(winreg.EnumKey(k, i))  # type: ignore[union-attr]
-                    except OSError:
-                        break
-                    i += 1
+            k = self._reg_open(hive, key_path, winreg.KEY_READ)
         except OSError:
             return names
+        try:
+            i = 0
+            while True:
+                try:
+                    names.append(winreg.EnumKey(k, i))  # type: ignore[union-attr]
+                except (OSError, AttributeError):
+                    break
+                i += 1
+        finally:
+            with contextlib.suppress(Exception):
+                k.Close()  # type: ignore[union-attr]
         return names
 
     def reg_hunt(
@@ -2382,11 +2409,21 @@ class WinCollector:
         if not HAS_WINREG or winreg is None:
             return
         key = r"SOFTWARE\NVIDIA Corporation\Installer2\Stripped"
-        subs = self.reg_subkeys(winreg.HKEY_LOCAL_MACHINE, key)
+        found: list[str] = []
+        # В разных версиях установщика пометка лежит то как ПОДключ («...\Stripped\ShadowPlay/11.0.9.0»),
+        # то как ЗНАЧЕНИЕ в самом ключе («ShadowPlay/11.0.9.0 = 1»). Нужно читать и то, и другое:
+        # иначе «установка полная» при реально вырезанном ShadowPlay — и диагностика молча промахивается.
+        found += self.reg_subkeys(winreg.HKEY_LOCAL_MACHINE, key)
+        for name, (_typ, data) in self.reg_values(winreg.HKEY_LOCAL_MACHINE, key).items():
+            if isinstance(data, (int, float)) and not isinstance(data, bool) and not data:
+                continue  # 0 = компонент на месте
+            found.append(name)
+        subs = list(dict.fromkeys(x.strip() for x in found if x.strip()))
         if not subs:
             r.add("OK", "inst.not_stripped", "Ни один компонент драйвера не помечен 'Stripped' (установка полная)")
             return
         r.snapshot["stripped_components"] = subs
+        r.snapshot["stripped_key"] = f"HKLM\\{key}"
         names = [re.split(r"/", s)[0].strip() for s in subs]
         hard = [n for n in names if self.NEED_COMPONENTS.search(n)]
         soft = [n for n in names if n not in hard]
@@ -2674,12 +2711,13 @@ FIX_METRICS: tuple[tuple[str, str], ...] = (
 # где лежат эти логи (первые существующие пути берутся)
 # список (не кортеж): selftest подменяет содержимое, чтобы проверить движок метрик
 FIX_WATCH_GLOBS = [
-    r"C:' + BS + 'ProgramData' + BS + 'NVIDIA Corporation' + BS + 'ShadowPlay' + BS + 'CaptureCore*.log",
-    r"C:' + BS + 'ProgramData' + BS + 'NVIDIA Corporation' + BS + 'ShadowPlay' + BS + '*.log",
-    r"%LOCALAPPDATA%' + BS + 'NVIDIA Corporation' + BS + 'NVIDIA App' + BS + 'CxNative_NVIDIA App*.log",
-    r"%LOCALAPPDATA%' + BS + 'NVIDIA Corporation' + BS + 'NVIDIA Overlay' + BS + 'CxNative_NVIDIA Overlay*.log",
-    r"%PROGRAMDATA%' + BS + 'NVIDIA Corporation' + BS + 'NVIDIA App' + BS + 'UXD' + BS + 'Log.NVIDIA App.exe.log",
-    r"%PROGRAMDATA%' + BS + 'NVIDIA Corporation' + BS + 'NVIDIA App' + BS + 'UXD' + BS + 'Log.nvcontainer.exe.log",
+    r"C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureCore*.log",
+    r"C:\ProgramData\NVIDIA Corporation\ShadowPlay\CaptureApi*.log",
+    r"C:\ProgramData\NVIDIA Corporation\ShadowPlay\NvStream*.log",
+    r"%LOCALAPPDATA%\NVIDIA Corporation\NVIDIA App\CxNative_NVIDIA App*.log",
+    r"%LOCALAPPDATA%\NVIDIA Corporation\NVIDIA Overlay\CxNative_NVIDIA Overlay*.log",
+    r"%PROGRAMDATA%\NVIDIA Corporation\NVIDIA App\UXD\Log.NVIDIA App.exe.log",
+    r"%PROGRAMDATA%\NVIDIA Corporation\NVIDIA App\UXD\Log.nvcontainer.exe.log",
 ]
 
 FIX_CEF_CACHE_DIRS = (
@@ -2701,8 +2739,10 @@ FIX_APP_ROOTS = (
 )
 
 FIX_APP_EXES = (
+    r"C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\NVIDIA App.exe",
     r"C:\Program Files\NVIDIA Corporation\NVIDIA App\NVIDIA App.exe",
     r"%LOCALAPPDATA%\NVIDIA Corporation\NVIDIA App\NVIDIA App.exe",
+    r"%ProgramFiles%\NVIDIA Corporation\NVIDIA App\CEF\NVIDIA App.exe",
 )
 
 FIX_INSTALLER_GLOBS = (
@@ -2909,6 +2949,11 @@ class Fixer:
         self.col = WinCollector(report, timeout=60)
         self._marks: dict[str, int] = {}
         self._before: dict[str, int] = {}
+        self._probe_marks: dict[str, int] = {}
+        self.watched_detail: list[dict[str, Any]] = []
+        # HKLM\SOFTWARE\NVIDIA Corporation имеет 32- и 64-битный кусты: без этого флага
+        # 32-битный Python читал бы пустой куст и «Stripped»/хоткеи казались бы отсутствующими.
+        self.W64 = int(getattr(winreg, "KEY_WOW64_64KEY", 0)) if (IS_WIN and HAS_WINREG and winreg is not None) else 0
 
     # ---------- утилиты ----------
     @staticmethod
@@ -2972,11 +3017,55 @@ class Fixer:
         out: list[Path] = []
         for glob_pat in FIX_WATCH_GLOBS:
             pat = expand(glob_pat)
-            for hit in sorted(glob.glob(pat), key=lambda p: os.path.getmtime(p), reverse=True):
+            hits: list[tuple[float, str]] = []
+            for hit in glob.glob(pat):
                 p = Path(hit)
-                if p.is_file() and p not in out:
-                    out.append(p)
-        return out[:6]
+                if p.is_file():
+                    try:
+                        hits.append((p.stat().st_mtime, str(p)))
+                    except OSError:
+                        continue
+            for _mt, hit in sorted(hits, reverse=True):
+                if hit not in out:
+                    out.append(Path(hit))
+        return out[:8]
+
+    def watch_sizes(self) -> dict[str, int]:
+        """Размер каждого наблюдаемого лога «сейчас» — по нему считаем, что дописалось."""
+        out: dict[str, int] = {}
+        for p in self.watch_files():
+            with contextlib.suppress(OSError):
+                out[str(p)] = p.stat().st_size
+        return out
+
+    def count_appended(self, start_sizes: dict[str, int] | None) -> dict[str, int]:
+        """Считаем сигнатуры ТОЛЬКО в байтах, дописанных после отметки start_sizes.
+
+        Это точнее, чем «строки сверху вниз»: хвост логa при перезаписи сдвигается,
+        а прирост по размеру — это ровно то, что NVIDIA успела написать за наш прогон.
+        """
+        counts: Counter[str] = Counter()
+        self.watched_detail = []
+        start = start_sizes or {}
+        for p in self.watch_files():
+            frm = int(start.get(str(p), 0))
+            try:
+                size = p.stat().st_size
+                with open(p, "rb") as fh:
+                    if size < frm:  # лог повернули/перезаписали — читаем последние 256 КБ
+                        frm = max(0, size - 256 * 1024)
+                    fh.seek(frm)
+                    blob = fh.read(4 * 1024 * 1024)
+            except OSError:
+                continue
+            text = blob.decode("utf-8", "ignore")
+            low = text.lower()
+            for code, needle in FIX_METRICS:
+                n = low.count(needle.lower())
+                if n:
+                    counts[code] += n
+            self.watched_detail.append({"файл": str(p), "до": frm, "после": size})
+        return dict(counts)
 
     def read_watch(self) -> dict[str, list[str]]:
         data: dict[str, list[str]] = {}
@@ -2997,6 +3086,18 @@ class Fixer:
                     if needle.lower() in line.lower():
                         counts[code] += 1
         return dict(counts)
+
+    def watch_note(self) -> str:
+        """Сколько логов реально наблюдаем — без этого вывода фраза «новых ошибок нет» была бы пустой."""
+        n = len(self.watch_files())
+        if n:
+            return f"наблюдаю логов: {n} · " + "; ".join(
+                f"{Path(p).name} ({Path(p).stat().st_size // 1024} КБ)" for p in list(self.watch_sizes())[:4]
+            )
+        return (
+            "ни одного живого лога NVIDIA не открылось — сравнение «до/после» НЕ устроено. "
+            "Пути: " + ", ".join(expand(g) for g in FIX_WATCH_GLOBS[:3])
+        )
 
     # ---------- шаги ----------
     def step_kill_stack(self) -> None:
@@ -3170,6 +3271,61 @@ class Fixer:
         else:
             self.add("INFO", "fix.settings_clean", "Явно выключенного оверлея/реплея в конфигах не найдено", hypothesis="disabled")
 
+    # ---------- реестр: 64-битный узел ----------
+    # HKLM\SOFTWARE\NVIDIA Corporation виден и в WOW, и в 64-битном кусте, и значения
+    # (Installer2\Stripped, настройки оверлея) лежат в разных. 32-битный Python без
+    # KEY_WOW64_64KEY читал бы пустой куст и объявлял бы «не вычищено».
+    W64: int = 0
+
+    @contextlib.contextmanager
+    def _open(self, hive: Any, rel: str, access: int):
+        """OpenKey с флагом разрядности; если winreg-заглушка флага не принимает — открываем без него."""
+        assert winreg is not None
+        try:
+            k = winreg.OpenKey(hive, rel, 0, access | self.W64)  # type: ignore[union-attr]
+        except TypeError:
+            k = winreg.OpenKey(hive, rel)  # type: ignore[union-attr]
+        try:
+            yield k
+        finally:
+            with contextlib.suppress(Exception):
+                k.Close()
+
+    def subkeys64(self, hive: Any, rel: str) -> list[str]:
+        if not HAS_WINREG or winreg is None:
+            return []
+        names: list[str] = []
+        try:
+            with self._open(hive, rel, winreg.KEY_READ) as k:  # type: ignore[union-attr]
+                i = 0
+                while True:
+                    try:
+                        names.append(winreg.EnumKey(k, i))  # type: ignore[union-attr]
+                    except OSError:
+                        break
+                    i += 1
+        except OSError:
+            return names
+        return names
+
+    def values64(self, hive: Any, rel: str) -> dict[str, tuple[int, Any]]:
+        if not HAS_WINREG or winreg is None:
+            return {}
+        out: dict[str, tuple[int, Any]] = {}
+        try:
+            with self._open(hive, rel, winreg.KEY_READ) as k:  # type: ignore[union-attr]
+                i = 0
+                while True:
+                    try:
+                        name, value, typ = winreg.EnumValue(k, i)  # type: ignore[union-attr]
+                    except OSError:
+                        break
+                    out[name] = (typ, value)
+                    i += 1
+        except OSError:
+            return out
+        return out
+
     def step_hotkey_defaults(self) -> None:
         """Пустые строки хоткеев в реестре — причина 'Hotkey:  State: OpenIGO'. Удаляем пустое → App возьмёт дефолт (Alt+Z)."""
         if not HAS_WINREG or winreg is None:
@@ -3182,15 +3338,15 @@ class Fixer:
             def visit(h: Any, rel: str, depth: int) -> None:
                 if depth > 3:
                     return
-                for sub in self.col.reg_subkeys(h, rel):
+                for sub in self.subkeys64(h, rel):
                     full = f"{rel}\\{sub}" if rel else sub
                     if FIX_HOTKEY_NAME_RE.search(sub):
-                        for name, (_typ, data) in self.col.reg_values(h, full).items():
+                        for name, (_typ, data) in self.values64(h, full).items():
                             if isinstance(data, str) and not data.strip():
                                 cleared.append(f"{hname}\\{full}\\{name}")
                                 if not self.dry and self.confirm("Сбросить пустое значение хоткея", f"{hname}\\{full}\\{name} (данные пустые) → удалить, App подставит дефолт"):
                                     try:
-                                        with winreg.OpenKey(h, full, 0, winreg.KEY_SET_VALUE) as k:  # type: ignore[union-attr]
+                                        with self._open(h, full, getattr(winreg, "KEY_SET_VALUE", 2)) as k:  # type: ignore[union-attr]
                                             winreg.DeleteValue(k, name)  # type: ignore[union-attr]
                                         self.record("reg_delete", key=f"{hname}\\{full}", name=name, data="", hive=h)
                                     except OSError:
@@ -3258,7 +3414,32 @@ class Fixer:
             return
         exe = next((Path(expand(p)) for p in FIX_APP_EXES if Path(expand(p)).is_file()), None)
         if exe is None:
-            self.add("HIGH", "fix.app_notfound", "Не нашёл исполняемый файл NVIDIA App", detail=f"Искал: {'; '.join(FIX_APP_EXES)}", hypothesis="app_ver")
+            # 1) NVIDIA App сам пишет, где его исполняемый файл (UXDriver\AppEXEPath)
+            hk = r"SOFTWARE\NVIDIA Corporation\NVIDIA App\UXDriver"
+            for name, (_t, data) in self.values64(getattr(winreg, "HKEY_LOCAL_MACHINE", 0), hk).items():
+                if name.lower() == "appexepath" and isinstance(data, str) and Path(expand(data)).is_file():
+                    exe = Path(expand(data))
+                    break
+        if exe is None:
+            # 2) ограниченный поиск по корням установки из snapshot
+            roots = [Path(p) for p in (self.col.snapshot.get("install_roots") or []) if p]
+            for root in roots[:2]:
+                found = find_files(root, re.compile(r"(?i)^nvidia app.*\.exe$"), max_depth=3)
+                if found:
+                    exe = Path(found[0])
+                    break
+        if exe is None:
+            self.add(
+                "HIGH",
+                "fix.app_notfound",
+                "Не нашёл исполняемый файл NVIDIA App",
+                detail=(
+                    f"Искал: {'; '.join(FIX_APP_EXES)}\n"
+                    f"Корни установки: {', '.join(str(p) for p in (self.col.snapshot.get('install_roots') or [])[:3]) or 'не known'}"
+                ),
+                fixes=["Открой NVIDIA App из меню «Пуск» — если он не запускается, нужен флаг --reinstall."],
+                hypothesis="app_ver",
+            )
             return
         if self.dry:
             self.actions.append(f"[dry-run] start {exe}")
@@ -3273,6 +3454,7 @@ class Fixer:
     # ---------- проба Alt+Z ----------
     def step_probe(self) -> dict[str, Any]:
         mods, main = parse_key_combo(self.keys)
+        self._probe_marks = self.watch_sizes()   # считаем новые ошибки от самого нажатия
         pids = self.overlay_pids()
         before = {w["hwnd"] for w in overlay_windows(pids, any_pid=not pids)}
         result: dict[str, Any] = {
@@ -3306,8 +3488,8 @@ class Fixer:
             if seen:
                 break
         new = [w for w in seen if w["hwnd"] not in before]
-        after = self.read_watch()
-        new_err = self.count_metrics(after, self._marks)
+        after = self.count_appended(self._probe_marks or self._marks)
+        new_err = after
         result["window"] = (new or seen)[:4]
         result["new_window"] = bool(new)
         result["new_errors"] = new_err
@@ -3387,8 +3569,17 @@ class Fixer:
             )
             self.dry = True
         before = self.read_watch()
-        self._marks = {p: len(v) for p, v in before.items()}
+        self._marks = self.watch_sizes()          # байтовые отметки «до прогона»
         self._before = self.count_metrics(before)
+        if not self._marks:
+            self.add(
+                "MEDIUM",
+                "fix.watch_empty",
+                "Не нашёл живых логов NVIDIA для сравнения «до/после»",
+                detail=self.watch_note() + "\nПроверь, что CaptureCore.log пишется: NVIDIA App → Помощь → собрать файлы отладки.",
+                fixes=["python nvidia_overlay_diag.py logs   # покажет, какие логи вообще есть"],
+                hypothesis="log_nothing",
+            )
         plan = self.plan()
         print("ПЛАН АВТОПОЧИНКИ (всё с откатом через fix --undo):")
         for i, (sid, title, _fn) in enumerate(plan, 1):
@@ -3403,20 +3594,31 @@ class Fixer:
             except Exception as exc:  # noqa: BLE001
                 self.add("LOW", "fix.step_error", f"Шаг {sid} дал сбой: {type(exc).__name__}: {exc}", hypothesis="unknown")
         after = self.read_watch()
-        since = self.count_metrics(after, self._marks)        # что НАРОСЛО с начала прогона
+        since = self.count_appended(self._marks)               # что НАРОСЛО с начала прогона (по байтам)
         total_new = self.count_metrics(after)                   # всего в хвостах логов
         diff = {code: {"до": self._before.get(code, 0), "сейчас": since.get(code, 0), "всего": total_new.get(code, 0)} for code, _ in FIX_METRICS}
-        r.snapshot["fix_metrics"] = {"before_total": total_new, "delta_since_start": diff}
+        r.snapshot["fix_metrics"] = {
+            "before_total": total_new,
+            "delta_since_start": diff,
+            "watched": self.watched_detail,
+            "watch_note": self.watch_note(),
+        }
         r.snapshot["fix_probe"] = probe
         r.snapshot["fix_journal"] = self.journal
         r.snapshot["fix_actions"] = self.actions[-60:]
-        improved = all(v["сейчас"] <= 0 for v in diff.values())
+        compared = bool(self._marks)
+        improved = all(v["сейчас"] <= 0 for v in diff.values()) and compared
         self.add(
-            "OK" if improved else "MEDIUM",
+            ("OK" if improved else "MEDIUM") if compared else "LOW",
             "fix.summary",
-            "Итог автопочинки: новых ошибок из списка не появилось" if improved else "Итог автопочинки: ошибки всё ещё есть — смотри метрики",
+            (
+                "Итог автопочинки: сравнить «до/после» не с чем — логи NVIDIA не открылись"
+                if not compared
+                else ("Итог автопочинки: новых ошибок из списка не появилось" if improved else "Итог автопочинки: ошибки всё ещё есть — смотри метрики")
+            ),
             detail=" · ".join(f"{code} {v['до']}→{v['сейчас']}" for code, v in diff.items())
-            + "\nВсего в хвостах логов: " + ", ".join(f"{code}={v['всего']}" for code, v in diff.items()),
+            + "\nВсего в хвостах логов: " + ", ".join(f"{code}={v['всего']}" for code, v in diff.items())
+            + "\n" + self.watch_note(),
             hypothesis="unknown",
         )
         return {"journal": self.journal, "actions": self.actions, "probe": probe, "diff": diff}
@@ -3523,6 +3725,9 @@ def render_fix(report: Report, width: int) -> str:
         L.append("прирост ошибок с начала прогона:")
         for code, v in diff.items():
             L.append(f"   {'✓' if not v.get('сейчас') else '✗'} {code:<20} {v.get('до', 0)} → {v.get('сейчас', 0)}")
+    note = (report.snapshot.get("fix_metrics") or {}).get("watch_note") or ""
+    if note:
+        L.append("основа сравнения: " + note)
     if act:
         L.append("команды:")
         L += [f"   {a}" for a in act[-25:]]
@@ -4221,6 +4426,12 @@ def run_selftest(sigs: Sequence[dict[str, Any]]) -> int:
             "[13:21:52:06:200][R][NVIDIA App:1:1] CShadowPlayApi::GetStatus: OUT enabled(1)\n",
             encoding="utf-8",
         )
+        for pat in FIX_WATCH_GLOBS:
+            # однажды сюда попал «шаблон конкатенации» вместо пути — метрики молча показывали нули
+            if "BS" in pat or "' + " in pat or "NVIDIA Corporation" not in pat:
+                problems.append(f"fix: битый шаблон поиска логов: {pat}")
+            if chr(92) not in pat:
+                problems.append(f"fix: в шаблоне нет разделителей пути: {pat}")
         saved = list(FIX_WATCH_GLOBS)
         try:
             FIX_WATCH_GLOBS[:] = [str(root / "CaptureCore*.log")]
@@ -4236,6 +4447,17 @@ def run_selftest(sigs: Sequence[dict[str, Any]]) -> int:
                 c_tail = fx2.count_metrics(data, {str(w[0]): 2})
                 if c_tail.get("wait_overlay_ready"):
                     problems.append("count_metrics не учитывает точку отсчёта (старые строки попали в прирост)")
+                # дельта по байтам: старое не считается, новое — считается
+                m0 = fx2.watch_sizes()
+                if fx2.count_appended(m0):
+                    problems.append("count_appended: на неизменённом логе прирост должен быть 0")
+                with open(w[0], "a", encoding="utf-8") as fh:
+                    fh.write("[13:21:52:07:000][E][NVIDIA App:1:1] CShadowPlayApi::CheckAndWaitForOverlayReady: WaitForOverlayReady failed.\n")
+                d1 = fx2.count_appended(m0)
+                if d1.get("wait_overlay_ready") != 1:
+                    problems.append(f"count_appended не досчитался дописанной строки: {d1}")
+                if not fx2.watched_detail:
+                    problems.append("count_appended не заполнил watched_detail (нужно для отчёта)")
                 if overlay_windows():
                     problems.append("overlay_windows должен быть пуст на не-Windows")
         finally:

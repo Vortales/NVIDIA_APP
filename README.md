@@ -187,15 +187,33 @@ python nvidia_overlay_diag.py scan "D:\Logs" "C:\Users\me\Downloads\nvlog_2026-1
   подсказывает следующий шаг).
 
 Метрики «до → после» считаются по живым логам: `wait_overlay_ready`, `showgfe_fail`, `ipc_sync_err`, `ddi_shim`,
-`window_gone`, `drs_132`, `hooks_off` — если после `fix` прирост нулевой, стек живой; если `wait_overlay_ready`
-продолжает расти — дело в недоустановленном компоненте (`--reinstall`).
+`window_gone`, `drs_132`, `hooks_off`. Считается ровно то, что лог **дописал** за время прогона (по смещению в
+байтах, а не «последние N строк»), поэтому нагромождения старых ошибок не портят вывод. В отчёте всегда есть
+строка `основа сравнения: …` — сколько логов реально открыто. Если логи не открылись, появится находка
+`fix.watch_empty`, а итог будет «сравнить не с чем», а не ложное «новых ошибок нет».
+Если `wait_overlay_ready` продолжает расти — стек жив, но хост оверлея не готов: обычно это недоустановленный
+компонент (тогда нужен `--reinstall`).
+
+Проверить, что запись действительно работает, а не только открылось окно:
+
+```powershell
+python nvidia_overlay_diag.py fix --wait 60     # после починки сам нажмёт Alt+Z и подождёт окно
+python nvidia_overlay_diag.py verify            # короткая проверка «окно есть / процесса нет»
+```
+
+Дальше руками 30 секунд: `Alt+Z` → «Начать запись» (или `Alt+F10`) → 10–15 с игры → стоп → файл должен
+появиться в папке записей (её путь скрипт печатает в `report.txt`, раздел «Записи»). Файла нет, окно есть —
+это уже не «окно не открывается», а `ShadowPlay`/DDI-shim: смотри метрики `ddi_shim`, `hooks_off` и
+`HKLM\SOFTWARE\NVIDIA Corporation\Installer2\Stripped`.
 
 ```powershell
 python nvidia_overlay_diag.py fix --dry-run        # посмотреть план
 python nvidia_overlay_diag.py fix                  # сделать всё самому, с Alt+Z в конце
 python nvidia_overlay_diag.py fix --only drs,cef   # только конкретные шаги
+python nvidia_overlay_diag.py fix --only app,probe # только поднять App и проверить окно
 python nvidia_overlay_diag.py fix --reinstall      # + запустить установщик полного пакета
-python nvidia_overlay_diag.py fix --keys "alt+\"   # своя клавиша открытия
+python nvidia_overlay_diag.py fix --keys alt+f10   # своя комбинация (backslash в конце cmd/PowerShell
+                                                   #  передаётся неудобно — лучше f10/tab/буква)
 python nvidia_overlay_diag.py fix --undo           # откатить последний прогон
 run_fix.bat                                        # то же самое двойным кликом (сам поднимет админа)
 run_fix.bat undo                                   # откат
