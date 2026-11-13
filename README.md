@@ -7,8 +7,9 @@
 
 | файл | зачем |
 |---|---|
-| `nvidia_overlay_diag.py` | самодостатический скрипт (только стандартная библиотека, ничего не ставит и не меняет в системе) |
+| `nvidia_overlay_diag.py` | самодостатический скрипт (только стандартная библиотека). `scan`/`logs` ничего не меняют; `fix` — умеет чинить, но только переименованием/бэкапом и с журналом отката |
 | `run_diag.bat` | «двойной клик» для Windows: сам поднимает права админа, гоняет `selftest` + `scan`, в конце открывает папку `Результат` |
+| `run_fix.bat` | «двойной клик, сделай всё сам»: план → автопочинка стека → сам отправляет Alt+Z и проверяет окно. `run_fix.bat undo` — откатить |
 | `tests/windows_smoke.py` | смоук-тест Windows-веток на Linux/macOS (фейковый `powershell.exe` + фейковый `winreg`): `python3 tests/windows_smoke.py` |
 
 ---
@@ -62,6 +63,9 @@ python nvidia_overlay_diag.py hypotheses --from report.json   # перезака
 python nvidia_overlay_diag.py logs --inbox-done               # разобрать incoming и почистить его
 python nvidia_overlay_diag.py scan --out-dir D:\Diag --keep-runs 5 --copy-mb 40
 python nvidia_overlay_diag.py verify --wait 40         # после правок: дожидается процесса NVIDIA Overlay.exe
+python nvidia_overlay_diag.py fix --dry-run            # что он собирается сделать (ничего не трогая)
+python nvidia_overlay_diag.py fix                      # делает сам: сервисы/Drs/кэш/конфиг/хоткеи + Alt+Z
+python nvidia_overlay_diag.py fix --undo               # откатить последний прогон по fix_journal.json
 python nvidia_overlay_diag.py selftest                 # проверка, что сам парсер/база исправны
 python nvidia_overlay_diag.py list-signatures          # что именно ищется в логах
 ```
@@ -69,6 +73,8 @@ python nvidia_overlay_diag.py list-signatures          # что именно и�
 Флаги: `--json`, `-o FILE`, `--bundle [ZIP]`, `--only-problems`, `--quiet`, `--width`, `--context`, `--tail-kb`,
 `--max-files`, `--all-files`, `--days`, `--no-logs`, `--no-events`, `--elevate`, `--out-dir DIR`, `--no-sink`,
 `--no-zip`, `--inbox-done`, `--keep-runs N`, `--copy-mb N`, `--kb FILE`, `--keep-foreign`.
+Для `fix`: `--dry-run`, `--yes` (по умолчанию и так делает без вопросов), `--ask` (спрашивать каждый шаг),
+`--only ids` / `--skip ids`, `--wait N`, `--keys alt+z`, `--reinstall`, `--undo`, `--elevate`.
 
 `--keep-foreign` — не пропускать заведомо чужие логи. По умолчанию файл, в первых 400 строках которого нет ни
 одного NVIDIA-маркера (или видны признаки телеметрии Office/браузера), помечается как `log.not_nvidia` и не
@@ -152,7 +158,52 @@ C:\Program Files (x86)\NVIDIA Corporation\**
 python nvidia_overlay_diag.py scan "D:\Logs" "C:\Users\me\Downloads\nvlog_2026-11-13.log" --bundle diag.zip
 ```
 
-## 4. Как со мной работать (поток «лог → решение»)
+## 4. Режим `fix` — «пусть скрипт делает всё сам»
+
+`fix` сначала делает полную диагностику (как `scan`), потом выполняет шаги починки **по порядку** и в конце
+**сам отправляет Alt+Z** (SendInput) и проверяет, появилось ли окно оверлея. Каждый шаг изолирован: упал —
+записали находку и идём дальше.
+
+| шаг | что делает | обратимость |
+|---|---|---|
+| `kill` | `taskkill /f /t /im "NVIDIA Overlay.exe" /t` + завершает `NVIDIA App.exe` (убивает zombie-хосты, из-за которых App обращается не к тому pid) | не требуется |
+| `svc` | `Restart-Service NVDisplay.ContainerLocalSystem,NvContainerLocalSystem -Force` | не требуется |
+| `drs` | переименовывает `C:\ProgramData\NVIDIA Corporation\Drs` → `Drs.diagbak-<дата>`; драйвер пересоздаёт базу профилей (лечит `NVAPI error -132`, `isEnableHook: 0`, `unknown DRV value: 'none'`) | `--undo` вернёт имя |
+| `cef` | переименовывает кэш UI-рантайма (`Cache`, `GPUCache`, `Code Cache`, `ShaderCache`, `blob_storage`, `Network`) в `*.diagbak-<дата>` | `--undo` |
+| `settings` | в JSON-конфиге App включает **уже существующие** ключи `overlay` / `instant_replay` / `record` (ложь → правда); чужие ключи не создаёт, файл сначала копирует в бэкап | бэкап в `%TEMP%`, путь в журнале |
+| `hotkey` | удаляет **пустые** значения хоткеев в `HKLM\HKCU\...\NVIDIA Corporation\...\Hotkey...` (у тебя в логах `GetHotkeyProperty: reg read failed` и `Hotkey:  State: OpenIGO` — привязка пустая) | старое значение (пусто) в журнале |
+| `reinstall` | только с флагом `--reinstall`: находит в кэше загрузок `setup.exe` полного пакета и запускает его — тебе остаётся нажать «Выборочная установка» и включить захват. Это **решающий** шаг, когда `Installer2\Stripped\ShadowPlay = 1` | — |
+| `app` | стартует `NVIDIA App.exe` (одним экземпляром) | — |
+| `probe` | отправляет клавиши (`--keys`, по умолчанию `alt+z`), ждёт `--wait` с, ищет видимое окно процесса `NVIDIA Overlay.exe` через `EnumWindows`, и считает, **наросло** ли число ошибок в `CaptureCore.log` | — |
+
+Что важно про безопасность:
+
+* **ничего не удаляется** — только `rename` с суффиксом `.diagbak-<дата>` и бэкапы; `undo` возвращает как было;
+* без прав администратора (`net session` / `IsUserAnAdmin`) `fix` автоматически уходит в режим плана и пишет об этом;
+* `--dry-run` = только план (команды видны в `fix_report.txt`, ничего не выполняется); `--ask` = спросить перед каждым шагом;
+* после прогона в папке прогона лежат `fix_journal.json` (что и в каком порядке сделано, для отката) и `fix_report.txt`
+  (план, команды, «до → после» по метрикам, итог пробы Alt+Z);
+* код возврата: `0` — окно оверлея появилось (или проб не было), `2` — окно не появилось (`.bat` по этому коду
+  подсказывает следующий шаг).
+
+Метрики «до → после» считаются по живым логам: `wait_overlay_ready`, `showgfe_fail`, `ipc_sync_err`, `ddi_shim`,
+`window_gone`, `drs_132`, `hooks_off` — если после `fix` прирост нулевой, стек живой; если `wait_overlay_ready`
+продолжает расти — дело в недоустановленном компоненте (`--reinstall`).
+
+```powershell
+python nvidia_overlay_diag.py fix --dry-run        # посмотреть план
+python nvidia_overlay_diag.py fix                  # сделать всё самому, с Alt+Z в конце
+python nvidia_overlay_diag.py fix --only drs,cef   # только конкретные шаги
+python nvidia_overlay_diag.py fix --reinstall      # + запустить установщик полного пакета
+python nvidia_overlay_diag.py fix --keys "alt+\"   # своя клавиша открытия
+python nvidia_overlay_diag.py fix --undo           # откатить последний прогон
+run_fix.bat                                        # то же самое двойным кликом (сам поднимет админа)
+run_fix.bat undo                                   # откат
+```
+
+---
+
+## 5. Как со мной работать (поток «лог → решение»)
 
 1. `python nvidia_overlay_diag.py scan` (или `run_diag.bat` — он то же самое + откроет папку `Результат`).
 2. Заархивируй **папку `Результат`** (или только `run_<дата>/`) и пришли целиком. Не выжимай цитаты: мне нужен
@@ -165,7 +216,7 @@ python nvidia_overlay_diag.py scan "D:\Logs" "C:\Users\me\Downloads\nvlog_2026-1
 момента запуска NVIDIA App до нажатия Alt+Z. Положи их в `Результат\incoming\` и запусти `logs`, либо вставь прямо
 в консоль: `python nvidia_overlay_diag.py logs -` (PowerShell: Ctrl+Z + Enter; bash: Ctrl+D).
 
-## 5. Расширение базы сигнатур
+## 6. Расширение базы сигнатур
 
 `list-signatures` показывает формат; своя база подключается без правки скрипта:
 
@@ -190,7 +241,7 @@ python nvidia_overlay_diag.py scan --kb my_rules.json
 `sev`: `CRITICAL|HIGH|MEDIUM|LOW|INFO`; `hyp` — id гипотезы из таблицы выше (`unknown` принимает любое своё имя,
 но тогда оно не попадёт в «планы» типовых гипотез).
 
-## 6. Типовой чек-лист (если хочется быстро, до запуска скрипта)
+## 7. Типовой чек-лист (если хочется быстро, до запуска скрипта)
 
 1. Alt+Z не открывает оверлей, но `NVIDIA Overlay.exe` в процессах есть → конфликт оверлеев (RTSS/Game Bar/Discord) или перехват клавиши → смени клавишу.
 2. Процеса оверлея нет вообще → `services.msc`: `NVIDIA Display Container LS` должен быть Running/Automatic.
@@ -201,7 +252,7 @@ python nvidia_overlay_diag.py scan --kb my_rules.json
 7. Ноутбук: режим «только iGPU/Eco» → оверлея не будет, нужен dGPU-only/MUX.
 8. После любых правок — полная перезагрузка, не «Завершение работы» (Fast Startup оставляет состояние).
 
-## 7. Ограничения (важно, чтобы не было ложных надежд)
+## 8. Ограничения (важно, чтобы не было ложных надежд)
 
 * Скрипт **читает, но не чинит**: никаких `Set-Service`/реестра/файлов. Команды он только печатает.
 * Часть проверок требует админа (сервисы, журнал событий, ProgramData других профилей). Без админа скрипт сам пишет, что ограничено.

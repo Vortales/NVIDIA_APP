@@ -572,7 +572,7 @@ SIGNATURES: list[dict[str, Any]] = [
         re=r"(?i)(unhandled|uncaught|\bfatal\b|exception|\babort(ed)?\b|assert(ion)\s?fail|stack\s?trace|crashpad|minidump|\bWER\b|faulting\s+(module|application)|\.dmp\b)",
         sev="HIGH",
         ctx=True,
-        not_re=r"(?i)(CloudSync\.cpp|ShareServerWorker|\[[IDV]\][^\n]{0,120}\bAbort!!!)",
+        not_re=r"(?i)(Unhandled message type|GetException|UxdException|CloudSync\.cpp|ShareServerWorker|\[[IDV]\][^\n]{0,120}\bAbort!!!)",
         code="log.crash_generic",
         hyp="unknown",
         title="Аварийное завершение (exception/assert/minidump)",
@@ -815,10 +815,144 @@ SIGNATURES: list[dict[str, Any]] = [
             "Проверь, что HKCU не перенесён/не заблокирован (политики, Roaming-профиль, антивирус-защита реестра).",
         ],
     ),
+    dict(
+        re=r"(?i)QueryShadowPlayDdiShimStatus",
+        sev="CRITICAL",
+        ctx=True,
+        code="log.ddi_shim",
+        hyp="component_stripped",
+        title="Драйверный DDI-shim ShadowPlay не отвечает (QueryShadowPlayDdiShimStatus = ошибка)",
+        why=(
+            "Приложение спрашивает у драйвера, жив ли DDI-шейдер захвата, и получает ошибку. Так выглядит установка "
+            "без компонента захвата (HKLM\\...\\Installer2\\Stripped\\ShadowPlay = 1) или с уехавшим DRS: оверлею "
+            "просто не на что опереться, поэтому 'WaitForOverlayReady failed' повторяется вечно."
+        ),
+        fixes=[
+            "Переустанови ОФИЦИАЛЬНЫЙ полный пакет: 'Выборочная установка' → Graphics Driver + NVIDIA App + захват (ShadowPlay) + 'Чистая установка'.",
+            "Перед этим — сбрось DRS (fix сам переименует папку Drs) и перезапусти сервисы контейнера.",
+            "Проверка после: 'Stripped\\ShadowPlay' исчез из реестра, а в CaptureCore.log нет QueryShadowPlayDdiShimStatus/WaitForOverlayReady.",
+        ],
+    ),
+    dict(
+        re=r"(?i)SendMessageToWindow.{0,80}window not available",
+        sev="HIGH",
+        ctx=True,
+        code="log.overlay_window_gone",
+        hyp="overlay_proc",
+        title="Окно оверлея не создано: IPC-отправка в '[NVIDIA GeForce Overlay DT]' → 'window not available'",
+        why=(
+            "Сообщение некому доставить — оконного хоста оверлея нет в системе (не 'скрыт', а именно отсутствует). "
+            "Обычно это верх каскада: CEF-рантайм не поднялся → окно не зарегистрировано → App крутит цикл ожидания."
+        ),
+        fixes=[
+            "python nvidia_overlay_diag.py fix  — сам выгрузит zombie-хосты, перезапустит сервисы, снесёт кэш CEF и проверит Alt+Z.",
+            "Ручками: taskkill /f /im \"NVIDIA Overlay.exe\" /t → перезапуск App ровно одним экземпляром → Alt+Z.",
+            "Если папка ...\\NVIDIA App\\CEF\\osc пуста/нет index.html — это недоустановленный пакет, нужна переустановка.",
+        ],
+    ),
+    dict(
+        re=r"(?i)No message request handler attached|cannot parse SDKIPCMessage",
+        sev="INFO",
+        code="log.msgbus_noise",
+        hyp="overlay_proc",
+        title="Шум MessageBus ('no handler' / 'cannot parse SDKIPCMessage') — это следствие",
+        why=(
+            "Обработчики сообщений не подключены, потому что UI-рантайм оверлея не поднялся. Сам по себе шум не лечится — "
+            "лечи log.overlay_not_ready / log.ddi_shim."
+        ),
+        fixes=[],
+    ),
+    dict(
+        re=r"(?i)Failed to get installed version from registry",
+        sev="HIGH",
+        code="log.app_component_missing",
+        hyp="component_stripped",
+        title="App не видит установленных компонентов NVIDIA (AppDiscoveryHelper: 'Failed to get installed version')",
+        why=(
+            "NVIDIA App ищет в реестре установленные компоненты (RISE/GeForce NOW/Broadcast/GAssist/ShadowPlay)"
+            " и не находит. Так выглядит установка с вырезанными компонентами или недособранная установка: UI-модули есть,"
+            " драйверной части под них нет — оверлю не на что опереться."
+        ),
+        fixes=[
+            "Установи полный пакет заново: 'Выборочная установка' → Graphics Driver + NVIDIA App + захват (ShadowPlay) + 'Чистая установка'.",
+            "Проверка после: HKLM\\SOFTWARE\\NVIDIA Corporation\\Installer2\\Stripped — ключей 'Stripped' быть не должно.",
+        ],
+    ),
+    dict(
+        re=r"(?i)unknown DRV value: 'none'",
+        sev="HIGH",
+        code="log.drv_none",
+        hyp="drs_profiles",
+        title="Профиль драйвера прочитался как 'none' (unknown DRV value: 'none')",
+        why=(
+            "Чтение DRS-профиля вернуло пустое имя драйвера — база профилей повреждена или недоступна. Рядом обычно"
+            "'m_uiIndex: -1' и 'isEnableHook: 0': приложение не получает разрешение на инжект, оверлей в игре не появится."
+        ),
+        fixes=[
+            "Сбросить базу DRS: закрыть App и переименовать C:\\ProgramData\\NVIDIA Corporation\\Drs (делает 'fix --only drs').",
+            "После перезагрузки проверить, что папка Drs пересоздалась и доступна на запись.",
+        ],
+    ),
+    dict(
+        re=r"(?i)PostMessageA: NotOnBusError|NotOnBusError",
+        sev="HIGH",
+        code="log.msgbus_notonbus",
+        hyp="overlay_proc",
+        title="Сообщения оверлею не уходят: шина MessageBus не подключена (NotOnBusError)",
+        why=(
+            "Транспорт между NVIDIA App и хостом оверлея не установлен ('not on bus'), то есть UI-процесс не сделал "
+            "'MessageBus joined'. Окно не может ни открыться, ни отреагировать на Alt+Z — App крутит цикл ожидания. "
+            "Лечится не настройками, а целостностью стека: компоненты драйвера + перезапуск сервисов."
+        ),
+        fixes=[
+            "python nvidia_overlay_diag.py fix  (шаги kill+svc+cef сбрасывают висящие экземпляры и кэш).",
+            "Проверить, что 'NVIDIA Overlay.exe' вообще стартует: после запуска App в Диспетчере задач должен появиться процесс с этим именем.",
+            "Если процесс стартует, но 'joined' не появляется — компонент захвата не установлен (см. log.component_stripped), нужна переустановка полного пакета.",
+        ],
+    ),
+    dict(
+        re=r"(?i)(CHelperProcMgr::StopProcess: Failed to stop|CSPWorkerThread::ThreadFunc: Run Failed)",
+        sev="MEDIUM",
+        ctx=True,
+        code="log.helper_stuck",
+        hyp="overlay_proc",
+        title="Хелпер-процесс оверлея завис: его не удалось остановить, рабочий поток упал",
+        why=(
+            "Обрывательные 'Failed to stop the helper' и 'ThreadFunc: Run Failed' означают, что старый хост оверлея "
+            "остался живым/полумёртвым. Новые экземпляры App тогда цепляются не к тому процессу — окно не появляется."
+        ),
+        fixes=[
+            "taskkill /f /t /im \"NVIDIA Overlay.exe\"  (делает 'fix --only kill'), затем запустить App одним экземпляром.",
+        ],
+    ),
+    dict(
+        re=r"(?i)UxdException.{0,60}HResult=" + chr(34) + r"?(0x80070005|0x80070005)" + chr(34) + "?",
+        sev="HIGH",
+        code="log.uxd_access_denied",
+        hyp="elevated",
+        title="UXDriver (служебная часть драйвера) отдаёт 'Отказано в доступе' (0x80070005)",
+        why=(
+            "NVIDIA App ходит в UXDriver-состояния через nvcontainer; E_ACCESSDENIED там = не хватает прав или "
+            "состояние испорчено. Для оверлея это прямой путь к 'IpcSyncCall error' и 'WaitForOverlayReady failed': "
+            "запрос на открытие окна доходит, но выполнить его некому/некем."
+        ),
+        fixes=[
+            "Запустить NVIDIA App от администратора один раз (ПКМ → От имени администратора) и проверить Alt+Z — часто этого хватает, чтобы права согласовались.",
+            "python nvidia_overlay_diag.py fix --only svc,drs  — перезапуск сервисов + сброс DRS под тем же админом.",
+            "Далее: полная переустановка пакета (fix --reinstall), т.к. рядом обычно 'Stripped' компоненты.",
+        ],
+    ),
 ]
 
 # Общий «чёрный список» строк, которые считаются ошибочными, даже если не совпали
 # ни с одной сигнатурой — их топ берётся в отчёт как «неизвестные ошибки».
+# «похоже на ошибку», но в логах NVIDIA App это штатный шум (не копить в log.unknown_errors)
+BENIGN_ERROR_RE = re.compile(
+    r"(?i)(Error Control\s*=|!!!\s+inf:|\s(inf|flq|dvi):\s|DeleteDVRTmpFiles|GetRequestOrigin: Invalid request"
+    r"|Not a game, not initialising|NvCplApiIsUxdServiceRunning|NvAPICache|GpuMemoryAllocation|error:203|error:0x2\b"
+    r"|Voice Query\(ASR\)|Game Assist not found|NvMtxLock|SetThreadPriority)"
+)
+
 GENERIC_ERROR_RE = re.compile(
     r"(?i)\b(error|errors|err\b|fatal|critic(al)?|severe|fail(ed|ure|s)?|exception|denied|invalid|unable|cannot|refus|unavailable|timed\s+out|timeout|crash|abort|corrupt|missing|not\s+found|not\s+supported|unsupported|broken)\b"
 )
@@ -1026,6 +1160,10 @@ TS_RES = [
 
 LEVEL_RE = re.compile(r"(?im)^.{0,40}?[\[(]?\b(debug|verbose|trace|info|notice|warn(ing)?|error|fail(fatal)?|fatal|critical|severe|panic)\b[\]):]?")
 
+# логи NVIDIA App/CaptureCore помечают уровень одной буквой: «[E]», «2026-11-13T21:55:07.661[E]», «(W)»
+SHORT_LEVEL_RE = re.compile(r"^[^\n]{0,60}?[\[(]([EWDVIFTR])[\])}]")
+SHORT_LEVELS = {"e": "error", "f": "fatal", "w": "warning", "i": "info", "d": "debug", "v": "verbose", "t": "trace", "r": "info"}
+
 
 def sniff_read_text(path: Path, max_bytes: int | None = None) -> tuple[list[str], str]:
     """Читает лог, угадывая кодировку (UTF-16 BOM / UTF-8 / cp1251 / latin-1)."""
@@ -1065,6 +1203,9 @@ def line_timestamp(line: str) -> str | None:
 def level_of(line: str) -> str | None:
     m = LEVEL_RE.search(line)
     if not m:
+        m2 = SHORT_LEVEL_RE.match(line)
+        if m2:
+            return SHORT_LEVELS.get(m2.group(1).lower())
         return None
     lv = m.group(1).lower()
     if lv in ("fail", "failure", "error"):
@@ -1101,7 +1242,7 @@ def scan_lines(lines: Sequence[str], sigs: Sequence[dict[str, Any]], context: in
                 continue  # шум:关键词 встретился в INFO/DEBUG-строке, ошибкой не считаем
             hits[s["code"]].append(idx)
             matched = True
-        if not matched and lvl in ("error", "fatal"):
+        if not matched and lvl in ("error", "fatal") and not BENIGN_ERROR_RE.search(line):
             key = re.sub(r"\d+", "N", line.strip())[:160]
             unknown_errors.append((key, idx))
 
@@ -2515,6 +2656,879 @@ def analyze_paths(
 # --------------------------------------------------------------------------------------
 
 
+# ============================================================================
+# РЕЖИМ fix — скрипт сам выполняет план починки (с журналом и откатом)
+# ============================================================================
+
+# Показатели «было/стало»: считаем вхождения в хвостах живых логов NVIDIA.
+FIX_METRICS: tuple[tuple[str, str], ...] = (
+    ("wait_overlay_ready", "WaitForOverlayReady failed"),
+    ("showgfe_fail", "FAIL[0x80040228] name ShowGFEOverlay"),
+    ("ipc_sync_err", "IpcSyncCall error"),
+    ("ddi_shim", "QueryShadowPlayDdiShimStatus"),
+    ("window_gone", "window not available"),
+    ("drs_132", "NVAPI error - (-132)"),
+    ("hooks_off", "isEnableHook: 0"),
+)
+
+# где лежат эти логи (первые существующие пути берутся)
+# список (не кортеж): selftest подменяет содержимое, чтобы проверить движок метрик
+FIX_WATCH_GLOBS = [
+    r"C:' + BS + 'ProgramData' + BS + 'NVIDIA Corporation' + BS + 'ShadowPlay' + BS + 'CaptureCore*.log",
+    r"C:' + BS + 'ProgramData' + BS + 'NVIDIA Corporation' + BS + 'ShadowPlay' + BS + '*.log",
+    r"%LOCALAPPDATA%' + BS + 'NVIDIA Corporation' + BS + 'NVIDIA App' + BS + 'CxNative_NVIDIA App*.log",
+    r"%LOCALAPPDATA%' + BS + 'NVIDIA Corporation' + BS + 'NVIDIA Overlay' + BS + 'CxNative_NVIDIA Overlay*.log",
+    r"%PROGRAMDATA%' + BS + 'NVIDIA Corporation' + BS + 'NVIDIA App' + BS + 'UXD' + BS + 'Log.NVIDIA App.exe.log",
+    r"%PROGRAMDATA%' + BS + 'NVIDIA Corporation' + BS + 'NVIDIA App' + BS + 'UXD' + BS + 'Log.nvcontainer.exe.log",
+]
+
+FIX_CEF_CACHE_DIRS = (
+    "Cache",
+    "GPUCache",
+    "ShaderCache",
+    "GrShaderCache",
+    "Code Cache",
+    "DawnGraphiteCache",
+    "DawnWebGPUCache",
+    "blob_storage",
+    "Network",
+)
+
+FIX_APP_ROOTS = (
+    r"%LOCALAPPDATA%\NVIDIA Corporation\NVIDIA App",
+    r"%LOCALAPPDATA%\NVIDIA Corporation\NVIDIA Overlay",
+    r"C:\ProgramData\NVIDIA Corporation\NVIDIA App",
+)
+
+FIX_APP_EXES = (
+    r"C:\Program Files\NVIDIA Corporation\NVIDIA App\NVIDIA App.exe",
+    r"%LOCALAPPDATA%\NVIDIA Corporation\NVIDIA App\NVIDIA App.exe",
+)
+
+FIX_INSTALLER_GLOBS = (
+    r"C:\NVIDIA Corporation\Downloader\*\setup.exe",
+    r"C:\Program Files\NVIDIA Corporation\NVIDIA App\Downloader\*\setup.exe",
+    r"C:\ProgramData\NVIDIA Corporation\NVIDIA App\Downloader\*\setup.exe",
+    r"C:\NVIDIA\*\setup.exe",
+    r"%TEMP%\NVIDIA*\setup.exe",
+)
+
+FIX_HOTKEY_NAME_RE = re.compile(r"(?i)hotkey|shortcut|binding")
+FIX_TOGGLE_KEY_RE = re.compile(r"(?i)^(in[\s_-]?game[\s_-]?overlay|overlay|overlayenabled|instant[\s_-]?replay|instantreplay|automagicgame|highlight|record|capture)$")
+FIX_LEAF_RE = re.compile(r"(?i)^(enabled|on|active|isenabled|usedesktopcapture|allowcapture)$")
+FIX_DRS_DIR = r"C:\ProgramData\NVIDIA Corporation\Drs"
+FIX_SERVICES = ("NVDisplay.ContainerLocalSystem", "NvContainerLocalSystem")
+
+
+def _vk_for_token(tok: str) -> int | None:
+    """'alt'/'ctrl'/'shift'/'win' -> VK модификатора; 'z'/'f10'/'0' -> VK клавиши."""
+    t = tok.strip().lower()
+    if not t:
+        return None
+    table = {"alt": 0x12, "menu": 0x12, "ctrl": 0x11, "control": 0x11, "shift": 0x10, "win": 0x5B, "meta": 0x5B}
+    if t in table:
+        return table[t]
+    if len(t) == 1:
+        ch = t[0]
+        if "a" <= ch <= "z":
+            return ord(ch.upper())
+        if "0" <= ch <= "9":
+            return ord(ch)
+        return {",": 0xBC, ".": 0xBE, "/": 0xBF, "\\": 0xDC, "-": 0xBD, "=": 0xBB, ";": 0xBA, "'": 0xDE}.get(ch)
+    m = re.fullmatch(r"f(\d{1,2})", t)
+    if m:
+        n = int(m.group(1))
+        if 1 <= n <= 24:
+            return 0x70 + n - 1
+    return None
+
+
+def parse_key_combo(spec: str) -> tuple[list[int], int | None]:
+    """'alt+z' -> ([VK_MENU], VK_Z). Неизвестные токены отбрасываются."""
+    parts = [p for p in re.split(r"[+\-]", spec.strip()) if p.strip()]
+    mods: list[int] = []
+    main: int | None = None
+    for p in parts:
+        vk = _vk_for_token(p)
+        if vk is None:
+            continue
+        if p.strip().lower() in ("alt", "menu", "ctrl", "control", "shift", "win", "meta"):
+            mods.append(vk)
+        else:
+            main = vk
+    return mods, main
+
+
+def send_keys(mods: Sequence[int], main: int | None, hold_ms: int = 40) -> tuple[bool, str]:
+    """
+    Реальная отправка сочетания через SendInput (user32). Важно: INPUT должен иметь
+    «канонический» размер (union с MOUSEINPUT), иначе SendInput молча возвращает 0.
+    """
+    if not IS_WIN:
+        return False, "отправка клавиш доступна только в Windows"
+    try:
+        user32 = ctypes.windll.user32  # type: ignore[attr-defined]
+    except Exception as exc:  # noqa: BLE001
+        return False, f"user32 недоступен: {exc}"
+
+    LONG, DWORD, ULONG, WORD = (ctypes.c_long, ctypes.c_ulong, ctypes.c_ulong, ctypes.c_ushort)
+    PUL = ctypes.POINTER(ULONG)
+
+    class MOUSEINPUT(ctypes.Structure):
+        _fields_ = [("dx", LONG), ("dy", LONG), ("mouseData", DWORD), ("dwFlags", DWORD), ("time", DWORD), ("dwExtraInfo", PUL)]
+
+    class KEYBDINPUT(ctypes.Structure):
+        _fields_ = [("wVk", WORD), ("wScan", WORD), ("dwFlags", DWORD), ("time", DWORD), ("dwExtraInfo", PUL)]
+
+    class HARDWAREINPUT(ctypes.Structure):
+        _fields_ = [("uMsg", DWORD), ("wParamL", WORD), ("wParamH", WORD)]
+
+    class INPUTU(ctypes.Union):
+        _fields_ = [("mi", MOUSEINPUT), ("ki", KEYBDINPUT), ("hi", HARDWAREINPUT)]
+
+    class INPUT(ctypes.Structure):
+        _fields_ = [("type", DWORD), ("U", INPUTU)]
+
+    KEYUP = 0x0002
+    seq = [v for v in list(mods) + ([main] if main is not None else [])]
+    if not seq:
+        return False, "пустая комбинация"
+
+    def one(vk: int, up: bool) -> int:
+        inp = INPUT(type=1, U=INPUTU(ki=KEYBDINPUT(vk, 0, KEYUP if up else 0, 0, None)))
+        return int(user32.SendInput(1, ctypes.byref(inp), ctypes.sizeof(INPUT)))
+
+    try:
+        sent = 0
+        for vk in seq:
+            sent += one(vk, False)
+            time_sleep(hold_ms / 1000.0)
+        for vk in reversed(seq):
+            sent += one(vk, True)
+            time_sleep(hold_ms / 1000.0)
+    except Exception as exc:  # noqa: BLE001
+        return False, f"SendInput: {type(exc).__name__}: {exc}"
+    names = {0x12: "Alt", 0x11: "Ctrl", 0x10: "Shift", 0x5B: "Win"}
+    label = "+".join(names.get(v, f"VK{v:02X}") for v in seq)
+    if sent < len(seq) * 2:
+        return False, f"SendInput принял {sent} из {len(seq) * 2} событий (обычно значит: нет доступа к текущему desktop)"
+    return True, f"отправлено: {label}"
+
+
+FIX_OVERLAY_WIN_RE = re.compile(r"(?i)(overlay|shadowplay|geforce overlay|nvOverlay)")
+FIX_APPWIN_RE = re.compile(r"(?i)^(nvidia app|settings|nvidia control panel)")
+
+
+def overlay_windows(pids: Sequence[int] = (), any_pid: bool = False) -> list[dict[str, Any]]:
+    """
+    Видимые окна хоста оверлея. pids — процессы 'NVIDIA Overlay.exe': берём ВСЕДНЕ видимые
+    окна этих pid (именно появление нового окна = успех). Если pid не нашли (PowerShell
+    недоступен), откатываемся на эвристику по имени/классу окна, но окно самого App
+    ('NVIDIA App') отбрасываем, чтобы не назвать успехом открытое приложение.
+    """
+    if not IS_WIN:
+        return []
+    try:
+        user32 = ctypes.windll.user32  # type: ignore[attr-defined]
+        import ctypes.wintypes as wt
+    except Exception:  # noqa: BLE001
+        return []
+
+    wanted = {int(p) for p in pids if p}
+    found: list[dict[str, Any]] = []
+    Proto = ctypes.WINFUNCTYPE(ctypes.c_bool, wt.HWND, wt.LPARAM)
+
+    def cb(hwnd, _lp):
+        try:
+            pid = wt.DWORD()
+            user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+            if not user32.IsWindowVisible(hwnd):
+                return True
+            rect = wt.RECT()
+            user32.GetWindowRect(hwnd, ctypes.byref(rect))
+            w, h = rect.right - rect.left, rect.bottom - rect.top
+            if w < 80 or h < 60:
+                return True
+            cls = ctypes.create_unicode_buffer(256)
+            ttl = ctypes.create_unicode_buffer(512)
+            user32.GetClassNameW(hwnd, cls, 256)
+            user32.GetWindowTextW(hwnd, ttl, 512)
+            text = f"{cls.value or ''} {ttl.value or ''}"
+            if wanted:
+                if pid.value not in wanted:
+                    return True
+            elif any_pid and FIX_APPWIN_RE.match((ttl.value or "").strip()):
+                return True
+            elif not FIX_OVERLAY_WIN_RE.search(text):
+                return True
+            found.append({"hwnd": int(hwnd or 0), "pid": pid.value, "class": cls.value, "title": ttl.value, "w": w, "h": h})
+        except Exception:  # noqa: BLE001
+            return True
+        return True
+
+    try:
+        user32.EnumWindows(Proto(cb), 0)
+    except Exception:  # noqa: BLE001
+        return []
+    return found
+
+
+class Fixer:
+    """
+    Выполняет то, что раньше было списком команд. Ничего не удаляет: папки только
+    переименовываются (легко вернуть), файлы конфигов пишутся после бэкапа, реестр
+    чинится удалением ПУСТЫХ значений (App тогда возьмёт дефолты).
+    Каждый шаг пишется в fix_journal.json — оттуда же работает --undo.
+    """
+
+    def __init__(
+        self,
+        report: Report,
+        *,
+        dry_run: bool = False,
+        assume_yes: bool = False,
+        only: Sequence[str] = (),
+        skip: Sequence[str] = (),
+        wait_s: int = 25,
+        keys: str = "alt+z",
+        reinstall: bool = False,
+        sink: "RunSink | None" = None,
+        yes_needed: bool = False,
+    ) -> None:
+        self.r = report
+        self.dry = dry_run
+        self.yes = assume_yes or not yes_needed  # по умолчанию делаем сразу (скрипт и просят «сделай сам»)
+        self.only = {o.strip() for o in only if o.strip()}
+        self.skip = {s.strip() for s in skip if s.strip()}
+        self.wait_s = max(0, int(wait_s))
+        self.keys = keys
+        self.reinstall = reinstall
+        self.sink = sink
+        self.journal: list[dict[str, Any]] = []
+        self.actions: list[str] = []
+        self.col = WinCollector(report, timeout=60)
+        self._marks: dict[str, int] = {}
+        self._before: dict[str, int] = {}
+
+    # ---------- утилиты ----------
+    @staticmethod
+    def stamp() -> str:
+        return re.sub(r"[-:]", "", now_iso())[:15].replace("T", "-")
+
+    def admin(self) -> bool:
+        if not IS_WIN:
+            return False
+        try:
+            return bool(ctypes.windll.shell32.IsUserAnAdmin())  # type: ignore[attr-defined]
+        except Exception:  # noqa: BLE001
+            return False
+
+    def sh(self, cmd: str, timeout: int = 120) -> tuple[int, str]:
+        """Одна команда через cmd.exe (Windows). В dry-run только показываем."""
+        if not IS_WIN:
+            return 127, "только Windows (на этой ОС команды fix не выполняются)"
+        if self.dry:
+            self.actions.append(f"[dry-run] {cmd}")
+            return 0, "пропущено (dry-run)"
+        try:
+            proc = subprocess.run(  # noqa: S602 — осознанный shell, команды наши
+                cmd,
+                shell=True,
+                capture_output=True,
+                timeout=timeout,
+                stdin=subprocess.DEVNULL,
+            )
+            out = (proc.stdout + proc.stderr).decode("utf-8", "replace").strip()
+        except FileNotFoundError as exc:
+            return 127, f"не запущено: {exc}"
+        except subprocess.TimeoutExpired:
+            return 124, f"таймаут {timeout}s"
+        except Exception as exc:  # noqa: BLE001
+            return 1, f"{type(exc).__name__}: {exc}"
+        self.actions.append(f"$ {cmd}  → rc={proc.returncode}")
+        return proc.returncode, out[:1500]
+
+    def record(self, kind: str, **kw: Any) -> None:
+        self.journal.append({"ts": now_iso(), "kind": kind, **kw})
+
+    def confirm(self, title: str, detail: str) -> bool:
+        if self.dry:
+            return False
+        if self.yes:
+            print(f"→ {title}: {detail[:140]}")
+            return True
+        print(f"\n→ {title}\n  {detail}")
+        try:
+            ans = input("  сделать? [Д/н] ").strip().lower()
+        except Exception:  # noqa: BLE001  (нет tty)
+            ans = "д"
+        return ans in ("", "д", "y", "yes", "да", "+")
+
+    def add(self, sev: str, code: str, title: str, **kw: Any) -> None:
+        self.r.add(sev, code, title, source="fix", **kw)
+
+    # ---------- показатели ----------
+    def watch_files(self) -> list[Path]:
+        out: list[Path] = []
+        for glob_pat in FIX_WATCH_GLOBS:
+            pat = expand(glob_pat)
+            for hit in sorted(glob.glob(pat), key=lambda p: os.path.getmtime(p), reverse=True):
+                p = Path(hit)
+                if p.is_file() and p not in out:
+                    out.append(p)
+        return out[:6]
+
+    def read_watch(self) -> dict[str, list[str]]:
+        data: dict[str, list[str]] = {}
+        for p in self.watch_files():
+            try:
+                lines, _enc = sniff_read_text(p, max_bytes=4 * 1024 * 1024)
+            except OSError:
+                continue
+            data[str(p)] = lines
+        return data
+
+    def count_metrics(self, data: dict[str, list[str]], start: dict[str, int] | None = None) -> dict[str, int]:
+        counts: Counter[str] = Counter()
+        for path, lines in data.items():
+            frm = (start or {}).get(path, 0)
+            for line in lines[frm:]:
+                for code, needle in FIX_METRICS:
+                    if needle.lower() in line.lower():
+                        counts[code] += 1
+        return dict(counts)
+
+    # ---------- шаги ----------
+    def step_kill_stack(self) -> None:
+        """Снести все экземпляры оверлея/приложения: размножение pid — частая причина 'окна нет'."""
+        if not IS_WIN:
+            self.add("INFO", "fix.kill_skip", "taskkill доступен только в Windows", hypothesis="overlay_proc")
+            return
+        pids = self.overlay_pids()
+        if not pids and not self.dry:
+            self.add("OK", "fix.kill_none", "Живых хостов оверлея не найдено — убивать нечего", hypothesis="overlay_proc")
+            return
+        if not self.confirm(
+            "Выгрузить стек оверлея",
+            f"taskkill /f /im \"NVIDIA Overlay.exe\" /t и завершить 'NVIDIA App.exe' (pid: {', '.join(map(str, pids[:8])) or '—'}). Файлы не трогаем.",
+        ):
+            self.add("INFO", "fix.kill_skip", "Убийство процессов пропущено (не подтверждено)", hypothesis="overlay_proc")
+            return
+        rc, out = self.sh('taskkill /f /t /im "NVIDIA Overlay.exe"')
+        self.add("OK" if rc in (0, 128) else "LOW", "fix.kill_overlay", f"taskkill NVIDIA Overlay.exe → rc={rc}", detail=out[:300], hypothesis="overlay_proc")
+        self.sh('taskkill /f /im "NVIDIA App.exe"')
+        self.record("kill", targets=["NVIDIA Overlay.exe", "NVIDIA App.exe"], pids=pids)
+
+    def overlay_pids(self) -> list[int]:
+        procs = self.col.as_list(
+            self.col.ps(
+                "Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'NVIDIA Overlay' } | "
+                "ForEach-Object { [pscustomobject]@{ PID=$_.ProcessId } }"
+            )
+        )
+        return [int(p["PID"]) for p in procs if str(p.get("PID", "")).isdigit()]
+
+    def step_restart_services(self) -> None:
+        names = ",".join(FIX_SERVICES)
+        if not self.confirm(
+            "Перезапустить сервисы NVIDIA",
+            f"Restart-Service {names} -Force (без перезагрузки, зависимости подтянутся сами).",
+        ):
+            self.add("INFO", "fix.svc_skip", "Перезапуск сервисов пропущен", hypothesis="svc")
+            return
+        ps = f"Restart-Service -Name {names} -Force -ErrorAction SilentlyContinue; Get-Service -Name {names} | Select-Object Name,Status | Out-String"
+        rc, out = self.sh(f'powershell -NoProfile -NonInteractive -Command "{ps}"', timeout=180)
+        ok = "Running" in out or rc == 0
+        self.add(
+            "OK" if ok else "HIGH",
+            "fix.svc_restart",
+            f"Сервисы перезапущены (rc={rc})",
+            detail=out.strip()[:400] or "нет вывода",
+            fixes=[] if ok else ["Запусти services.msc и проверь, что NVDisplay.ContainerLocalSystem стартует вручную."],
+            hypothesis="svc",
+        )
+        self.record("services", names=list(FIX_SERVICES))
+
+    def step_rebuild_drs(self) -> None:
+        """Переименовать ProgramData\\...\\Drs → драйвер пересоберёт базу профилей (лечит -132 / isEnableHook: 0)."""
+        src = Path(expand(FIX_DRS_DIR))
+        if not src.exists():
+            self.add("OK", "fix.drs_absent", f"Папки {FIX_DRS_DIR} нет — сбрасывать нечего", hypothesis="drs_profiles")
+            return
+        dst = src.with_name(f"{src.name}.diagbak-{self.stamp()}")
+        if not self.confirm(
+            "Сбросить базу профилей DRS",
+            f"переименовать {src} → {dst.name}. Игра/оверлей после этого видят чистые профили. Откат: python nvidia_overlay_diag.py fix --undo",
+        ):
+            self.add("INFO", "fix.drs_skip", "Сброс DRS пропущен", hypothesis="drs_profiles")
+            return
+        try:
+            if self.dry:
+                self.actions.append(f"[dry-run] rename {src} → {dst}")
+            else:
+                src.rename(dst)
+                self.record("rename", src=str(src), dst=str(dst), what="drs")
+        except OSError as exc:
+            self.add(
+                "HIGH",
+                "fix.drs_locked",
+                "Папку Drs переименовать не удалось (удерживается драйвером)",
+                detail=f"{type(exc).__name__}: {exc}\nСначала шаг 'Перезапустить сервисы NVIDIA', потом повторить; либо назначить переименование на перезагрузку.",
+                fixes=["powershell (админ): Restart-Service NVDisplay.ContainerLocalSystem -Force, затем повторить fix --only drs",
+                       "или: перегрузись и сразу запусти fix --only drs (до запуска NVIDIA App)"],
+                hypothesis="drs_profiles",
+            )
+            return
+        self.add(
+            "OK",
+            "fix.drs_reset",
+            f"База DRS сброшена: {src.name} → {dst.name}",
+            detail="Драйвер создаст Drs заново при следующем обращении. Если что — fix --undo вернёт как было.",
+            hypothesis="drs_profiles",
+        )
+
+    def step_clear_cef(self) -> None:
+        """Кэш CEF — источник 'приложение есть, а окно белое/никакое'."""
+        moved: list[str] = []
+        for root_pat in FIX_APP_ROOTS:
+            root = Path(expand(root_pat))
+            if not root.is_dir():
+                continue
+            for sub in sorted(root.iterdir()):
+                if not sub.is_dir():
+                    continue
+                if sub.name.strip().lower() not in {c.lower() for c in FIX_CEF_CACHE_DIRS}:
+                    continue
+                dst = sub.with_name(f"{sub.name}.diagbak-{self.stamp()}")
+                if self.dry:
+                    self.actions.append(f"[dry-run] rename {sub} → {dst.name}")
+                    moved.append(sub.name)
+                    continue
+                try:
+                    sub.rename(dst)
+                    moved.append(sub.name)
+                    self.record("rename", src=str(sub), dst=str(dst), what="cef_cache")
+                except OSError:
+                    pass
+        if moved:
+            self.add("OK", "fix.cef_cleared", f"Кэш UI-рантайма убран в .diagbak: {', '.join(sorted(set(moved))[:6])}", hypothesis="config_corrupt")
+        else:
+            self.add("INFO", "fix.cef_nothing", "Кэша CEF в типовых папках не нашлось (или уже чист)", hypothesis="config_corrupt")
+
+    def step_fix_settings(self) -> None:
+        """Включить оверлей/реплей в конфиге App, если они там явно выключены (только существующие ключи!)."""
+        touched = 0
+        candidates: list[Path] = []
+        for root_pat in FIX_APP_ROOTS:
+            root = Path(expand(root_pat))
+            if not root.is_dir():
+                continue
+            candidates += find_files(root, re.compile(r"(?i)(settings|config|options).*\.json$"), max_depth=3, limit=600)
+        candidates = [c for c in candidates if c.is_file() and c.stat().st_size < 512 * 1024]
+        for f in candidates[:8]:
+            try:
+                obj = json.loads(f.read_text(encoding="utf-8-sig"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            changed: list[str] = []
+
+            def walk(node: Any, path: str = "", near: bool = False) -> None:
+                if isinstance(node, dict):
+                    for k, v in list(node.items()):
+                        kp = f"{path}/{k}"
+                        key = str(k)
+                        direct = bool(FIX_TOGGLE_KEY_RE.search(key))
+                        if isinstance(v, bool) and not v and (direct or (near and FIX_LEAF_RE.search(key))):
+                            node[k] = True
+                            changed.append(kp)
+                        else:
+                            walk(v, kp, near=direct or near)
+                elif isinstance(node, list):
+                    for i, v in enumerate(node):
+                        walk(v, f"{path}[{i}]")
+
+            walk(obj)
+            if not changed:
+                continue
+            if self.dry:
+                self.actions.append(f"[dry-run] {f}: включить {', '.join(changed[:6])}")
+                touched += 1
+                continue
+            if not self.confirm("Включить оверлей в конфиге", f"{f.name}: {', '.join(changed[:6])} → true (оригинал в бэкап)"):
+                continue
+            bak = Path(tempfile.gettempdir()) / f"{f.name}.diagbak-{self.stamp()}"
+            try:
+                bak.write_bytes(f.read_bytes())
+                self.record("copy", src=str(f), dst=str(bak), what="settings_backup")
+                f.write_text(json.dumps(obj, ensure_ascii=False, indent=2), encoding="utf-8")
+                touched += 1
+            except OSError as exc:
+                self.add("LOW", "fix.settings_write_fail", f"Конфиг не перезаписан: {exc}", hypothesis="disabled")
+                continue
+        if touched:
+            self.add("OK", "fix.settings_fixed", f"В конфиге App включены переключатели оверлея/записи (файлов: {touched})", hypothesis="disabled")
+        else:
+            self.add("INFO", "fix.settings_clean", "Явно выключенного оверлея/реплея в конфигах не найдено", hypothesis="disabled")
+
+    def step_hotkey_defaults(self) -> None:
+        """Пустые строки хоткеев в реестре — причина 'Hotkey:  State: OpenIGO'. Удаляем пустое → App возьмёт дефолт (Alt+Z)."""
+        if not HAS_WINREG or winreg is None:
+            self.add("INFO", "fix.hotkey_skip", "Реестр недоступен (не Windows) — пропускаю", hypothesis="hotkey")
+            return
+        cleared: list[str] = []
+        for hive, hname in ((winreg.HKEY_CURRENT_USER, "HKCU"), (winreg.HKEY_LOCAL_MACHINE, "HKLM")):
+            base = r"SOFTWARE\NVIDIA Corporation"
+
+            def visit(h: Any, rel: str, depth: int) -> None:
+                if depth > 3:
+                    return
+                for sub in self.col.reg_subkeys(h, rel):
+                    full = f"{rel}\\{sub}" if rel else sub
+                    if FIX_HOTKEY_NAME_RE.search(sub):
+                        for name, (_typ, data) in self.col.reg_values(h, full).items():
+                            if isinstance(data, str) and not data.strip():
+                                cleared.append(f"{hname}\\{full}\\{name}")
+                                if not self.dry and self.confirm("Сбросить пустое значение хоткея", f"{hname}\\{full}\\{name} (данные пустые) → удалить, App подставит дефолт"):
+                                    try:
+                                        with winreg.OpenKey(h, full, 0, winreg.KEY_SET_VALUE) as k:  # type: ignore[union-attr]
+                                            winreg.DeleteValue(k, name)  # type: ignore[union-attr]
+                                        self.record("reg_delete", key=f"{hname}\\{full}", name=name, data="", hive=h)
+                                    except OSError:
+                                        pass
+                    visit(h, full, depth + 1)
+
+            visit(hive, base, 0)
+        if cleared:
+            self.add(
+                "MEDIUM",
+                "fix.hotkey_reset",
+                f"Найдено пустых привязок хоткеев: {len(cleared)}",
+                detail="Пустая строка = 'Alt+Z' ни к чему не привязан. " + ("dry-run: ничего не менял." if self.dry else "Пустые значения убраны — назначь Alt+Z заново в настройках App."),
+                evidence=cleared[:6],
+                hypothesis="hotkey",
+                fixes=["NVIDIA App → Настройки → Горячие клавиши → назначить Alt+Z ещё раз (теперь значение сохранится)."],
+            )
+        else:
+            self.add("INFO", "fix.hotkey_ok", "Пустых хоткей-значений в реестре нет", hypothesis="hotkey")
+
+    def step_reinstall(self) -> None:
+        """Решающий шаг при Installer2\\Stripped\\ShadowPlay: старт найденного установщика (галки сам)."""
+        if not self.reinstall:
+            self.add(
+                "INFO",
+                "fix.reinstall_skip",
+                "Переустановка пакета не запускалась (нужен флаг --reinstall)",
+                detail=(
+                    "Если HKLM\\SOFTWARE\\NVIDIA Corporation\\Installer2\\Stripped содержит ShadowPlay — без полного "
+                    "пакета драйвера оверлей НЕ заработает, что бы тут ни нажимать. Скачай официальный пакет и "
+                    "поставь 'Выборочная установка' → Graphics Driver + NVIDIA App + захват (ShadowPlay), 'Чистая установка'."
+                ),
+                fixes=["запусти: python nvidia_overlay_diag.py fix --reinstall  (сам найду setup.exe в кэше загрузок и открою его)"],
+                hypothesis="component_stripped",
+            )
+            return
+        found: list[str] = []
+        for pat in FIX_INSTALLER_GLOBS:
+            found += [h for h in glob.glob(expand(pat)) if Path(h).is_file()]
+        if not found:
+            self.add(
+                "HIGH",
+                "fix.reinstall_nopackage",
+                "Локального установочного пакета не нашёл — сначала скачай драйвер",
+                detail=f"Искал по: {'; '.join(FIX_INSTALLER_GLOBS[:3])}… Скачай полный пакет (nvidia.com → Drivers → твою GPU) и повтори fix --reinstall.",
+                fixes=["скачай пакет, потом: python nvidia_overlay_diag.py fix --reinstall"],
+                hypothesis="component_stripped",
+            )
+            return
+        setup = max(found, key=lambda p: os.path.getmtime(p))
+        if not self.confirm("Запустить установщик драйвера", f"{setup}\nВ UI выбери 'Выборочная установка' и включи NVIDIA App + захват/ShadowPlay + 'Чистая установка'."):
+            return
+        rc, out = self.sh(f'start "" "{setup}"', timeout=20)
+        self.add(
+            "OK" if rc == 0 else "HIGH",
+            "fix.reinstall_started",
+            f"Установщик запущен: {Path(setup).name} (rc={rc})",
+            detail="Доведи установку до конца, затем: python nvidia_overlay_diag.py fix --only probe --wait 40",
+            hypothesis="component_stripped",
+        )
+
+    def step_start_app(self) -> None:
+        if not IS_WIN:
+            self.add("INFO", "fix.app_skip", "Запуск App — только в Windows", hypothesis="overlay_proc")
+            return
+        exe = next((Path(expand(p)) for p in FIX_APP_EXES if Path(expand(p)).is_file()), None)
+        if exe is None:
+            self.add("HIGH", "fix.app_notfound", "Не нашёл исполняемый файл NVIDIA App", detail=f"Искал: {'; '.join(FIX_APP_EXES)}", hypothesis="app_ver")
+            return
+        if self.dry:
+            self.actions.append(f"[dry-run] start {exe}")
+            return
+        try:
+            subprocess.Popen([str(exe)], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)  # noqa: S603
+            self.add("OK", "fix.app_started", f"NVIDIA App запущен: {exe}", hypothesis="overlay_proc")
+            self.record("launch", exe=str(exe))
+        except OSError as exc:
+            self.add("HIGH", "fix.app_start_fail", f"NVIDIA App не стартует: {exc}", hypothesis="app_ver")
+
+    # ---------- проба Alt+Z ----------
+    def step_probe(self) -> dict[str, Any]:
+        mods, main = parse_key_combo(self.keys)
+        pids = self.overlay_pids()
+        before = {w["hwnd"] for w in overlay_windows(pids, any_pid=not pids)}
+        result: dict[str, Any] = {
+            "keys": self.keys, "sent": False, "note": "", "window": [], "new_window": False,
+            "pids": pids[:8], "waited": self.wait_s,
+        }
+        if not self.dry and not pids and IS_WIN:
+            self.add(
+                "HIGH",
+                "fix.probe_nohost",
+                "Процесса 'NVIDIA Overlay.exe' нет — нажимать Alt+Z бесполезно",
+                detail=(
+                    "Хост оверлея вообще не запущен: App не смог его поднять (см. log.ddi_shim / "
+                    "log.msgbus_notonbus / log.component_stripped). Сначала шаги kill,svc,app."
+                ),
+                fixes=["python nvidia_overlay_diag.py fix --only kill,svc,app,probe --wait 40"],
+                hypothesis="overlay_proc",
+            )
+            result["note"] = "хост оверлея не запущен"
+            return result
+        ok, note = send_keys(mods, main)
+        result["sent"], result["note"] = ok, note
+        if not ok:
+            self.add("LOW", "fix.probe_nosend", f"Клавиши не отправлены: {note}", hypothesis="overlay_proc")
+            return result
+        deadline = time_monotonic() + self.wait_s
+        seen: list[dict[str, Any]] = []
+        while time_monotonic() < deadline:
+            time_sleep(1.5)
+            seen = overlay_windows(pids, any_pid=not pids)
+            if seen:
+                break
+        new = [w for w in seen if w["hwnd"] not in before]
+        after = self.read_watch()
+        new_err = self.count_metrics(after, self._marks)
+        result["window"] = (new or seen)[:4]
+        result["new_window"] = bool(new)
+        result["new_errors"] = new_err
+        if new or seen:
+            self.add(
+                "OK",
+                "fix.probe_window",
+                "Оверлей ОТКРЫЛСЯ: окно хоста видно" + (" (новое — появилось после нажатия)" if new else " (окно уже было видимым)"),
+                detail="; ".join(f"{w['class']} «{w['title']}» {w['w']}×{w['h']} pid={w['pid']}" for w in result["window"]),
+                evidence=[f"pid хостов: {', '.join(map(str, pids)) or '—'}", f"отправка: {note}"],
+                fixes=[
+                    "Открой Alt+Z → 'Запись' → 'Начать запись' (Alt+F10), запиши 15 с и проверь файл в папке записи.",
+                    "Если запись стартует и падает — прогони scan ещё раз: теперь будут видны новые коды.",
+                ],
+                hypothesis="overlay_proc",
+            )
+        else:
+            crit = ", ".join(f"{k}: +{v}" for k, v in new_err.items() if v) or "новых ошибок не наросло"
+            self.add(
+                "HIGH" if any(new_err.get(c) for c, _ in FIX_METRICS[:5]) else "MEDIUM",
+                "fix.probe_no_window",
+                f"Клавиши '{self.keys}' отправлены, но окно оверлея не появилось",
+                detail=(
+                    f"Ждал {self.wait_s} с, новых видимых окон у pid {', '.join(map(str, pids[:6])) or '—'} нет. "
+                    f"Прирост ошибок с начала прогона: {crit}. "
+                    "Растёт wait_overlay_ready/ddi_shim — стек не поднялся, дело не в клавишах."
+                ),
+                fixes=[
+                    "Сделай --reinstall: при вырезанном компоненте ShadowPlay дальнейшие перезапуски бессмысленны.",
+                    "Затем: python nvidia_overlay_diag.py fix --only kill,svc,app,probe --wait 40",
+                ],
+                evidence=[f"хосты: {', '.join(map(str, pids)) or 'нет'}", f"отправка: {note}"],
+                hypothesis="overlay_proc",
+            )
+        return result
+
+    # ---------- планирование ----------
+    STEPS = (
+        ("kill", "Выгрузить процессы оверлея/App", "step_kill_stack"),
+        ("svc", "Перезапустить сервисы NVIDIA", "step_restart_services"),
+        ("drs", "Сбросить базу профилей DRS", "step_rebuild_drs"),
+        ("cef", "Очистить кэш CEF (UI оверлея)", "step_clear_cef"),
+        ("settings", "Включить оверлей/запись в конфиге", "step_fix_settings"),
+        ("hotkey", "Сбросить пустые хоткеи в реестре", "step_hotkey_defaults"),
+        ("reinstall", "Запустить установщик полного пакета", "step_reinstall"),
+        ("app", "Запустить NVIDIA App", "step_start_app"),
+        ("probe", "Нажать Alt+Z и проверить окно", "step_probe"),
+    )
+
+    def plan(self) -> list[tuple[str, str, str]]:
+        out = []
+        for sid, title, fn in self.STEPS:
+            if self.only and sid not in self.only:
+                continue
+            if sid in self.skip:
+                continue
+            if sid == "reinstall" and not self.reinstall:
+                out.append((sid, title, fn))
+                continue
+            out.append((sid, title, fn))
+        return out
+
+    def run(self) -> dict[str, Any]:
+        r = self.r
+        r.snapshot["fix_mode"] = {"dry_run": self.dry, "keys": self.keys, "wait_s": self.wait_s, "reinstall": self.reinstall}
+        if not IS_WIN:
+            self.dry = True  # на чужой ОС ничего не выполняем — только план
+            self.add("INFO", "fix.nowin", "Это не Windows: команды не выполняются, показываю план", hypothesis="unknown")
+        if IS_WIN and not self.admin() and not self.dry:
+            self.add(
+                "HIGH",
+                "fix.not_admin",
+                "Нужны права администратора",
+                detail="Без админа сервисы/Drs/реестр не трогаем. Запусти от админа или добавь --elevate.",
+                fixes=["python nvidia_overlay_diag.py fix --elevate"],
+                hypothesis="elevated",
+            )
+            self.dry = True
+        before = self.read_watch()
+        self._marks = {p: len(v) for p, v in before.items()}
+        self._before = self.count_metrics(before)
+        plan = self.plan()
+        print("ПЛАН АВТОПОЧИНКИ (всё с откатом через fix --undo):")
+        for i, (sid, title, _fn) in enumerate(plan, 1):
+            print(f"  {i}) {title}" + ("" if sid != "reinstall" else "   [только с --reinstall]"))
+        probe: dict[str, Any] = {}
+        for sid, _title, fn in plan:
+            r.note(f"fix: шаг {sid}")
+            try:
+                res = getattr(self, fn)()
+                if sid == "probe" and isinstance(res, dict):
+                    probe = res
+            except Exception as exc:  # noqa: BLE001
+                self.add("LOW", "fix.step_error", f"Шаг {sid} дал сбой: {type(exc).__name__}: {exc}", hypothesis="unknown")
+        after = self.read_watch()
+        since = self.count_metrics(after, self._marks)        # что НАРОСЛО с начала прогона
+        total_new = self.count_metrics(after)                   # всего в хвостах логов
+        diff = {code: {"до": self._before.get(code, 0), "сейчас": since.get(code, 0), "всего": total_new.get(code, 0)} for code, _ in FIX_METRICS}
+        r.snapshot["fix_metrics"] = {"before_total": total_new, "delta_since_start": diff}
+        r.snapshot["fix_probe"] = probe
+        r.snapshot["fix_journal"] = self.journal
+        r.snapshot["fix_actions"] = self.actions[-60:]
+        improved = all(v["сейчас"] <= 0 for v in diff.values())
+        self.add(
+            "OK" if improved else "MEDIUM",
+            "fix.summary",
+            "Итог автопочинки: новых ошибок из списка не появилось" if improved else "Итог автопочинки: ошибки всё ещё есть — смотри метрики",
+            detail=" · ".join(f"{code} {v['до']}→{v['сейчас']}" for code, v in diff.items())
+            + "\nВсего в хвостах логов: " + ", ".join(f"{code}={v['всего']}" for code, v in diff.items()),
+            hypothesis="unknown",
+        )
+        return {"journal": self.journal, "actions": self.actions, "probe": probe, "diff": diff}
+
+    # ---------- откат ----------
+    @staticmethod
+    def find_journal(sink: "RunSink | None") -> Path | None:
+        base = Path(sink.base) if sink and getattr(sink, "base", None) else Path(OUT_DIR_NAME)
+        if not base.is_dir():
+            return None
+        cands = sorted(base.glob("run_*/fix_journal.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+        return cands[0] if cands else None
+
+    def undo(self) -> int:
+        if not self.journal:
+            self.add("LOW", "fix.undo_empty", "В журнале нет обратимых действий", hypothesis="unknown")
+            return 0
+        done = 0
+        for item in reversed(self.journal):
+            kind = item.get("kind")
+            if kind == "rename":
+                src, dst = Path(item["src"]), Path(item["dst"])
+                if not dst.exists():
+                    continue
+                if self.dry:
+                    self.actions.append(f"[dry-run] rename {dst} → {src}")
+                    continue
+                with contextlib.suppress(OSError):
+                    if not src.exists():
+                        dst.rename(src)
+                        done += 1
+            elif kind == "copy":
+                src, dst = Path(item["src"]), Path(item["dst"])
+                if dst.is_file() and not self.dry:
+                    with contextlib.suppress(OSError):
+                        src.write_bytes(dst.read_bytes())
+                        done += 1
+            elif kind == "reg_delete":
+                self.actions.append(f"реестр не откатывается автоматом: было {item.get('key')}\\{item.get('name')} = '' (пусто) — верни как считал нужным")
+        self.add(
+            "OK" if done else "INFO",
+            "fix.undo",
+            f"Откат выполнено действий: {done}",
+            detail="Сервисы/процессы после отката стоит перезапустить: fix --only svc,kill,app,probe",
+            hypothesis="unknown",
+        )
+        return done
+
+
+def load_journal(path: Path) -> list[dict[str, Any]]:
+    try:
+        obj = json.loads(path.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    if isinstance(obj, dict):
+        for key in ("journal", "actions", "steps"):
+            if isinstance(obj.get(key), list):
+                return [x for x in obj[key] if isinstance(x, dict)]
+        return []
+    return [x for x in obj if isinstance(x, dict)]
+
+
+def run_fix(report: Report, args: argparse.Namespace, sink: "RunSink | None") -> dict[str, Any]:
+    fx = Fixer(
+        report,
+        dry_run=bool(getattr(args, "dry_run", False)),
+        assume_yes=not bool(getattr(args, "ask", False)),
+        only=str(getattr(args, "only", "") or "").split(","),
+        skip=str(getattr(args, "skip", "") or "").split(","),
+        wait_s=int(getattr(args, "wait", 25) or 25),
+        keys=str(getattr(args, "keys", "alt+z") or "alt+z"),
+        reinstall=bool(getattr(args, "reinstall", False)),
+        sink=sink,
+    )
+    if getattr(args, "undo", False):
+        src = Fixer.find_journal(sink)
+        if not src:
+            report.add("LOW", "fix.no_journal", f"Журнал не найден (ожидался '{OUT_DIR_NAME}/run_*/fix_journal.json') — откатывать нечего", hypothesis="unknown")
+            return {}
+        fx.journal = load_journal(src)
+        report.note(f"undo: журнал {src}")
+        fx.undo()
+        return {"undo_from": str(src)}
+    return fx.run()
+
+
+def render_fix(report: Report, width: int) -> str:
+    fx = report.snapshot.get("fix_mode") or {}
+    probe = report.snapshot.get("fix_probe") or {}
+    diff = (report.snapshot.get("fix_metrics") or {}).get("delta_since_start") or {}
+    act = report.snapshot.get("fix_actions") or []
+    if not fx:
+        return ""
+    L = ["", "=" * width, "ЧТО СДЕЛАЛ РЕЖИМ FIX", "=" * width]
+    L.append(f"режим: {'dry-run (только план)' if fx.get('dry_run') else 'выполнение'} · клавиши: {fx.get('keys')} · ждал {fx.get('wait_s')} с")
+    if probe:
+        win = probe.get("window") or []
+        L.append(
+            "проба: "
+            + ("ОКНО ОВЕРЛЕЯ ПОЯВИЛОСЬ — " + "; ".join(f"{w.get('class','?')} «{w.get('title','')}» {w.get('w')}×{w.get('h')}" for w in win[:2]) if win else "окна нет")
+            + (f" (отправка: {probe.get('note','')})" if not win else "")
+        )
+    if diff:
+        L.append("прирост ошибок с начала прогона:")
+        for code, v in diff.items():
+            L.append(f"   {'✓' if not v.get('сейчас') else '✗'} {code:<20} {v.get('до', 0)} → {v.get('сейчас', 0)}")
+    if act:
+        L.append("команды:")
+        L += [f"   {a}" for a in act[-25:]]
+    L.append("журнал: fix_journal.json в папке прогона; откат — python nvidia_overlay_diag.py fix --undo")
+    return "\n".join(L)
+
 def run_verify(wait_s: int, report: Report) -> None:
     r = report
     print("Проверка запуска оверлея.")
@@ -2995,7 +4009,7 @@ COMMAND_HINTS = [
 
 def render_commands() -> str:
     return "\n".join(
-        ["Команды-подсказки (ВЫПОЛНЯЙ САМ — скрипт ничего в системе не меняет):"] + ["  " + c for c in COMMAND_HINTS]
+        ["Команды-подсказки (в режиме scan скрипт ничего не меняет; хочешь, чтобы он сделал сам — режим fix):"] + ["  " + c for c in COMMAND_HINTS]
     )
 
 
@@ -3174,6 +4188,75 @@ def run_selftest(sigs: Sequence[dict[str, Any]]) -> int:
             if "ВСЁ В ПАПКЕ" not in sink.summary_line():
                 problems.append("summary_line неинформативна")
 
+    # ---- линт базы сигнатур + дым-тест режима fix ----
+    for sig in SIGNATURES:
+        for fld in ("re", "sev", "code", "hyp", "title"):
+            if not sig.get(fld):
+                problems.append(f"сигнатура {sig.get('code', '?')}: пустое поле {fld}")
+        if sig["sev"] not in SEV_WEIGHT:
+            problems.append(f"сигнатура {sig['code']}: неизвестный severity {sig['sev']}")
+        if sig["hyp"] not in HYPOTHESES:
+            problems.append(f"сигнатура {sig['code']}: гипотеза {sig['hyp']} не описана в HYPOTHESES")
+        if sig.get("not_re"):
+            try:
+                re.compile(sig["not_re"])
+            except re.error as exc:
+                problems.append(f"сигнатура {sig['code']}: битый not_re ({exc})")
+        if len(sig.get("fixes", [])) == 0 and sig["sev"] in ("CRITICAL", "HIGH"):
+            problems.append(f"сигнатура {sig['code']}: критичная, но без «что делать»")
+    if parse_key_combo("alt+z") != ([18], 90):
+        problems.append(f"parse_key_combo('alt+z') = {parse_key_combo('alt+z')}")
+    if parse_key_combo("alt+\\") != ([18], 220):
+        problems.append(f"parse_key_combo('alt+backslash') = {parse_key_combo(chr(43) + chr(92))}")
+    if level_of("[13:21:52:06:151][E][NVIDIA App:1:1] boom") != "error":
+        problems.append("level_of не видит короткую метку [E]")
+    if BENIGN_ERROR_RE.search("2026-01-01 ERROR CSettings::DeleteDVRTmpFiles: FindFirstFileW failed") is None:
+        problems.append("BENIGN_ERROR_RE не ловит известный шум")
+    # движок метрик «до/после» на подставном CaptureCore.log
+    with tempfile.TemporaryDirectory() as td3:
+        root = Path(td3)
+        (root / "CaptureCore.log").write_text(
+            "x" * 0 + "[13:21:52:06:151][E][NVIDIA App:1:1] CShadowPlayApi::CheckAndWaitForOverlayReady: WaitForOverlayReady failed.\n"
+            "[13:21:52:06:151][E][NVIDIA App:1:1] CShadowPlayApi::SetProperty: FAIL[0x80040228] name ShowGFEOverlay\n"
+            "[13:21:52:06:200][R][NVIDIA App:1:1] CShadowPlayApi::GetStatus: OUT enabled(1)\n",
+            encoding="utf-8",
+        )
+        saved = list(FIX_WATCH_GLOBS)
+        try:
+            FIX_WATCH_GLOBS[:] = [str(root / "CaptureCore*.log")]
+            fx2 = Fixer(Report(mode="selftest-fix"), dry_run=True, assume_yes=True, only=["probe"])
+            w = fx2.watch_files()
+            if not w:
+                problems.append("watch_files не нашёл подставной CaptureCore.log")
+            else:
+                data = fx2.read_watch()
+                c_all = fx2.count_metrics(data)
+                if c_all.get("wait_overlay_ready") != 1 or c_all.get("showgfe_fail") != 1:
+                    problems.append(f"count_metrics считает странно: {c_all}")
+                c_tail = fx2.count_metrics(data, {str(w[0]): 2})
+                if c_tail.get("wait_overlay_ready"):
+                    problems.append("count_metrics не учитывает точку отсчёта (старые строки попали в прирост)")
+                if overlay_windows():
+                    problems.append("overlay_windows должен быть пуст на не-Windows")
+        finally:
+            FIX_WATCH_GLOBS[:] = saved
+
+    try:
+        rep2 = Report(mode="selftest-fix")
+        fx = Fixer(rep2, dry_run=True, assume_yes=True, only=["probe", "settings", "hotkey"], sink=None)
+        import io as _io
+
+        with contextlib.redirect_stdout(_io.StringIO()):
+            res = fx.run()
+        if len(res.get("diff") or {}) != len(FIX_METRICS):
+            problems.append(f"fix: в метриках {len(res.get('diff') or {})} записей, ожидалось {len(FIX_METRICS)}")
+        if not any(f.code.startswith("fix.") for f in rep2.findings):
+            problems.append("fix: не ни одной находки fix.* (движок шаги не выполняет)")
+        if fx.journal:
+            problems.append("fix: в dry-run не должно быть записей в журнале откатов")
+    except Exception as exc:  # noqa: BLE001
+        problems.append(f"fix (dry-run) упал: {type(exc).__name__}: {exc}")
+
     print(f"проверено сигнатур: {len(SIGNATURES)}, строк фикстуры: {len(lines)}, сработало кодов: {len(got)}")
     print(f"топ-гипотеза по фикстуре: {hyps[0]['id'] if hyps else '-'}")
     if problems:
@@ -3197,6 +4280,7 @@ def build_parser() -> argparse.ArgumentParser:
               scan [ПУТЬ ...]     живые проверки Windows + разбор самых свежих логов (пути — дополнительно к типовым)
               logs ФАЙЛ|ПАПКА ...  только разбор логов (работает на Linux/macOS; '-' = stdin)
               verify              проверка 'запустился ли оверлей после правок'
+              fix                 САМ чинит стек и жмёт Alt+Z (список шагов — 'fix --help')
               hypotheses          только вердикт по последнему отчёту (см. --from)
               list-signatures     печать базы сигнатур (для расширения)
 
@@ -3250,6 +4334,28 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--elevate", action="store_true", help="перезапустить себя с правами администратора (Windows)")
 
     sub.add_parser("scan", parents=[sp], help="полная диагностика (рекомендую)")
+
+    fp = common(argparse.ArgumentParser(add_help=False))
+    fp.add_argument("paths", nargs="*", help="дополнительные файлы/папки с логами")
+    fp.add_argument("--days", type=int, default=3)
+    fp.add_argument("--no-logs", action="store_true", help="не разбирать логи перед починкой")
+    fp.add_argument("--no-events", action="store_true")
+    fp.add_argument("--context", type=int, default=6)
+    fp.add_argument("--tail-kb", type=int, default=900)
+    fp.add_argument("--max-files", type=int, default=25)
+    fp.add_argument("--all-files", action="store_true")
+    fp.add_argument("--keep-foreign", action="store_true")
+    fp.add_argument("--elevate", action="store_true", help="перезапустить себя от администратора")
+    fp.add_argument("--yes", "-y", action="store_true", help="то же, что и по умолчанию: делать без вопросов")
+    fp.add_argument("--ask", action="store_true", help="спрашивать подтверждение перед КАЖДЫМ шагом")
+    fp.add_argument("--dry-run", action="store_true", help="только план: ничего не выполнять")
+    fp.add_argument("--undo", action="store_true", help="откатить последний прогон fix по fix_journal.json")
+    fp.add_argument("--only", metavar="ids", help="выполнить только шаги (kill,svc,drs,cef,settings,hotkey,reinstall,app,probe) через запятую")
+    fp.add_argument("--skip", metavar="ids", help="исключить шаги через запятую")
+    fp.add_argument("--wait", type=int, default=25, metavar="N", help="сколько секунд ждать окно оверлея после Alt+Z (по умолчанию 25)")
+    fp.add_argument("--keys", default="alt+z", metavar="COMBO", help="какие клавиши отправить для открытия оверлея (alt+z, alt+\\, f10 …)")
+    fp.add_argument("--reinstall", action="store_true", help="разрешить найти и запустить установщик полного пакета (решающий шаг при Stripped\\ShadowPlay)")
+    sub.add_parser("fix", parents=[fp], help="сам чинит: processes→services→Drs→кэш→конфиг→хоткеи, затем жмёт Alt+Z и проверяет окно")
 
     lp = common(argparse.ArgumentParser(add_help=False))
     lp.add_argument("paths", nargs="*", help="лог-файлы или папки ('-' для stdin)")
@@ -3411,7 +4517,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not report.findings:  # не из --from
             col = WinCollector(report)
             report.snapshot["_days"] = int(getattr(args, "days", 3) or 3)
-            if cmd == "scan" or not IS_WIN:
+            if cmd in ("scan", "fix") or not IS_WIN:
                 col.collect_all()
             else:
                 report.note("hypotheses без --from: собран минимум данных (сервисы + процессы); полный вариант — scan")
@@ -3443,8 +4549,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             elif extra_paths:
                 analyze_paths(report, extra_paths, sigs=sigs, context=int(getattr(args, "context", 6)))
     # события (для scan)
-    if cmd == "scan" and IS_WIN and not getattr(args, "no_events", False) and not getattr(args, "src", None):
+    if cmd in ("scan", "fix") and IS_WIN and not getattr(args, "no_events", False) and not getattr(args, "src", None):
         WinCollector(report).check_event_log()
+
+    # ---- автопочинка: после сбора, до рендера (чтобы 'до/после' считались честно) ----
+    if cmd == "fix":
+        fix_res = run_fix(report, args, sink)
+        report.snapshot["fix_result_diff"] = fix_res.get("diff") or {}
 
     log_files = [Path(p) for p in (report.snapshot.get("log_files_used") or []) if Path(p).exists()]
 
@@ -3463,6 +4574,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             only_problems=bool(getattr(args, "only_problems", False)),
         )
         text += "\n" + render_commands()
+    if cmd == "fix":
+        text += "\n" + render_fix(report, width)
 
     # ---- всё в папку результатов (её и архивируешь) ----
     payload = report.to_json()
@@ -3470,7 +4583,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     payload["argv"] = " ".join(sys.argv[1:])
     payload["script_sha256_16"] = script_sha256()
 
-    default_name = "report.json" if getattr(args, "json", False) else ("hypotheses.txt" if cmd == "hypotheses" else "report.txt")
+    default_name = "report.json" if getattr(args, "json", False) else ("hypotheses.txt" if cmd == "hypotheses" else ("fix_plan.txt" if cmd == "fix" and getattr(args, "dry_run", False) else "report.txt"))
     save_anyway = sink is not None and sink.active
     out_arg = getattr(args, "out", None)
 
@@ -3495,12 +4608,22 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if save_anyway:
         sink.write_json("report.json", payload)
+        if cmd == "fix":
+            sink.write_json("fix_journal.json", payload.get("snapshot", {}).get("fix_journal", []))
+            sink.write_text("fix_report.txt", render_fix(report, width), bom=True)
         sink.write_text("verdict.txt", render_verdict(report, width) + "\n\n" + render_fixes(report))
         sink.copy_logs(log_files, cap_mb=int(getattr(args, "copy_mb", COPY_TOTAL_CAP_MB) or COPY_TOTAL_CAP_MB))
         sink.write_text("manifest.txt", sink.manifest(report, cmd, sys.argv[1:]))
         print(sink.summary_line())
     elif out_arg is None and getattr(args, "no_sink", False):
         print("\n(--no-sink: на диск ничего не писалось)")
+
+    rc = 0
+    if cmd == "fix" and IS_WIN and not getattr(args, "dry_run", False) and not getattr(args, "undo", False):
+        probe = report.snapshot.get("fix_probe") or {}
+        # 0 = оверлей открылся (или keys не отправлялись — не наш случай), 2 = окно не появилось
+        if probe.get("sent") and not (probe.get("window") or []):
+            rc = 2
 
     if getattr(args, "inbox_done", False) and sink:
         sink.mark_incoming_done(sink.grab_incoming())
@@ -3514,7 +4637,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"архив готов: {bp}  (логи внутри: {len(included)}) — можно отправить и его целиком")
         if not included:
             print('  внимание: логи не найдены — добавь путь вручную: scan "C:\\Путь\\к\\логу"  или кинь файл в incoming/')
-    return 0
+    if cmd == "fix" and rc == 2:
+        print("\nОКНА ОВЕРЛЕЯ НЕТ. Следующий шаг: python nvidia_overlay_diag.py fix --reinstall  (полный пакет с захватом), потом fix --only probe")
+    return rc
 
 
 if __name__ == "__main__":
