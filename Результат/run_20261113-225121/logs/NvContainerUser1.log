@@ -1,0 +1,151 @@
+#0(I)[2026-11-13 19:43:37,532]{00001D70}<NvContainer>      Container main v1.51
+#1(I)[2026-11-13 19:43:37,532]{00001D70}<NvContainer>      Telemetry API initialized
+#2(I)[2026-11-13 19:43:37,532]{00001D70}<NvcHost>          Base host initialized successfully
+#3(I)[2026-11-13 19:43:37,532]{00001D70}<NvcHostWin32>     Dynamic loading of plugins is enabled
+#4(I)[2026-11-13 19:43:37,532]{00001D70}<NvcHostWin32>     Dynamic unloading of plugins is enabled
+#5(I)[2026-11-13 19:43:37,532]{00001D70}<NvcHostWin32>     Open parent process 0000000000000214 for PID 4608
+#6(I)[2026-11-13 19:43:37,532]{00001D70}<NvcHostWin32>     Win32 host initialized successfully
+#7(I)[2026-11-13 19:43:37,532]{00001D70}<NvcHostWin32>     Use external event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_user' for quitting
+#8(I)[2026-11-13 19:43:37,532]{00001D70}<NvcHost>          Load plugins from C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User
+#9(I)[2026-11-13 19:43:37,532]{00001E60}<NvcHostWin32>     Parent process tracking thread started with timeout: 4294967295
+#0(I)[2026-11-13 19:43:37,532]{00001D70}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#1(I)[2026-11-13 19:43:37,532]{00001D70}<NvcRegistryStora> Creating RegistryStorage
+#2(I)[2026-11-13 19:43:37,532]{00001D70}<NvcRegistryStora> Successfully initialized RegistryStorage
+#3(I)[2026-11-13 19:43:37,664]{00001D70}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll - 43.5.0.0 at 00007FFE79670000 took 115862 microseconds
+#4(I)[2026-11-13 19:43:37,664]{00001D70}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#5(I)[2026-11-13 19:43:37,664]{00001D70}<NvcPluginManager> Loaded mandatory plugin NvBackendPlugin, version 1
+#6(I)[2026-11-13 19:43:37,664]{00001D70}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvAccount.dll
+#7(I)[2026-11-13 19:43:37,664]{00001D70}<NvcJsonFileStora> Creating JsonFileStorage
+#8(I)[2026-11-13 19:43:37,664]{00001D70}<NvcJsonFileStora> Loaded configuration from JSON file
+#9(I)[2026-11-13 19:43:37,702]{00001D70}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\dependencies/CrimsonUtil.dll - 11.0.9.585 at 00007FFE8A620000 took 37749 microseconds
+#0(I)[2026-11-13 19:43:37,702]{00001D70}<NvcPluginLoadHel> Loaded dependency module CrimsonUtil.dll
+#1(I)[2026-11-13 19:43:37,733]{00001D70}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvAccount.dll - 11.0.9.585 at 00007FFE789C0000 took 31246 microseconds
+#2(I)[2026-11-13 19:43:37,733]{00001D70}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvAccount.dll
+#3(I)[2026-11-13 19:43:37,733]{00001D70}<NvcPluginManager> Loaded mandatory plugin NvAccount, version 1
+#4(I)[2026-11-13 19:43:37,733]{00001D70}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/DesktopNotification.dll
+#5(I)[2026-11-13 19:43:37,733]{00001D70}<NvcJsonFileStora> Creating JsonFileStorage
+#6(I)[2026-11-13 19:43:37,733]{00001D70}<NvcJsonFileStora> Loaded configuration from JSON file
+#7(I)[2026-11-13 19:43:37,733]{00001D70}<NvcPluginLoadHel> Dependency module CrimsonUtil.dll has been loaded already
+#8(I)[2026-11-13 19:43:37,764]{00001D70}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/DesktopNotification.dll - 11.0.9.585 at 00007FFE78760000 took 31243 microseconds
+#9(I)[2026-11-13 19:43:37,764]{00001D70}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/DesktopNotification.dll
+#0(I)[2026-11-13 19:43:37,764]{00001D70}<NvcPluginManager> Loaded mandatory plugin DesktopNotification, version 1
+#1(I)[2026-11-13 19:43:37,764]{00001D70}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/Diagnostics.dll
+#2(I)[2026-11-13 19:43:37,764]{00001D70}<NvcJsonFileStora> Creating JsonFileStorage
+#3(I)[2026-11-13 19:43:37,764]{00001D70}<NvcJsonFileStora> Loaded configuration from JSON file
+#4(I)[2026-11-13 19:43:37,764]{00001D70}<NvcPluginLoadHel> Dependency module CrimsonUtil.dll has been loaded already
+#5(I)[2026-11-13 19:43:37,802]{00001D70}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/Diagnostics.dll - 11.0.9.585 at 00007FFE78300000 took 37749 microseconds
+#6(I)[2026-11-13 19:43:37,802]{00001D70}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/Diagnostics.dll
+#7(I)[2026-11-13 19:43:37,802]{00001D70}<NvcPluginManager> Loaded mandatory plugin Diagnostics, version 1
+#8(I)[2026-11-13 19:43:37,802]{00001D70}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/Downloader.dll
+#9(I)[2026-11-13 19:43:37,802]{00001D70}<NvcJsonFileStora> Creating JsonFileStorage
+#0(I)[2026-11-13 19:43:37,802]{00001D70}<NvcJsonFileStora> Loaded configuration from JSON file
+#1(I)[2026-11-13 19:43:37,802]{00001D70}<NvcPluginLoadHel> Dependency module CrimsonUtil.dll has been loaded already
+#2(I)[2026-11-13 19:43:37,880]{00001D70}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\dependencies/libcrypto-3-x64.dll - 3.6.3.0 at 00007FFE73C80000 took 78112 microseconds
+#3(I)[2026-11-13 19:43:37,880]{00001D70}<NvcPluginLoadHel> Loaded dependency module libcrypto-3-x64.dll
+#4(I)[2026-11-13 19:43:37,933]{00001D70}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/Downloader.dll - 11.0.9.585 at 00007FFE72FA0000 took 53377 microseconds
+#5(I)[2026-11-13 19:43:37,933]{00001D70}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/Downloader.dll
+#6(I)[2026-11-13 19:43:37,933]{00001D70}<NvcPluginManager> Loaded mandatory plugin Downloader, version 1
+#7(I)[2026-11-13 19:43:37,933]{00001D70}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/DriverUpdateRecommendation.dll
+#8(I)[2026-11-13 19:43:37,933]{00001D70}<NvcRegistryStora> Creating RegistryStorage
+#9(I)[2026-11-13 19:43:37,933]{00001D70}<NvcRegistryStora> Successfully initialized RegistryStorage
+#0(I)[2026-11-13 19:43:37,933]{00001D70}<NvcPluginLoadHel> Dependency module CrimsonUtil.dll has been loaded already
+#1(I)[2026-11-13 19:43:37,949]{00001D70}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/DriverUpdateRecommendation.dll - 11.0.9.585 at 00007FFE72DA0000 took 15621 microseconds
+#2(I)[2026-11-13 19:43:37,949]{00001D70}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/DriverUpdateRecommendation.dll
+#3(I)[2026-11-13 19:43:37,949]{00001D70}<NvcPluginManager> Loaded mandatory plugin DriverUpdateRecommendation, version 1
+#4(I)[2026-11-13 19:43:37,949]{00001D70}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/NvAppIgoIpcProxy.dll
+#5(I)[2026-11-13 19:43:37,949]{00001D70}<NvcRegistryStora> Creating RegistryStorage
+#6(I)[2026-11-13 19:43:37,949]{00001D70}<NvcRegistryStora> Successfully initialized RegistryStorage
+#7(I)[2026-11-13 19:43:37,949]{00001D70}<NvcPluginLoadHel> Dependency module CrimsonUtil.dll has been loaded already
+#8(I)[2026-11-13 19:43:37,980]{00001D70}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/NvAppIgoIpcProxy.dll - 11.0.9.585 at 00007FFE72BF0000 took 31243 microseconds
+#9(I)[2026-11-13 19:43:37,980]{00001D70}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/NvAppIgoIpcProxy.dll
+#0(I)[2026-11-13 19:43:37,980]{00001D70}<NvcPluginManager> Loaded mandatory plugin NvAppIgoIpcProxy, version 1
+#1(I)[2026-11-13 19:43:37,980]{00001D70}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/NvKVStorage.dll
+#2(I)[2026-11-13 19:43:37,980]{00001D70}<NvcRegistryStora> Creating RegistryStorage
+#3(I)[2026-11-13 19:43:37,980]{00001D70}<NvcRegistryStora> Successfully initialized RegistryStorage
+#4(I)[2026-11-13 19:43:37,980]{00001D70}<NvcPluginLoadHel> Dependency module CrimsonUtil.dll has been loaded already
+#5(I)[2026-11-13 19:43:38,012]{00001D70}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/NvKVStorage.dll - 11.0.9.585 at 00007FFE729C0000 took 32225 microseconds
+#6(I)[2026-11-13 19:43:38,012]{00001D70}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp/NvKVStorage.dll
+#7(I)[2026-11-13 19:43:38,012]{00001D70}<NvcPluginManager> Loaded mandatory plugin NvKVStorage, version 1
+#8(I)[2026-11-13 19:43:38,012]{00001D70}<NvcHost>          Creating directory listener to represent current folder state
+#9(I)[2026-11-13 19:43:38,012]{00001D70}<DirectoryListene> Adding directory C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User.
+#0(I)[2026-11-13 19:43:38,014]{00001D70}<NvcHost>          Successfully updated directory change listener
+#1(I)[2026-11-13 19:43:38,014]{00001D70}<NvcHost>          Container is initializing
+#2(I)[2026-11-13 19:43:38,014]{00001D70}<NvcPluginManager> Initiate transition to Initializing state for NvBackendPlugin
+#3(I)[2026-11-13 19:43:38,014]{00001D70}<NvcPluginManager> Transition to Initializing state for NvBackendPlugin is in progress
+#4(I)[2026-11-13 19:43:38,014]{00001D70}<NvcPluginManager> Initiate transition to Initializing state for NvAccount
+#5(I)[2026-11-13 19:43:38,135]{00001D70}<NvcPluginManager> Transition to Initialized state for NvAccount completed
+#6(I)[2026-11-13 19:43:38,135]{00001D70}<NvcPluginManager> Initiate transition to Initializing state for DesktopNotification
+#7(I)[2026-11-13 19:43:38,135]{00001D70}<NvcPluginManager> Transition to Initializing state for DesktopNotification is in progress
+#8(I)[2026-11-13 19:43:38,135]{00001D70}<NvcPluginManager> Initiate transition to Initializing state for Diagnostics
+#9(I)[2026-11-13 19:43:38,135]{00001D70}<NvcPluginManager> Transition to Initializing state for Diagnostics is in progress
+#0(I)[2026-11-13 19:43:38,135]{00001D70}<NvcPluginManager> Initiate transition to Initializing state for Downloader
+#1(I)[2026-11-13 19:43:38,143]{00001D70}<NvcPluginManager> Transition to Initializing state for Downloader is in progress
+#2(I)[2026-11-13 19:43:38,143]{00001D70}<NvcPluginManager> Initiate transition to Initializing state for DriverUpdateRecommendation
+#3(I)[2026-11-13 19:43:38,143]{00001D70}<NvcPluginManager> Transition to Initializing state for DriverUpdateRecommendation is in progress
+#4(I)[2026-11-13 19:43:38,143]{00001D70}<NvcPluginManager> Initiate transition to Initializing state for NvAppIgoIpcProxy
+#5(I)[2026-11-13 19:43:38,143]{00001D70}<NvcPluginManager> Transition to Initializing state for NvAppIgoIpcProxy is in progress
+#6(I)[2026-11-13 19:43:38,143]{00001D70}<NvcPluginManager> Initiate transition to Initializing state for NvKVStorage
+#7(I)[2026-11-13 19:43:38,143]{00001D70}<NvcPluginManager> Transition to Initializing state for NvKVStorage is in progress
+#8(I)[2026-11-13 19:43:38,143]{00002218}<NvcPluginManager> Notification 1 / 0000000000000000 from DesktopNotification
+#9(I)[2026-11-13 19:43:38,143]{00002218}<NvcPluginManager> Transition to Initialized state for DesktopNotification completed
+#0(I)[2026-11-13 19:43:38,145]{00002228}<NvcPluginManager> Notification 1 / 0000000000000000 from NvAppIgoIpcProxy
+#1(I)[2026-11-13 19:43:38,145]{00002220}<NvcPluginManager> Notification 1 / 0000000000000000 from Downloader
+#2(I)[2026-11-13 19:43:38,145]{0000222C}<NvcPluginManager> Notification 1 / 0000000000000000 from NvKVStorage
+#3(I)[2026-11-13 19:43:38,145]{00002228}<NvcPluginManager> Transition to Initialized state for NvAppIgoIpcProxy completed
+#4(I)[2026-11-13 19:43:38,145]{00002220}<NvcPluginManager> Transition to Initialized state for Downloader completed
+#5(I)[2026-11-13 19:43:38,145]{0000222C}<NvcPluginManager> Transition to Initialized state for NvKVStorage completed
+#6(I)[2026-11-13 19:43:38,226]{0000221C}<NvcPluginManager> Notification 1 / 0000000000000000 from Diagnostics
+#7(I)[2026-11-13 19:43:38,226]{0000221C}<NvcPluginManager> Transition to Initialized state for Diagnostics completed
+#8(I)[2026-11-13 19:43:38,822]{00002148}<NvcPluginManager> Notification 1 / 0000000000000000 from NvBackendPlugin
+#9(I)[2026-11-13 19:43:38,822]{00002148}<NvcPluginManager> Transition to Initialized state for NvBackendPlugin completed
+#0(I)[2026-11-13 19:43:38,891]{00002224}<NvcPluginManager> Notification 1 / 0000000000000000 from DriverUpdateRecommendation
+#1(I)[2026-11-13 19:43:38,891]{00002224}<NvcPluginManager> Transition to Initialized state for DriverUpdateRecommendation completed
+#2(I)[2026-11-13 19:43:38,891]{00001D70}<NvcHost>          Container is initialized with 1. State: normal
+#3(I)[2026-11-13 19:43:38,891]{00001D70}<NvcHost>          Base host core
+#4(I)[2026-11-13 19:43:38,891]{00001D70}<NvcHost>          Container is starting
+#5(I)[2026-11-13 19:43:38,891]{00001D70}<NvcPluginManager> NvcPluginLoadStats for 'NvBackendPlugin' => LibraryLoadTime = 131483 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 115862, InitializeProcTime = 0 us, InitializeTimeTotal = 807458 us, StartProcTime = 0 us, StartTimeTotal = 0 us. 
+#6(I)[2026-11-13 19:43:38,891]{00001D70}<NvcTelemetryHelp> NvcPluginLoadStats for NvBackendPlugin returned 1
+#7(I)[2026-11-13 19:43:38,891]{00001D70}<NvcPluginManager> Transition to Started state for NvBackendPlugin completed
+#8(I)[2026-11-13 19:43:38,891]{00001D70}<NvcPluginManager> Initiate transition to Starting state for NvAccount
+#9(I)[2026-11-13 19:43:38,953]{00001D70}<NvcPluginManager> NvcPluginLoadStats for 'NvAccount' => LibraryLoadTime = 68995 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 31246, InitializeProcTime = 120706 us, InitializeTimeTotal = 120706 us, StartProcTime = 62487 us, StartTimeTotal = 62487 us. 
+#0(I)[2026-11-13 19:43:38,953]{00001D70}<NvcTelemetryHelp> NvcPluginLoadStats for NvAccount returned 1
+#1(I)[2026-11-13 19:43:38,953]{00001D70}<NvcPluginManager> Transition to Started state for NvAccount completed
+#2(I)[2026-11-13 19:43:38,953]{00001D70}<NvcPluginManager> Initiate transition to Starting state for DesktopNotification
+#3(I)[2026-11-13 19:43:39,038]{00001D70}<NvcPluginManager> Transition to Starting state for DesktopNotification is in progress
+#4(I)[2026-11-13 19:43:39,038]{00001D70}<NvcPluginManager> Initiate transition to Starting state for Diagnostics
+#5(I)[2026-11-13 19:43:39,118]{00001D70}<NvcPluginManager> Transition to Starting state for Diagnostics is in progress
+#6(I)[2026-11-13 19:43:39,118]{00001D70}<NvcPluginManager> Initiate transition to Starting state for Downloader
+#7(I)[2026-11-13 19:43:39,118]{0000221C}<NvcPluginManager> Notification 1 / 0000000000000000 from Diagnostics
+#8(I)[2026-11-13 19:43:39,118]{0000221C}<NvcPluginManager> NvcPluginLoadStats for 'Diagnostics' => LibraryLoadTime = 37749 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 37749, InitializeProcTime = 0 us, InitializeTimeTotal = 90472 us, StartProcTime = 80043 us, StartTimeTotal = 80043 us. 
+#9(I)[2026-11-13 19:43:39,118]{0000221C}<NvcTelemetryHelp> NvcPluginLoadStats for Diagnostics returned 1
+#0(I)[2026-11-13 19:43:39,118]{0000221C}<NvcPluginManager> Transition to Started state for Diagnostics completed
+#1(I)[2026-11-13 19:43:39,168]{00001D70}<NvcPluginManager> Transition to Starting state for Downloader is in progress
+#2(I)[2026-11-13 19:43:39,168]{00001D70}<NvcPluginManager> Initiate transition to Starting state for DriverUpdateRecommendation
+#3(I)[2026-11-13 19:43:39,168]{00002220}<NvcPluginManager> Notification 1 / 0000000000000000 from Downloader
+#4(I)[2026-11-13 19:43:39,168]{00002220}<NvcPluginManager> NvcPluginLoadStats for 'Downloader' => LibraryLoadTime = 131489 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 53377, InitializeProcTime = 8022 us, InitializeTimeTotal = 10041 us, StartProcTime = 50361 us, StartTimeTotal = 50361 us. 
+#5(I)[2026-11-13 19:43:39,168]{00002220}<NvcTelemetryHelp> NvcPluginLoadStats for Downloader returned 1
+#6(I)[2026-11-13 19:43:39,168]{00002220}<NvcPluginManager> Transition to Started state for Downloader completed
+#7(I)[2026-11-13 19:43:39,209]{00002218}<NvcPluginManager> Notification 1 / 0000000000000000 from DesktopNotification
+#8(I)[2026-11-13 19:43:39,209]{00002218}<NvcPluginManager> NvcPluginLoadStats for 'DesktopNotification' => LibraryLoadTime = 31243 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 31243, InitializeProcTime = 0 us, InitializeTimeTotal = 8022 us, StartProcTime = 84624 us, StartTimeTotal = 170725 us. 
+#9(I)[2026-11-13 19:43:39,209]{00002218}<NvcTelemetryHelp> NvcPluginLoadStats for DesktopNotification returned 1
+#0(I)[2026-11-13 19:43:39,209]{00002218}<NvcPluginManager> Transition to Started state for DesktopNotification completed
+#1(I)[2026-11-13 19:43:39,219]{00001D70}<NvcPluginManager> Transition to Starting state for DriverUpdateRecommendation is in progress
+#2(I)[2026-11-13 19:43:39,219]{00001D70}<NvcPluginManager> Initiate transition to Starting state for NvAppIgoIpcProxy
+#3(I)[2026-11-13 19:43:39,219]{00002224}<NvcPluginManager> Notification 1 / 0000000000000000 from DriverUpdateRecommendation
+#4(I)[2026-11-13 19:43:39,219]{00002224}<NvcPluginManager> NvcPluginLoadStats for 'DriverUpdateRecommendation' => LibraryLoadTime = 15621 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 15621, InitializeProcTime = 0 us, InitializeTimeTotal = 747730 us, StartProcTime = 50374 us, StartTimeTotal = 50374 us. 
+#5(I)[2026-11-13 19:43:39,219]{00002224}<NvcTelemetryHelp> NvcPluginLoadStats for DriverUpdateRecommendation returned 1
+#6(I)[2026-11-13 19:43:39,219]{00002224}<NvcPluginManager> Transition to Started state for DriverUpdateRecommendation completed
+#7(I)[2026-11-13 19:43:39,275]{00001D70}<NvcPluginManager> Transition to Starting state for NvAppIgoIpcProxy is in progress
+#8(I)[2026-11-13 19:43:39,275]{00001D70}<NvcPluginManager> Initiate transition to Starting state for NvKVStorage
+#9(I)[2026-11-13 19:43:39,275]{00002228}<NvcPluginManager> Notification 1 / 0000000000000000 from NvAppIgoIpcProxy
+#0(I)[2026-11-13 19:43:39,275]{00002228}<NvcPluginManager> NvcPluginLoadStats for 'NvAppIgoIpcProxy' => LibraryLoadTime = 31243 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 31243, InitializeProcTime = 0 us, InitializeTimeTotal = 2019 us, StartProcTime = 56054 us, StartTimeTotal = 56054 us. 
+#1(I)[2026-11-13 19:43:39,275]{00002228}<NvcTelemetryHelp> NvcPluginLoadStats for NvAppIgoIpcProxy returned 1
+#2(I)[2026-11-13 19:43:39,275]{00002228}<NvcPluginManager> Transition to Started state for NvAppIgoIpcProxy completed
+#3(I)[2026-11-13 19:43:39,333]{00001D70}<NvcPluginManager> Transition to Starting state for NvKVStorage is in progress
+#4(I)[2026-11-13 19:43:39,333]{0000222C}<NvcPluginManager> Notification 1 / 0000000000000000 from NvKVStorage
+#5(I)[2026-11-13 19:43:39,333]{0000222C}<NvcPluginManager> NvcPluginLoadStats for 'NvKVStorage' => LibraryLoadTime = 32225 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 32225, InitializeProcTime = 0 us, InitializeTimeTotal = 2019 us, StartProcTime = 58379 us, StartTimeTotal = 58379 us. 
+#6(I)[2026-11-13 19:43:39,333]{0000222C}<NvcTelemetryHelp> NvcPluginLoadStats for NvKVStorage returned 1
+#7(I)[2026-11-13 19:43:39,333]{0000222C}<NvcPluginManager> Transition to Started state for NvKVStorage completed
+#8(I)[2026-11-13 19:43:39,335]{00001D70}<NvcHost>          Container is started with 1. State: normal
+#9(I)[2026-11-13 19:43:39,335]{00001D70}<NvcTelemetryHelp> NvcLoadStats => LibraryLoadTime = 480048 us, InitializeTime = 876458 us, StartTime = 444342 us, TotalLoadTime = 1819149 us
+#0(I)[2026-11-13 19:43:39,335]{00001D70}<NvcTelemetryHelp> NvcLoadStats returned 1

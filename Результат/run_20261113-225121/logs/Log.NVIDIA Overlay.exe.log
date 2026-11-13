@@ -1,0 +1,47 @@
+2026-11-13 21:52:41.812 (     57.453) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:52:41.814 (     57.455) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:52:41.813 (     57.454) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:52:41.812 (     57.453) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:52:41.818 (     57.459) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:52:41.820 (     57.461) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:52:41.824 (     57.465) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:52:41.824 (     57.465) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:52:41.825 (     57.466) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:52:41.825 (     57.466) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 21:52:42.194 (     57.835) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 21:52:42.194 (     57.835) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 21:52:42.198 (     57.839) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  2. 
+2026-11-13 21:52:42.198 (     57.839) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 21:52:42.239 (     57.880) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 21:55:07.320 (     57.334) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:55:07.323 (     57.337) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:55:07.323 (     57.337) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 21:55:07.326 (     57.340) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:55:07.325 (     57.339) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:55:07.325 (     57.339) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 21:55:07.333 (     57.347) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:55:07.333 (     57.347) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:55:07.334 (     57.348) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 21:55:07.334 (     57.348) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 21:55:07.650 (     57.664) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 21:55:07.653 (     57.667) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 21:55:07.655 (     57.669) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  2. 
+2026-11-13 21:55:07.656 (     57.670) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 21:55:07.693 (     57.707) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 22:43:40.677 (      2.048) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:43:40.677 (      2.048) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:43:40.677 (      2.048) |    DEBUG: [UXDriver.NvCpl] 4170@NvCplApiIsUxdServiceRunning : UXD service is running. 
+2026-11-13 22:43:40.677 (      2.048) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:43:40.678 (      2.049) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:43:40.678 (      2.049) |    DEBUG: [UXDriver.NvCpl] 408@NvCplApiInit : Call. 
+2026-11-13 22:43:40.687 (      2.058) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:43:40.687 (      2.058) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:43:40.687 (      2.058) |    DEBUG: [UXDriver.NvCpl] 422@NvCplApiInit : NvCplApiInit result: 0. 
+2026-11-13 22:43:40.687 (      2.058) |    DEBUG: [UXDriver.NvCpl] 299@NvCplApiSetDisplayChangeCallback : Call. 
+2026-11-13 22:43:41.303 (      2.674) |    DEBUG: [UXDriver.NvCpl] 466@NvCplApiGetGPUCount : Call. 
+2026-11-13 22:43:41.303 (      2.674) |    DEBUG: [UXDriver.NvCpl] 471@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount. 
+2026-11-13 22:43:41.306 (      2.677) |    DEBUG: [UXDriver.NvCpl] 478@NvCplApiGetGPUCount : Call GpuFunctions::GetGpuCount returned  2. 
+2026-11-13 22:43:41.306 (      2.677) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_IS_RESIZABLE_BAR. 
+2026-11-13 22:43:41.346 (      2.717) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 22:43:41.591 (      2.962) |    DEBUG: [UXDriver.NvCpl] 329@NvCplApiGetSetting : Call NVCPLAPI_SETTING_PHYSX_GPUS. 
+2026-11-13 22:43:41.597 (      2.968) |    DEBUG: [UXDriver.NvCpl] 667@NvCplApiGetInfo : Call. 

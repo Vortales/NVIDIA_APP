@@ -1,0 +1,225 @@
+#0(I)[2026-11-13 19:43:37,329]{00001204}<NvpChildGroup>    Add watchdog for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser - 'C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe' : '-f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerAIUser%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser" -r -l 3 -p 30000  ' : 10/300/5 : non-elevated : '' 
+#1(I)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Adding directory C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser.
+#2(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Total number of current directories is 1.
+#3(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App
+#4(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Total number of current directories is 2.
+#5(I)[2026-11-13 19:43:37,329]{00001204}<NvpChildGroup>    Add watchdog for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session - 'C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe' : '-f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerSession%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session" -r -l 3 -p 30000  -ert' : 10/300/5 : elevated : '' 
+#6(I)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Adding directory C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session.
+#7(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Total number of current directories is 3.
+#8(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl
+#9(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Total number of current directories is 4.
+#0(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NVIDIA App
+#1(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Total number of current directories is 5.
+#2(I)[2026-11-13 19:43:37,329]{00001204}<NvpChildGroup>    Add watchdog for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser - 'C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe' : '-f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser%dSPUser.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser" -r -l 3 -p 30000 -st "C:\Program Files\NVIDIA Corporation\NvContainer\NvContainerTelemetryApi.dll"' : 10/300/5 : non-elevated : '' 
+#3(I)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Adding directory C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser.
+#4(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Total number of current directories is 6.
+#5(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps
+#6(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Total number of current directories is 7.
+#7(I)[2026-11-13 19:43:37,329]{00001204}<NvpChildGroup>    Add watchdog for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User - 'C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe' : '-f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User" -r -l 3 -p 30000  ' : 10/300/5 : non-elevated : '' 
+#8(I)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Adding directory C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User.
+#9(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Total number of current directories is 8.
+#0(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend
+#1(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Total number of current directories is 9.
+#2(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App
+#3(D)[2026-11-13 19:43:37,329]{00001204}<DirectoryListene> Total number of current directories is 10.
+#4(D)[2026-11-13 19:43:37,345]{00001204}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NVIDIA App/NvApp
+#5(D)[2026-11-13 19:43:37,345]{00001F64}<DirectoryListene> Directory change listener thread started
+#6(D)[2026-11-13 19:43:37,345]{00001204}<DirectoryListene> Directory listener thread started.
+#7(I)[2026-11-13 19:43:37,401]{00001FF4}<NvpWatchdog>          User session 1 - 'Console'
+#8(I)[2026-11-13 19:43:37,401]{00001FF4}<NvpWatchdog>          Running session 1 - 'Console'
+#9(I)[2026-11-13 19:43:37,401]{00001FF4}<NvpWatchdog>      Running sessions = 1, user sessions = 1 & service session
+#0(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App
+#1(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#2(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#3(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>    Group =>
+#4(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser
+#5(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#6(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerAIUser%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser" -r -l 3 -p 30000  
+#7(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Processes =>
+#8(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl
+#9(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#0(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#1(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>    Group =>
+#2(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session
+#3(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Container: elevated - C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#4(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerSession%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session" -r -l 3 -p 30000  -ert
+#5(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Processes =>
+#6(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps
+#7(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#8(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#9(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>    Group =>
+#0(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser
+#1(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#2(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser%dSPUser.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser" -r -l 3 -p 30000 -st "C:\Program Files\NVIDIA Corporation\NvContainer\NvContainerTelemetryApi.dll"
+#3(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Processes =>
+#4(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend
+#5(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#6(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#7(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>    Group =>
+#8(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User
+#9(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#0(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User" -r -l 3 -p 30000  
+#1(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>        Processes =>
+#2(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App
+#3(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#4(D)[2026-11-13 19:43:37,401]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#5(I)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildGroup>    Run containers for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser
+#6(I)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildProcess>  Run container for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser in session 1
+#7(D)[2026-11-13 19:43:37,401]{00001FF4}<NvpDacl>          Succeeded to create DACL
+#8(I)[2026-11-13 19:43:37,401]{00001FF4}<NvpChildProcess>  Use quit event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_aiuser' (error = 0) for non-elevated container 'C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser'
+#9(D)[2026-11-13 19:43:37,432]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl
+#0(D)[2026-11-13 19:43:37,432]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#1(D)[2026-11-13 19:43:37,432]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#2(I)[2026-11-13 19:43:37,432]{00001FF4}<NvpChildGroup>    Run containers for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session
+#3(I)[2026-11-13 19:43:37,432]{00001FF4}<NvpChildProcess>  Run container for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session in session 1
+#4(I)[2026-11-13 19:43:37,432]{00001FF4}<NvpChildProcess>  Use quit event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_session' (error = 0) for elevated container 'C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session'
+#5(D)[2026-11-13 19:43:37,448]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps
+#6(D)[2026-11-13 19:43:37,448]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#7(D)[2026-11-13 19:43:37,448]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#8(I)[2026-11-13 19:43:37,448]{00001FF4}<NvpChildGroup>    Run containers for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser
+#9(I)[2026-11-13 19:43:37,448]{00001FF4}<NvpChildProcess>  Run container for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser in session 1
+#0(D)[2026-11-13 19:43:37,448]{00001FF4}<NvpDacl>          Succeeded to create DACL
+#1(I)[2026-11-13 19:43:37,448]{00001FF4}<NvpChildProcess>  Use quit event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_spuser' (error = 0) for non-elevated container 'C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser'
+#2(D)[2026-11-13 19:43:37,479]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend
+#3(D)[2026-11-13 19:43:37,479]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#4(D)[2026-11-13 19:43:37,479]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#5(I)[2026-11-13 19:43:37,479]{00001FF4}<NvpChildGroup>    Run containers for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User
+#6(I)[2026-11-13 19:43:37,479]{00001FF4}<NvpChildProcess>  Run container for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User in session 1
+#7(D)[2026-11-13 19:43:37,479]{00001FF4}<NvpDacl>          Succeeded to create DACL
+#8(I)[2026-11-13 19:43:37,479]{00001FF4}<NvpChildProcess>  Use quit event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_user' (error = 0) for non-elevated container 'C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User'
+#9(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App
+#0(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#1(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#2(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>    Group =>
+#3(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser
+#4(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#5(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerAIUser%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser" -r -l 3 -p 30000  
+#6(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Processes =>
+#7(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildProcess>          Session 1, process 0000000000000834
+#8(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl
+#9(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#0(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#1(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>    Group =>
+#2(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session
+#3(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Container: elevated - C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#4(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerSession%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session" -r -l 3 -p 30000  -ert
+#5(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Processes =>
+#6(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildProcess>          Session 1, process 000000000000083C
+#7(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps
+#8(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#9(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#0(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>    Group =>
+#1(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser
+#2(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#3(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser%dSPUser.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser" -r -l 3 -p 30000 -st "C:\Program Files\NVIDIA Corporation\NvContainer\NvContainerTelemetryApi.dll"
+#4(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Processes =>
+#5(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildProcess>          Session 1, process 0000000000000860
+#6(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend
+#7(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#8(D)[2026-11-13 19:43:37,517]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#9(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>    Group =>
+#0(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User
+#1(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#2(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User" -r -l 3 -p 30000  
+#3(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildGroup>        Processes =>
+#4(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpChildProcess>          Session 1, process 0000000000000880
+#5(D)[2026-11-13 19:43:37,517]{00001FF4}<NvpWatchdog>      Wait for 7 handles. Timeout = 4294967295
+#6(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpWatchdog>      Directory change event was signaled
+#7(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpWatchdog>          User session 1 - 'Console'
+#8(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpWatchdog>          Running session 1 - 'Console'
+#9(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpWatchdog>      Running sessions = 1, user sessions = 1 & service session
+#0(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App
+#1(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#2(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#3(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Group =>
+#4(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser
+#5(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#6(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerAIUser%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser" -r -l 3 -p 30000  
+#7(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Processes =>
+#8(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildProcess>          Session 1, process 0000000000000834
+#9(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl
+#0(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#1(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#2(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Group =>
+#3(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session
+#4(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Container: elevated - C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#5(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerSession%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session" -r -l 3 -p 30000  -ert
+#6(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Processes =>
+#7(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildProcess>          Session 1, process 000000000000083C
+#8(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps
+#9(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#0(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#1(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Group =>
+#2(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser
+#3(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#4(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser%dSPUser.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser" -r -l 3 -p 30000 -st "C:\Program Files\NVIDIA Corporation\NvContainer\NvContainerTelemetryApi.dll"
+#5(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Processes =>
+#6(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildProcess>          Session 1, process 0000000000000860
+#7(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend
+#8(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#9(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#0(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Group =>
+#1(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User
+#2(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#3(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User" -r -l 3 -p 30000  
+#4(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Processes =>
+#5(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildProcess>          Session 1, process 0000000000000880
+#6(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App
+#7(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#8(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#9(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Run containers for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser
+#0(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Container 0000000000000834 for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser is already running in session 1
+#1(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl
+#2(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#3(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#4(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Run containers for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session
+#5(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Container 000000000000083C for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session is already running in session 1
+#6(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps
+#7(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#8(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#9(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Run containers for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser
+#0(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Container 0000000000000860 for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser is already running in session 1
+#1(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend
+#2(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#3(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#4(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Run containers for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User
+#5(I)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Container 0000000000000880 for C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User is already running in session 1
+#6(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App
+#7(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#8(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#9(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Group =>
+#0(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser
+#1(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#2(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerAIUser%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser" -r -l 3 -p 30000  
+#3(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Processes =>
+#4(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildProcess>          Session 1, process 0000000000000834
+#5(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl
+#6(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#7(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session/NvCpl/nvxdsyncplugin.dll
+#8(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Group =>
+#9(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session
+#0(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Container: elevated - C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#1(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerSession%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\Session" -r -l 3 -p 30000  -ert
+#2(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Processes =>
+#3(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildProcess>          Session 1, process 000000000000083C
+#4(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps
+#5(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#6(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser/nvspcaps/_nvspcaps64.dll
+#7(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Group =>
+#8(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser
+#9(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#0(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser%dSPUser.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\SPUser" -r -l 3 -p 30000 -st "C:\Program Files\NVIDIA Corporation\NvContainer\NvContainerTelemetryApi.dll"
+#1(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Processes =>
+#2(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildProcess>          Session 1, process 0000000000000860
+#3(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process folder C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend
+#4(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> Process file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#5(D)[2026-11-13 19:43:38,153]{00001FF4}<DirectoryEnumera> OnItem returned FALSE for file C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User/NvBackend/NvBackend64.dll
+#6(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>    Group =>
+#7(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Folder: C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User
+#8(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Container: C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+#9(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Parameters: -f "C:\ProgramData\NVIDIA Corporation\NVIDIA App\NvContainer\NvContainerUser%d.log" -d "C:\Program Files\NVIDIA Corporation\NvContainer\plugins\User" -r -l 3 -p 30000  
+#0(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildGroup>        Processes =>
+#1(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpChildProcess>          Session 1, process 0000000000000880
+#2(D)[2026-11-13 19:43:38,153]{00001FF4}<NvpWatchdog>      Wait for 7 handles. Timeout = 4294967295
+#3(I)[2026-11-13 19:43:45,778]{00001204}<NvpWatchdog>      Session 1 event 8: Unlock
+#4(I)[2026-11-13 19:43:45,778]{00001204}<NvpWatchdog>      Session 1 event 8: Unlock

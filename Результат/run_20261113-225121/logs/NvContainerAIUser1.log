@@ -1,0 +1,38 @@
+#0(I)[2026-11-13 19:43:37,432]{00001CA0}<NvContainer>      Container main v1.51
+#1(I)[2026-11-13 19:43:37,432]{00001CA0}<NvContainer>      Telemetry API initialized
+#2(I)[2026-11-13 19:43:37,432]{00001CA0}<NvcHost>          Base host initialized successfully
+#3(I)[2026-11-13 19:43:37,448]{00001CA0}<NvcHostWin32>     Dynamic loading of plugins is enabled
+#4(I)[2026-11-13 19:43:37,448]{00001CA0}<NvcHostWin32>     Dynamic unloading of plugins is enabled
+#5(I)[2026-11-13 19:43:37,448]{00001CA0}<NvcHostWin32>     Open parent process 0000000000000210 for PID 4608
+#6(I)[2026-11-13 19:43:37,448]{00001CA0}<NvcHostWin32>     Win32 host initialized successfully
+#7(I)[2026-11-13 19:43:37,448]{00001CA0}<NvcHostWin32>     Use external event 'Global\NvContainer4608-session1-c:_program files_nvidia corporation_nvcontainer_plugins_aiuser' for quitting
+#8(I)[2026-11-13 19:43:37,448]{00001CA0}<NvcHost>          Load plugins from C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser
+#9(I)[2026-11-13 19:43:37,448]{000019EC}<NvcHostWin32>     Parent process tracking thread started with timeout: 4294967295
+#0(I)[2026-11-13 19:43:37,448]{00001CA0}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#1(I)[2026-11-13 19:43:37,448]{00001CA0}<NvcJsonFileStora> Creating JsonFileStorage
+#2(I)[2026-11-13 19:43:37,448]{00001CA0}<NvcJsonFileStora> Loaded configuration from JSON file
+#3(I)[2026-11-13 19:43:37,517]{00001CA0}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\dependencies/CrimsonUtil.dll - 11.0.9.585 at 00007FFE8A620000 took 68998 microseconds
+#4(I)[2026-11-13 19:43:37,517]{00001CA0}<NvcPluginLoadHel> Loaded dependency module CrimsonUtil.dll
+#5(I)[2026-11-13 19:43:37,548]{00001CA0}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll - 0.0.0.0 at 00007FFE7AAD0000 took 31242 microseconds
+#6(I)[2026-11-13 19:43:37,548]{00001CA0}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser/NVIDIA App/McpServerPlugin.dll
+#7(I)[2026-11-13 19:43:37,548]{00001CA0}<NvcPluginManager> Loaded mandatory plugin McpServerPlugin, version 1
+#8(I)[2026-11-13 19:43:37,564]{00001CA0}<NvcHost>          Creating directory listener to represent current folder state
+#9(I)[2026-11-13 19:43:37,564]{00001CA0}<DirectoryListene> Adding directory C:\Program Files\NVIDIA Corporation\NvContainer\plugins\AIUser.
+#0(I)[2026-11-13 19:43:37,564]{00001CA0}<NvcHost>          Successfully updated directory change listener
+#1(I)[2026-11-13 19:43:37,564]{00001CA0}<NvcHost>          Container is initializing
+#2(I)[2026-11-13 19:43:37,564]{00001CA0}<NvcPluginManager> Initiate transition to Initializing state for McpServerPlugin
+#3(I)[2026-11-13 19:43:37,564]{00001CA0}<NvcPluginManager> Transition to Initializing state for McpServerPlugin is in progress
+#4(I)[2026-11-13 19:43:37,579]{00000CA4}<NvcPluginManager> Notification 1 / 0000000000000000 from McpServerPlugin
+#5(I)[2026-11-13 19:43:37,579]{00000CA4}<NvcPluginManager> Transition to Initialized state for McpServerPlugin completed
+#6(I)[2026-11-13 19:43:37,579]{00001CA0}<NvcHost>          Container is initialized with 1. State: normal
+#7(I)[2026-11-13 19:43:37,579]{00001CA0}<NvcHost>          Base host core
+#8(I)[2026-11-13 19:43:37,579]{00001CA0}<NvcHost>          Container is starting
+#9(I)[2026-11-13 19:43:37,579]{00001CA0}<NvcPluginManager> Initiate transition to Starting state for McpServerPlugin
+#0(I)[2026-11-13 19:43:37,633]{00001CA0}<NvcPluginManager> Transition to Starting state for McpServerPlugin is in progress
+#1(I)[2026-11-13 19:43:37,633]{00000CA4}<NvcPluginManager> Notification 1 / 0000000000000000 from McpServerPlugin
+#2(I)[2026-11-13 19:43:37,633]{00000CA4}<NvcPluginManager> NvcPluginLoadStats for 'McpServerPlugin' => LibraryLoadTime = 100240 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 31242, InitializeProcTime = 0 us, InitializeTimeTotal = 15621 us, StartProcTime = 53376 us, StartTimeTotal = 53376 us. 
+#3(I)[2026-11-13 19:43:37,633]{00000CA4}<NvcTelemetryHelp> NvcPluginLoadStats for McpServerPlugin returned 1
+#4(I)[2026-11-13 19:43:37,633]{00000CA4}<NvcPluginManager> Transition to Started state for McpServerPlugin completed
+#5(I)[2026-11-13 19:43:37,633]{00001CA0}<NvcHost>          Container is started with 1. State: normal
+#6(I)[2026-11-13 19:43:37,633]{00001CA0}<NvcTelemetryHelp> NvcLoadStats => LibraryLoadTime = 115861 us, InitializeTime = 15621 us, StartTime = 53376 us, TotalLoadTime = 197055 us
+#7(I)[2026-11-13 19:43:37,633]{00001CA0}<NvcTelemetryHelp> NvcLoadStats returned 1

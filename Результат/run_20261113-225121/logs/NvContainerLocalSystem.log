@@ -1,0 +1,101 @@
+#0(I)[2026-11-13 19:43:36,194]{00001204}<NvContainer>      Container main v1.51
+#1(I)[2026-11-13 19:43:36,194]{00001204}<NvContainer>      Enabled EnforceRedirectionTrust policy
+#2(I)[2026-11-13 19:43:36,194]{00001204}<NvContainer>      Telemetry API initialized
+#3(I)[2026-11-13 19:43:36,194]{00001204}<NvcHost>          Base host initialized successfully
+#4(I)[2026-11-13 19:43:36,194]{00001204}<NvcHostWin32>     Dynamic loading of plugins is enabled
+#5(I)[2026-11-13 19:43:36,194]{00001204}<NvcHostWin32>     Dynamic unloading of plugins is enabled
+#6(I)[2026-11-13 19:43:36,194]{00001204}<NvcHostWin32>     Win32 host initialized successfully
+#7(I)[2026-11-13 19:43:36,194]{000014A0}<NvcServiceHost>   Service host: 'Start-pending' status reported. Exit code 0
+#8(I)[2026-11-13 19:43:36,194]{00001204}<NvcServiceHost>   Service host: wait completed with 0
+#9(I)[2026-11-13 19:43:36,194]{00001204}<NvcServiceHost>   Created new DACL with added privileges 0x00100000
+#0(I)[2026-11-13 19:43:36,194]{00001204}<NvcServiceHost>   Successfully adjusted DACL for process 4608
+#1(I)[2026-11-13 19:43:36,194]{00001204}<NvcHost>          Load plugins from C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem
+#2(I)[2026-11-13 19:43:36,194]{00001204}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvMessageBusBroadcast.dll
+#3(I)[2026-11-13 19:43:36,194]{00001204}<NvcRegistryStora> Creating RegistryStorage
+#4(I)[2026-11-13 19:43:36,194]{00001204}<NvcRegistryStora> Successfully initialized RegistryStorage
+#5(I)[2026-11-13 19:43:36,267]{00001204}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvMessageBusBroadcast.dll - 3.21.3679.8940 at 00007FFE91580000 took 57122 microseconds
+#6(I)[2026-11-13 19:43:36,267]{00001204}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvMessageBusBroadcast.dll
+#7(I)[2026-11-13 19:43:36,267]{00001204}<NvcPluginManager> Loaded mandatory plugin NvMessageBusBroadcast, version 1
+#8(I)[2026-11-13 19:43:36,267]{00001204}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvCpl/NvXDCore.dll
+#9(I)[2026-11-13 19:43:36,267]{00001204}<NvcRegistryStora> Creating RegistryStorage
+#0(I)[2026-11-13 19:43:36,267]{00001204}<NvcRegistryStora> Successfully initialized RegistryStorage
+#1(I)[2026-11-13 19:43:36,309]{00001204}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvCpl/NvXDCore.dll - 32.0.15.5527 at 00007FFE8EE60000 took 27135 microseconds
+#2(I)[2026-11-13 19:43:36,309]{00001204}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvCpl/NvXDCore.dll
+#3(I)[2026-11-13 19:43:36,309]{00001204}<NvcPluginManager> Loaded mandatory plugin NvXDCore, version 1
+#4(I)[2026-11-13 19:43:36,309]{00001204}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvTelemetry/NvTelemetry64.dll
+#5(I)[2026-11-13 19:43:36,309]{00001204}<NvcRegistryStora> Creating RegistryStorage
+#6(I)[2026-11-13 19:43:36,309]{00001204}<NvcRegistryStora> Successfully initialized RegistryStorage
+#7(I)[2026-11-13 19:43:36,394]{00001204}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvTelemetry/NvTelemetry64.dll - 19.8.6.0 at 00007FFE8C580000 took 84615 microseconds
+#8(I)[2026-11-13 19:43:36,394]{00001204}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvTelemetry/NvTelemetry64.dll
+#9(I)[2026-11-13 19:43:36,394]{00001204}<NvcPluginManager> Loaded mandatory plugin NvTelemetryPlugin, version 1
+#0(I)[2026-11-13 19:43:36,394]{00001204}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvTelemetry/NvLocalizedConfig/NvLocalizedConfig.dll
+#1(I)[2026-11-13 19:43:36,394]{00001204}<NvcJsonFileStora> Creating JsonFileStorage
+#2(I)[2026-11-13 19:43:36,394]{00001204}<NvcJsonFileStora> Loaded configuration from JSON file
+#3(I)[2026-11-13 19:43:36,456]{00001204}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\dependencies/CrimsonUtil.dll - 11.0.9.585 at 00007FFE8A620000 took 46862 microseconds
+#4(I)[2026-11-13 19:43:36,456]{00001204}<NvcPluginLoadHel> Loaded dependency module CrimsonUtil.dll
+#5(I)[2026-11-13 19:43:36,488]{00001204}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvTelemetry/NvLocalizedConfig/NvLocalizedConfig.dll - 11.0.9.585 at 00007FFE86D20000 took 31243 microseconds
+#6(I)[2026-11-13 19:43:36,488]{00001204}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/NvTelemetry/NvLocalizedConfig/NvLocalizedConfig.dll
+#7(I)[2026-11-13 19:43:36,488]{00001204}<NvcPluginManager> Loaded mandatory plugin NvLocalizedConfig, version 1
+#8(I)[2026-11-13 19:43:36,488]{00001204}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/ShadowPlay/_nvspserviceplugin64.dll
+#9(I)[2026-11-13 19:43:36,494]{00001204}<NvcRegistryStora> Creating RegistryStorage
+#0(I)[2026-11-13 19:43:36,494]{00001204}<NvcRegistryStora> Successfully initialized RegistryStorage
+#1(I)[2026-11-13 19:43:36,510]{00001204}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/ShadowPlay/_nvspserviceplugin64.dll - 11.0.9.585 at 00007FFE84690000 took 15625 microseconds
+#2(I)[2026-11-13 19:43:36,510]{00001204}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/ShadowPlay/_nvspserviceplugin64.dll
+#3(I)[2026-11-13 19:43:36,510]{00001204}<NvcPluginManager> Loaded optional plugin ShadowPlayContainerPlugin, version 1
+#4(I)[2026-11-13 19:43:36,525]{00001204}<NvcPluginManager> Loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/Watchdog/NvPluginWatchdog.dll
+#5(I)[2026-11-13 19:43:36,525]{00001204}<NvcRegistryStora> Creating RegistryStorage
+#6(I)[2026-11-13 19:43:36,525]{00001204}<NvcRegistryStora> Successfully initialized RegistryStorage
+#7(I)[2026-11-13 19:43:36,541]{00001204}<NvcPluginLoadHel> Secure loading C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/Watchdog/NvPluginWatchdog.dll - 1.51.3806.6365 at 00007FFE83F60000 took 15621 microseconds
+#8(I)[2026-11-13 19:43:36,541]{00001204}<NvcPluginManager> Loaded C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem/Watchdog/NvPluginWatchdog.dll
+#9(I)[2026-11-13 19:43:36,541]{00001204}<NvcPluginManager> Loaded mandatory plugin NvPluginWatchdog, version 1
+#0(I)[2026-11-13 19:43:36,541]{00001204}<NvcHost>          Creating directory listener to represent current folder state
+#1(I)[2026-11-13 19:43:36,541]{00001204}<DirectoryListene> Adding directory C:\Program Files\NVIDIA Corporation\NvContainer\plugins\LocalSystem.
+#2(I)[2026-11-13 19:43:36,541]{00001204}<NvcHost>          Successfully updated directory change listener
+#3(I)[2026-11-13 19:43:36,541]{00001204}<NvcHost>          Container is initializing
+#4(I)[2026-11-13 19:43:36,541]{00001204}<NvcPluginManager> Initiate transition to Initializing state for NvMessageBusBroadcast
+#5(I)[2026-11-13 19:43:36,541]{00001204}<NvcPluginManager> Transition to Initialized state for NvMessageBusBroadcast completed
+#6(I)[2026-11-13 19:43:36,541]{00001204}<NvcPluginManager> Initiate transition to Initializing state for NvXDCore
+#7(I)[2026-11-13 19:43:36,557]{00001204}<NvcPluginManager> Transition to Initialized state for NvXDCore completed
+#8(I)[2026-11-13 19:43:36,557]{00001204}<NvcPluginManager> Initiate transition to Initializing state for NvTelemetryPlugin
+#9(I)[2026-11-13 19:43:37,231]{00001204}<NvcPluginManager> Transition to Initialized state for NvTelemetryPlugin completed
+#0(I)[2026-11-13 19:43:37,231]{00001204}<NvcPluginManager> Initiate transition to Initializing state for NvLocalizedConfig
+#1(I)[2026-11-13 19:43:37,241]{00001204}<NvcPluginManager> Transition to Initializing state for NvLocalizedConfig is in progress
+#2(I)[2026-11-13 19:43:37,241]{00001204}<NvcPluginManager> Initiate transition to Initializing state for ShadowPlayContainerPlugin
+#3(I)[2026-11-13 19:43:37,329]{00001204}<NvcPluginManager> Transition to Initialized state for ShadowPlayContainerPlugin completed
+#4(I)[2026-11-13 19:43:37,329]{00001204}<NvcPluginManager> Initiate transition to Initializing state for NvPluginWatchdog
+#5(I)[2026-11-13 19:43:37,345]{00001204}<NvcPluginManager> Transition to Initialized state for NvPluginWatchdog completed
+#6(I)[2026-11-13 19:43:37,360]{00001E90}<NvcPluginManager> Notification 1 / 0000000000000000 from NvLocalizedConfig
+#7(I)[2026-11-13 19:43:37,360]{00001E90}<NvcPluginManager> Transition to Initialized state for NvLocalizedConfig completed
+#8(I)[2026-11-13 19:43:37,360]{00001204}<NvcHost>          Container is initialized with 1. State: normal
+#9(I)[2026-11-13 19:43:37,360]{00001204}<NvcServiceHost>   Service host: 'Running' status reported. Exit code 0
+#0(I)[2026-11-13 19:43:37,360]{00001204}<NvcServiceHost>   Service host: Created ServiceConfigThread
+#1(I)[2026-11-13 19:43:37,360]{00001204}<NvcHost>          Container is starting
+#2(I)[2026-11-13 19:43:37,360]{00001204}<NvcPluginManager> NvcPluginLoadStats for 'NvMessageBusBroadcast' => LibraryLoadTime = 72748 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 57122, InitializeProcTime = 0 us, InitializeTimeTotal = 0 us, StartProcTime = 0 us, StartTimeTotal = 0 us. 
+#3(I)[2026-11-13 19:43:37,360]{00001204}<NvcTelemetryHelp> NvcPluginLoadStats for NvMessageBusBroadcast returned 1
+#4(I)[2026-11-13 19:43:37,360]{00001204}<NvcPluginManager> Transition to Started state for NvMessageBusBroadcast completed
+#5(I)[2026-11-13 19:43:37,360]{00001204}<NvcPluginManager> Initiate transition to Starting state for NvXDCore
+#6(I)[2026-11-13 19:43:37,360]{00001204}<NvcPluginManager> NvcPluginLoadStats for 'NvXDCore' => LibraryLoadTime = 42756 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 27135, InitializeProcTime = 15621 us, InitializeTimeTotal = 15621 us, StartProcTime = 0 us, StartTimeTotal = 0 us. 
+#7(I)[2026-11-13 19:43:37,360]{00001204}<NvcTelemetryHelp> NvcPluginLoadStats for NvXDCore returned 1
+#8(I)[2026-11-13 19:43:37,360]{00001204}<NvcPluginManager> Transition to Started state for NvXDCore completed
+#9(I)[2026-11-13 19:43:37,360]{00001204}<NvcPluginManager> NvcPluginLoadStats for 'NvTelemetryPlugin' => LibraryLoadTime = 84615 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 84615, InitializeProcTime = 674417 us, InitializeTimeTotal = 674417 us, StartProcTime = 0 us, StartTimeTotal = 0 us. 
+#0(I)[2026-11-13 19:43:37,360]{00001204}<NvcTelemetryHelp> NvcPluginLoadStats for NvTelemetryPlugin returned 1
+#1(I)[2026-11-13 19:43:37,360]{00001204}<NvcPluginManager> Transition to Started state for NvTelemetryPlugin completed
+#2(I)[2026-11-13 19:43:37,360]{00001204}<NvcPluginManager> Initiate transition to Starting state for NvLocalizedConfig
+#3(I)[2026-11-13 19:43:37,401]{00001E90}<NvcPluginManager> Notification 1 / 0000000000000000 from NvLocalizedConfig
+#4(I)[2026-11-13 19:43:37,401]{00001E90}<NvcPluginManager> NvcPluginLoadStats for 'NvLocalizedConfig' => LibraryLoadTime = 93733 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 31243, InitializeProcTime = 9999 us, InitializeTimeTotal = 119105 us, StartProcTime = 0 us, StartTimeTotal = 40752 us. 
+#5(I)[2026-11-13 19:43:37,401]{00001E90}<NvcTelemetryHelp> NvcPluginLoadStats for NvLocalizedConfig returned 1
+#6(I)[2026-11-13 19:43:37,401]{00001E90}<NvcPluginManager> Transition to Started state for NvLocalizedConfig completed
+#7(I)[2026-11-13 19:43:37,401]{00001204}<NvcPluginManager> Transition to Started state for NvLocalizedConfig is in progress
+#8(I)[2026-11-13 19:43:37,401]{00001204}<NvcPluginManager> Initiate transition to Starting state for ShadowPlayContainerPlugin
+#9(I)[2026-11-13 19:43:37,401]{00001204}<NvcPluginManager> NvcPluginLoadStats for 'ShadowPlayContainerPlugin' => LibraryLoadTime = 15625 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 15625, InitializeProcTime = 87863 us, InitializeTimeTotal = 87863 us, StartProcTime = 0 us, StartTimeTotal = 0 us. 
+#0(I)[2026-11-13 19:43:37,401]{00001204}<NvcTelemetryHelp> NvcPluginLoadStats for ShadowPlayContainerPlugin returned 1
+#1(I)[2026-11-13 19:43:37,401]{00001204}<NvcPluginManager> Transition to Started state for ShadowPlayContainerPlugin completed
+#2(I)[2026-11-13 19:43:37,401]{00001204}<NvcPluginManager> Initiate transition to Starting state for NvPluginWatchdog
+#3(I)[2026-11-13 19:43:37,401]{00001204}<NvcPluginManager> NvcPluginLoadStats for 'NvPluginWatchdog' => LibraryLoadTime = 15621 us, ImageLoadTime = 0 us, AbsLibraryLoadTime = 15621, InitializeProcTime = 15622 us, InitializeTimeTotal = 15622 us, StartProcTime = 0 us, StartTimeTotal = 0 us. 
+#4(I)[2026-11-13 19:43:37,401]{00001204}<NvcTelemetryHelp> NvcPluginLoadStats for NvPluginWatchdog returned 1
+#5(I)[2026-11-13 19:43:37,401]{00001204}<NvcPluginManager> Transition to Started state for NvPluginWatchdog completed
+#6(I)[2026-11-13 19:43:37,401]{00001204}<NvcHost>          Container is started with 1. State: normal
+#7(I)[2026-11-13 19:43:37,401]{00001204}<NvcTelemetryHelp> NvcLoadStats => LibraryLoadTime = 347225 us, InitializeTime = 819142 us, StartTime = 40752 us, TotalLoadTime = 1269933 us
+#8(I)[2026-11-13 19:43:37,401]{00001204}<NvcTelemetryHelp> NvcLoadStats returned 1
+#9(I)[2026-11-13 19:43:47,375]{00001F74}<NvcServiceHost>   ServiceConfigThread: Timeout occurred
+#0(I)[2026-11-13 19:43:47,375]{00001F74}<NvcServiceHost>   Leaving service NvContainerLocalSystem start type 2 unchanged

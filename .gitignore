@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+
+# артефакты диагностики
+Результат/
+diagnostics/
+report.txt
+report.json
+diag.zip
+nvidia_overlay_*.zip
+nvidia_overlay_report.txt

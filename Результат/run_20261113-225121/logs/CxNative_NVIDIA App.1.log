@@ -1,0 +1,566 @@
+2026-11-13T22:43:50.659[I]                     LoggingImpl.cpp:173  Initialize CrimsonNative logger done
+2026-11-13T22:43:50.659[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance BackgroundProcess for modules: BackgroundProcess
+2026-11-13T22:43:50.659[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin BackgroundProcess
+2026-11-13T22:43:50.659[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance AppDiscovery for modules: AppDiscovery
+2026-11-13T22:43:50.659[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin AppDiscovery
+2026-11-13T22:43:50.659[I] Backgrou TASK         TaskQueue.cpp:180  BackgroundProcess worker thread started
+2026-11-13T22:43:50.659[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance DriverInstall for modules: DriverInstall
+2026-11-13T22:43:50.659[I] AppDisco TASK         TaskQueue.cpp:180  AppDiscovery worker thread started
+2026-11-13T22:43:50.659[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin DriverInstall
+2026-11-13T22:43:50.659[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance LoginId for modules: LoginId
+2026-11-13T22:43:50.660[I] DriverIn TASK         TaskQueue.cpp:180  DriverInstall worker thread started
+2026-11-13T22:43:50.660[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin LoginId
+2026-11-13T22:43:50.660[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance MessageBusRouter for modules: MessageBusRouter,Downloader,Diagnostics,NvAccount,NvLocalizedConfig,OverClockingNvc,DesktopNotification,NvDriverDiagnostics,DriverUpdateRecommendation,NvKVStorage,NvAppIgoIpcProxy,McpServer
+2026-11-13T22:43:50.660[I] cefclien 1390 MessageBusRouterConfi:32   Creating MessageBusRouterConfig
+2026-11-13T22:43:50.660[I]  LoginId TASK         TaskQueue.cpp:180  LoginId worker thread started
+2026-11-13T22:43:50.665[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin MessageBusRouter
+2026-11-13T22:43:50.665[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance NvIGOUtil for modules: NvIGOUtil
+2026-11-13T22:43:50.665[I]               MessageBusRouterPlugi:260  Trying to join MessageBus...
+2026-11-13T22:43:50.665[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin NvIGOUtil
+2026-11-13T22:43:50.666[I] MessageB TASK         TaskQueue.cpp:180  TASK worker thread started
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance NvOc for modules: NvOc
+2026-11-13T22:43:50.666[I] NvIGOUti TASK         TaskQueue.cpp:180  NvIGOUtil worker thread started
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin NvOc
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance LocalGames for modules: LocalGames
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin LocalGames
+2026-11-13T22:43:50.666[I]     NvOc TASK         TaskQueue.cpp:180  NvOc worker thread started
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance NvCplDisplayPlugin for modules: NvCplDisplayPlugin
+2026-11-13T22:43:50.666[I] LocalGam TASK         TaskQueue.cpp:180  LocalGames worker thread started
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin NvCplDisplayPlugin
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance NvCplPlugin for modules: NvCplPlugin
+2026-11-13T22:43:50.666[I] NvCplDis TASK         TaskQueue.cpp:180  NvCplDisplayPlugin worker thread started
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin NvCplPlugin
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance NvPerfMon for modules: NvPerfMon
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin NvPerfMon
+2026-11-13T22:43:50.666[I] NvCplPlu TASK         TaskQueue.cpp:180  NvCplPlugin worker thread started
+2026-11-13T22:43:50.666[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance NvWorkstation for modules: NvWorkstation
+2026-11-13T22:43:50.667[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin NvWorkstation
+2026-11-13T22:43:50.667[I] NvPerfMo TASK         TaskQueue.cpp:180  NvPerfMon worker thread started
+2026-11-13T22:43:50.667[I] cefclien 1390         CefPlugin.cpp:146  Creating Plugin instance SystemInfo for modules: SystemInfo
+2026-11-13T22:43:50.667[I] cefclien 1390         CefPlugin.cpp:168  Invoking Initialize() for plugin SystemInfo
+2026-11-13T22:43:50.667[I] NvWorkst TASK         TaskQueue.cpp:180  NvWorkstation worker thread started
+2026-11-13T22:43:50.667[I] SystemIn TASK         TaskQueue.cpp:180  SystemInfo worker thread started
+2026-11-13T22:43:50.673[I] NvPerfMo TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvPerfMon
+2026-11-13T22:43:50.673[I] NvPerfMo TASK  FrameViewWrapper.cpp:125  Loading nvapi..
+2026-11-13T22:43:50.673[I] LocalGam TASK  PluginModuleBase.cpp:315  Starting plugin Init for LocalGames
+2026-11-13T22:43:50.673[I] LocalGam TASK        LocalGames.cpp:31   Initializing LocalGames
+2026-11-13T22:43:50.674[I] Backgrou TASK  PluginModuleBase.cpp:315  Starting plugin Init for BackgroundProcess
+2026-11-13T22:43:50.674[I] Backgrou TASK BackgroundProcessPlug:30   Initializing BackgroundProcess
+2026-11-13T22:43:50.674[I] DriverIn TASK  PluginModuleBase.cpp:315  Starting plugin Init for DriverInstall
+2026-11-13T22:43:50.674[I] DriverIn TASK DriverInstallPlugin.c:35   Loding module.
+2026-11-13T22:43:50.674[I] DriverIn TASK DriverInstallModule.c:45   DriverInstallModule called 
+2026-11-13T22:43:50.674[I] DriverIn TASK DriverInstallPlugin.c:44   Register aync driver install.
+2026-11-13T22:43:50.674[I] DriverIn TASK DriverInstallPlugin.c:47   Register setting of state.
+2026-11-13T22:43:50.674[I] DriverIn TASK DriverInstallPlugin.c:49   Register fetch state.
+2026-11-13T22:43:50.674[I] DriverIn TASK DriverInstallPlugin.c:52   Register plugin version.
+2026-11-13T22:43:50.674[I] DriverIn TASK DriverInstallPlugin.c:55   Initialized DriverInstall
+2026-11-13T22:43:50.674[I] Backgrou TASK BackgroundProcessConf:83   Creating BackgroundProcessConfig
+2026-11-13T22:43:50.674[I] DriverIn TASK  PluginModuleBase.cpp:323  Successfully initialized DriverInstall, took 0.07ms
+2026-11-13T22:43:50.674[I]     NvOc TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvOc
+2026-11-13T22:43:50.674[I]     NvOc TASK        NvOcModule.cpp:81   Loading nvapi..
+2026-11-13T22:43:50.674[I] AppDisco TASK  PluginModuleBase.cpp:315  Starting plugin Init for AppDiscovery
+2026-11-13T22:43:50.674[I] AppDisco TASK AppDiscoveryPlugin.cp:37   Loding module AppDiscovery ...
+2026-11-13T22:43:50.674[I] AppDisco TASK AppDiscoveryModule.cp:23   Creating AppDiscoveryModule
+2026-11-13T22:43:50.674[I] AppDisco TASK AppDiscoveryPlugin.cp:47   Registering async methods for plugin AppDiscovery
+2026-11-13T22:43:50.674[I] AppDisco TASK AppDiscoveryPlugin.cp:54   Initialized AppDiscovery
+2026-11-13T22:43:50.674[I] AppDisco TASK  PluginModuleBase.cpp:323  Successfully initialized AppDiscovery, took 0.04ms
+2026-11-13T22:43:50.675[I] NvWorkst TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvWorkstation
+2026-11-13T22:43:50.675[I] NvWorkst TASK    NvCplAPIModule.cpp:20   nvcpl dll path is C:\Program Files\NVIDIA Corporation\NVIDIA App\NvCpl\NvCpl.dll
+2026-11-13T22:43:50.675[I] NvIGOUti TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvIGOUtil
+2026-11-13T22:43:50.675[I] NvIGOUti TASK   nvigoutilPlugin.cpp:32   Initializing NvIGOUtil
+2026-11-13T22:43:50.675[D] NvIGOUti TASK         nvigoutil.cpp:20   Looking for ShadowPlay...
+2026-11-13T22:43:50.675[D] NvIGOUti TASK         nvigoutil.cpp:31   LibPath = C:\Program Files\NVIDIA Corporation\NVIDIA App\ShadowPlay\nvspapi64.dll
+2026-11-13T22:43:50.675[I] SystemIn TASK  PluginModuleBase.cpp:315  Starting plugin Init for SystemInfo
+2026-11-13T22:43:50.675[I] SystemIn TASK   system_info_win.cpp:149  Creating SystemInfo
+2026-11-13T22:43:50.676[I] NvCplDis TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvCplDisplayPlugin
+2026-11-13T22:43:50.676[I] NvCplDis TASK NvCplDisplayPlugin.cp:31   Initializing module NvCplDisplayPlugin
+2026-11-13T22:43:50.676[I] NvCplDis TASK    NvCplApiModule.cpp:571  nvcpl dll path is C:\Program Files\NVIDIA Corporation\NVIDIA App\NvCpl\NvCpl.dll
+2026-11-13T22:43:50.676[I] NvCplPlu TASK  PluginModuleBase.cpp:315  Starting plugin Init for NvCplPlugin
+2026-11-13T22:43:50.676[I] NvCplPlu TASK       NvCplPlugin.cpp:40   Initializing module NvCplPlugin
+2026-11-13T22:43:50.676[I]  LoginId TASK  PluginModuleBase.cpp:315  Starting plugin Init for LoginId
+2026-11-13T22:43:50.676[I] NvCplPlu TASK    NvCplApiModule.cpp:40   nvcpl dll path is C:\Program Files\NVIDIA Corporation\NVIDIA App\NvCpl\NvCpl.dll
+2026-11-13T22:43:50.676[I]  LoginId TASK     LoginIdPlugin.cpp:29   Initialized LoginId
+2026-11-13T22:43:50.676[I]  LoginId TASK  PluginModuleBase.cpp:323  Successfully initialized LoginId, took 0.07ms
+2026-11-13T22:43:50.677[I] NvPerfMo TASK  FrameViewWrapper.cpp:133  nvapiinit successful
+2026-11-13T22:43:50.677[I]     NvOc TASK        NvOcModule.cpp:89   nvapiinit successful
+2026-11-13T22:43:50.678[I]     NvOc TASK      NvapiWrapper.cpp:33   NvAPI_EnumLogicalGPUs : NVAPI_OK 
+2026-11-13T22:43:50.680[I]     NvOc TASK      NvapiWrapper.cpp:33   NvAPI_GPU_GetLogicalGpuInfo : NVAPI_OK 
+2026-11-13T22:43:50.680[I]     NvOc TASK        NvOcModule.cpp:45   GPU count is 1
+2026-11-13T22:43:50.680[I]     NvOc TASK      NvapiWrapper.cpp:33   NvAPI_GPU_GetSystemType : NVAPI_OK 
+2026-11-13T22:43:50.680[I]     NvOc TASK        NvOcModule.cpp:51   System Type(Unknow=0, Laptop=1, DESKTOP=2) is 1
+2026-11-13T22:43:50.682[I]     NvOc TASK      NvapiWrapper.cpp:33   NvAPI_GPU_GetFullName : NVAPI_OK 
+2026-11-13T22:43:50.682[I]     NvOc TASK      NvapiWrapper.cpp:51   GPU name is NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:50.682[I]     NvOc TASK      NvapiWrapper.cpp:33   NvAPI_GPU_GetArchInfo : NVAPI_OK 
+2026-11-13T22:43:50.682[I]     NvOc TASK      NvapiWrapper.cpp:33   NvAPI_GPU_GetBrandType : NVAPI_OK 
+2026-11-13T22:43:50.682[I]     NvOc TASK               Gpu.cpp:455  Gpu handle : 256, index : 0, Name : NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:50.682[I]     NvOc TASK               Gpu.cpp:456  Gpu architecture_id : 368
+2026-11-13T22:43:50.682[I]     NvOc TASK               Gpu.cpp:457  Gpu brand type : 1
+2026-11-13T22:43:50.683[I]     NvOc TASK      NvapiWrapper.cpp:33   NvAPI_GPU_ClockClientClkDomainsGetInfo : NVAPI_OK 
+2026-11-13T22:43:50.683[I]     NvOc TASK      NvapiWrapper.cpp:33   NvAPI_GPU_ClockClientClkDomainsGetInfo : NVAPI_OK 
+2026-11-13T22:43:50.683[I]     NvOc TASK      NvapiWrapper.cpp:33   NvAPI_GPU_ClockClientClkVfPointsGetInfo : NVAPI_OK 
+2026-11-13T22:43:50.683[I]     NvOc TASK      NvapiWrapper.cpp:33   NvAPI_GPU_ClockClientClkVfPointsGetInfo : NVAPI_OK 
+2026-11-13T22:43:50.683[I]     NvOc TASK        NvOcPlugin.cpp:55   Initialized NvOc
+2026-11-13T22:43:50.683[I]     NvOc TASK  PluginModuleBase.cpp:323  Successfully initialized NvOc, took 9.15ms
+2026-11-13T22:43:50.684[I] Backgrou TASK         utils_win.cpp:141  All services started successfully.
+2026-11-13T22:43:50.684[I] Backgrou TASK BackgroundProcessConf:83   Creating BackgroundProcessConfig
+2026-11-13T22:43:50.684[I] Backgrou TASK BackgroundProcessPlug:58   Initialized BackgroundProcess
+2026-11-13T22:43:50.684[I] Backgrou TASK  PluginModuleBase.cpp:323  Successfully initialized BackgroundProcess, took 10.61ms
+2026-11-13T22:43:50.699[I] LocalGam TASK        LocalGames.cpp:70   Initialized LocalGames
+2026-11-13T22:43:50.699[I] LocalGam TASK  PluginModuleBase.cpp:323  Successfully initialized LocalGames, took 25.06ms
+2026-11-13T22:43:50.701[I] NvPerfMo TASK  FrameViewWrapper.cpp:144  frameView init successfully
+2026-11-13T22:43:50.701[I] NvPerfMo TASK   NvPerfMonPlugin.cpp:56   Initialized NvPerfMon
+2026-11-13T22:43:50.701[I] NvPerfMo TASK  PluginModuleBase.cpp:323  Successfully initialized NvPerfMon, took 27.88ms
+2026-11-13T22:43:50.717[D] NvIGOUti TASK         nvigoutil.cpp:42   Loaded ShadowPlay
+2026-11-13T22:43:50.720[I] SystemIn TASK  SystemInfoPlugin.cpp:45   Initialized SystemInfo
+2026-11-13T22:43:50.720[I] SystemIn TASK  PluginModuleBase.cpp:323  Successfully initialized SystemInfo, took 45.28ms
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Ansel:NvCameraControl
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:DesktopNotification
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:Diagnostics
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:Downloader
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:DriverUpdateRecommendation
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:McpServer
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:MessageBusRouter-IGO
+2026-11-13T22:43:50.740[I]               MessageBusConnector.c:177  Joined bus as CrimsonNative:MessageBusRouter-NvApp
+2026-11-13T22:43:50.740[I]               MessageBusRouterPlugi:272  Forwarding messages...
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvAccount
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvAppIgoIpcProxy
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvDriverDiagnostics
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvKVStorage
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN CrimsonNative:NvLocalizedConfig
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Hotkey:HotkeyPlugin
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Hotkey:OSC
+2026-11-13T22:43:50.740[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.740[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN NvBackend:NvBackend
+2026-11-13T22:43:50.741[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.741[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN NvNode:SDKAPI
+2026-11-13T22:43:50.741[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.741[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowPlayApi_OSCUI
+2026-11-13T22:43:50.741[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.741[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowplayServer
+2026-11-13T22:43:50.741[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.757[I] NvIGOUti TASK  PluginModuleBase.cpp:323  Successfully initialized NvIGOUtil, took 82.34ms
+2026-11-13T22:43:50.789[D] MbBroadc MBUS MessageBusConnector.c:307   JOIN Shadowplay:ShadowPlayApi_NvAppUI
+2026-11-13T22:43:50.789[E] MbBroadc MBUS      MessageHandler.h:69   No message request handler attached
+2026-11-13T22:43:50.800[I] NvCplPlu TASK    NvCplApiModule.cpp:161  nvcplinit is successful
+2026-11-13T22:43:50.800[I] NvCplPlu TASK      NvBackendApi.cpp:81   Loading NvBackendAPI DLL...
+2026-11-13T22:43:50.800[I] NvCplDis TASK    NvCplApiModule.cpp:674  nvcplinit is successful
+2026-11-13T22:43:50.800[I] NvWorkst TASK    NvCplAPIModule.cpp:92   nvcplinit is successful
+2026-11-13T22:43:50.800[I] NvWorkst TASK     NvWorkstation.cpp:34   Initializing module NvWorkstation
+2026-11-13T22:43:50.800[I] NvWorkst TASK     NvWorkstation.cpp:48   Initialized NvWorkstation
+2026-11-13T22:43:50.800[I] NvWorkst TASK  PluginModuleBase.cpp:323  Successfully initialized NvWorkstation, took 125.82ms
+2026-11-13T22:43:50.801[I] NvCplDis TASK NvCplDisplayPlugin.cp:171  Initialized NvCplDisplayPlugin : successfully
+2026-11-13T22:43:50.801[I] NvCplDis TASK  PluginModuleBase.cpp:323  Successfully initialized NvCplDisplayPlugin, took 124.60ms
+2026-11-13T22:43:50.822[I] NvCplPlu TASK      NvBackendApi.cpp:148  Calling EnsureThatBackendIsRunning...
+2026-11-13T22:43:50.822[I] NvCplPlu TASK      NvBackendApi.cpp:156  EnsureThatBackendIsRunning succeded.
+2026-11-13T22:43:50.822[I] NvCplPlu TASK       NvCplPlugin.cpp:76   Initialized NvCplPlugin : successfully
+2026-11-13T22:43:50.822[I] NvCplPlu TASK  PluginModuleBase.cpp:323  Successfully initialized NvCplPlugin, took 145.81ms
+2026-11-13T22:43:50.822[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin BackgroundProcess
+2026-11-13T22:43:50.822[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin AppDiscovery
+2026-11-13T22:43:50.822[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin DriverInstall
+2026-11-13T22:43:50.822[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin LoginId
+2026-11-13T22:43:50.822[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin MessageBusRouter
+2026-11-13T22:43:50.822[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin NvIGOUtil
+2026-11-13T22:43:50.822[I] AppDisco TASK AppDiscoveryPlugin.cp:67   Start AppDiscovery
+2026-11-13T22:43:50.823[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin NvOc
+2026-11-13T22:43:50.823[I] AppDisco TASK AppDiscoveryPlugin.cp:69   Started AppDiscovery
+2026-11-13T22:43:50.823[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin LocalGames
+2026-11-13T22:43:50.823[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin NvCplDisplayPlugin
+2026-11-13T22:43:50.823[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin NvCplPlugin
+2026-11-13T22:43:50.823[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin NvPerfMon
+2026-11-13T22:43:50.823[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin NvWorkstation
+2026-11-13T22:43:50.823[I] cefclien 1390         CefPlugin.cpp:181  Invoking Start() for plugin SystemInfo
+2026-11-13T22:43:50.823[I]                  NvCplApiModule.cpp:81   Profilemap instance
+2026-11-13T22:43:50.854[I]                        GpuProps.cpp:982  Attempting to retrieve GPU UUIDs via CUDA Driver API
+2026-11-13T22:43:50.854[I]                        GpuProps.cpp:1010 Found CUDA driver DLL at: C:\Windows\system32\DriverStore\FileRepository\nvcvi.inf_amd64_7428391d91532508\nvcuda64.dll
+2026-11-13T22:43:50.968[I]                        GpuProps.cpp:1020 Successfully loaded nvcuda64.dll from driver store
+2026-11-13T22:43:50.968[I]                        GpuProps.cpp:1055 All CUDA function pointers obtained successfully
+2026-11-13T22:43:50.986[I]                        GpuProps.cpp:1066 CUDA initialized successfully
+2026-11-13T22:43:50.986[I]                        GpuProps.cpp:1079 CUDA device count: 1
+2026-11-13T22:43:50.987[I]                        GpuProps.cpp:1085 NVAPI physical GPU count: 1
+2026-11-13T22:43:50.987[I]                        GpuProps.cpp:1121 Device 0 - CUDA UUID: 1C326399-55C0-6AF9-2F5C-CCB025F46538
+2026-11-13T22:43:50.987[I]                        GpuProps.cpp:1142 CUDA Device 0 matched with m_vGpus[0], updated UUID info
+2026-11-13T22:43:50.987[I]                        GpuProps.cpp:1150 Added GPU to CUDA ordering string: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:50.987[I]                        GpuProps.cpp:1169 GPU UUID retrieval completed successfully
+2026-11-13T22:43:50.987[I]                        GpuProps.cpp:1170 CUDA GPU default ordering (in CUDA enumeration order): NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:51.003[I]                        GpuProps.cpp:982  Attempting to retrieve GPU UUIDs via CUDA Driver API
+2026-11-13T22:43:51.003[I]                        GpuProps.cpp:1010 Found CUDA driver DLL at: C:\Windows\system32\DriverStore\FileRepository\nvcvi.inf_amd64_7428391d91532508\nvcuda64.dll
+2026-11-13T22:43:51.078[I]                        GpuProps.cpp:1020 Successfully loaded nvcuda64.dll from driver store
+2026-11-13T22:43:51.078[I]                        GpuProps.cpp:1055 All CUDA function pointers obtained successfully
+2026-11-13T22:43:51.078[I]                        GpuProps.cpp:1066 CUDA initialized successfully
+2026-11-13T22:43:51.078[I]                        GpuProps.cpp:1079 CUDA device count: 1
+2026-11-13T22:43:51.079[I]                        GpuProps.cpp:1085 NVAPI physical GPU count: 1
+2026-11-13T22:43:51.079[I]                        GpuProps.cpp:1121 Device 0 - CUDA UUID: 1C326399-55C0-6AF9-2F5C-CCB025F46538
+2026-11-13T22:43:51.079[I]                        GpuProps.cpp:1142 CUDA Device 0 matched with m_vGpus[0], updated UUID info
+2026-11-13T22:43:51.079[I]                        GpuProps.cpp:1150 Added GPU to CUDA ordering string: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:51.079[I]                        GpuProps.cpp:1169 GPU UUID retrieval completed successfully
+2026-11-13T22:43:51.079[I]                        GpuProps.cpp:1170 CUDA GPU default ordering (in CUDA enumeration order): NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:51.082[I]                    NvApiWrapper.cpp:1676 Graphics driver version: 62124, branch: r621_20
+2026-11-13T22:43:51.082[I]                        GpuProps.cpp:976  Getting default CUDA GPU ordering: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:51.082[I]                    ProfileTable.cpp:2826 Using default GPU ordering from NVAPI: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:51.269[E]                 NvApiDrsWrapper.cpp:48   NVAPI error - (-132)
+2026-11-13T22:43:51.269[I]                  NvCplApiModule.cpp:84   Profilemap is instanced
+2026-11-13T22:43:51.269[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+2026-11-13T22:43:51.269[I]                    NvApiWrapper.cpp:1676 Graphics driver version: 62124, branch: r621_20
+2026-11-13T22:43:51.269[I]                        GpuProps.cpp:976  Getting default CUDA GPU ordering: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:51.269[I]                    ProfileTable.cpp:2826 Using default GPU ordering from NVAPI: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:51.269[E]                         Profile.cpp:484  unknown DRV value: 'none'
+2026-11-13T22:43:51.269[I]                  NvCplApiModule.cpp:89   Getting all settings for global
+2026-11-13T22:43:51.311[I]                  NvCplApiModule.cpp:252  IS_RESIZABLE_BAR API call result:0, gpuIndex:0, isResizableBar:1
+2026-11-13T22:43:51.317[D]                    NvApiWrapper.cpp:1289 isUpScalingSupported: displayId=0x80061083 status=0 factors=5
+2026-11-13T22:43:51.323[D]                    NvApiWrapper.cpp:1328 isHyperSamplingSupported: displayId=0x80061083 legacyStatus=0 legacyFactors=7 dlStatus=0 dlFactors=2
+2026-11-13T22:43:51.325[I]                    ProfileTable.cpp:2991 Driver name 'none' from drvValue not found in m_oGpuProps
+2026-11-13T22:43:51.325[I]                    NvApiWrapper.cpp:1676 Graphics driver version: 62124, branch: r621_20
+2026-11-13T22:43:51.325[I]                        GpuProps.cpp:976  Getting default CUDA GPU ordering: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:51.325[I]                    ProfileTable.cpp:2826 Using default GPU ordering from NVAPI: NVIDIA GeForce RTX 3060 Laptop GPU
+2026-11-13T22:43:51.325[E]                         Profile.cpp:484  unknown DRV value: 'none'
+2026-11-13T22:43:51.330[I]                    NvApiWrapper.cpp:1676 Graphics driver version: 62124, branch: r621_20
+2026-11-13T22:43:51.330[I]                    NvApiWrapper.cpp:1676 Graphics driver version: 62124, branch: r621_20
+2026-11-13T22:43:51.337[I]                  NvCplApiModule.cpp:91   Getting all settings is done
+2026-11-13T22:43:51.669[I] SystemIn 98db   SystemInfoTasks.cpp:95   ExecuteAsync DeviceIDGet
+2026-11-13T22:43:51.670[I] SystemIn efce   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:51.670[I] SystemIn dcf9   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:51.670[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: CPUName, OSName, OSVersion, BrowserVersion, OSBuildNumber, PhysicalMemoryCapacity, Platform, ProcessorArchitecture, SystemName, VendorName, DeviceType, ConfidenceInBrowser, IsBrowserForged, ProductVersion, ProductName, Make, Model, UserDefaultUILanguage, UserSpecifiedDeviceName
+2026-11-13T22:43:51.670[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: OSName, Platform
+2026-11-13T22:43:51.678[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:51.682[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:51.704[I] SystemIn 2531   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:51.704[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: UserDefaultUILanguage
+2026-11-13T22:43:51.708[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:51.737[I] SystemIn 66aa   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:51.737[I] SystemIn aaf0   SystemInfoTasks.cpp:95   ExecuteAsync DeviceIDGet
+2026-11-13T22:43:51.737[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: VendorName, SystemName, DeviceType, SubApiName, ErrorMessage, ProcessorArchitecture
+2026-11-13T22:43:51.742[I] SystemIn 482d   SystemInfoTasks.cpp:95   ExecuteAsync DeviceIDGet
+2026-11-13T22:43:51.744[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:51.746[D]               MessageCallbackManage:198  Registering notification listener for method RegisterApplicationScanProgressNotifications
+2026-11-13T22:43:51.746[D]               MessageCallbackManage:198  Registering notification listener for method RegisterApplicationChangedNotifications
+2026-11-13T22:43:51.746[D]               MessageCallbackManage:198  Registering notification listener for method RegisterApplicationRemovedNotifications
+2026-11-13T22:43:51.756[I] SystemIn 21f2   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:51.756[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: ProcessorArchitecture, PhysicalMemoryCapacity
+2026-11-13T22:43:51.757[D]               MessageCallbackManage:198  Registering notification listener for method RegisterApplicationStateChangedNotifications
+2026-11-13T22:43:51.757[I] SystemIn 6ad9   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:51.758[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: CPUName, PhysicalMemoryCapacity
+2026-11-13T22:43:51.763[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:51.763[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:51.764[I] SystemIn 4b9f   SystemInfoTasks.cpp:95   ExecuteAsync DeviceIDGet
+2026-11-13T22:43:51.766[I] SystemIn bd1f   SystemInfoTasks.cpp:95   ExecuteAsync DeviceIDGet
+2026-11-13T22:43:51.766[I] SystemIn de9b   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:51.766[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: DeviceType, SystemName, VendorName
+2026-11-13T22:43:51.771[D]               MessageCallbackManage:198  Registering notification listener for method RegisterDisplayChangeNotification
+2026-11-13T22:43:51.773[I] NvIGOUti 3c47   nvigoutilPlugin.cpp:105  Created NVIDIA App ready for G-Assist event (already signaled)
+2026-11-13T22:43:51.773[I] NvIGOUti 3c47   nvigoutilPlugin.cpp:119  NVIDIA App is now ready for G-Assist function calls
+2026-11-13T22:43:51.774[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:51.807[I] SystemIn c7ee   SystemInfoTasks.cpp:15   SystemInfoGet: ExecuteAsync
+2026-11-13T22:43:51.808[I]                 SystemInfoTasks.cpp:40   Logging SystemInfoGet keys: ProcessorArchitecture
+2026-11-13T22:43:51.811[I] SystemIn TASK   SystemInfoTasks.cpp:73   SystemInfoGet: FinishAsync
+2026-11-13T22:43:51.826[I] NvCplDis 3055    NvCplApiModule.cpp:2464 GetDisplaysState API call start
+2026-11-13T22:43:51.883[I] NvCplDis a086    NvCplApiModule.cpp:2122 GetGlobalGsyncState API call result:0. gsyncState:3
+2026-11-13T22:43:51.923[I] LocalGam 0333   LocalGamesTasks.cpp:154  ExecuteAsync GetIsSystemOPSCompatible
+2026-11-13T22:43:51.964[I] SystemIn 98db   system_info_win.cpp:455  Replying to Device ID query with : 062b19a572c0afb81f72cb6a5f2fa2a28ebe1bfaef598e50147f89406ef1c5c0
+2026-11-13T22:43:51.964[I] SystemIn TASK   SystemInfoTasks.cpp:103  DeviceIDGet: FinishAsync
+2026-11-13T22:43:51.991[I] AppDisco 0fdd AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:51.992[I] AppDisco 0fdd   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.992[I] AppDisco 0fdd AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:51.992[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:51.992[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist DisplayVersion
+2026-11-13T22:43:51.992[E] AppDisco 0fdd AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:51.992[I] AppDisco 0fdd AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:51.992[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:51.992[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE DisplayVersion
+2026-11-13T22:43:51.992[E] AppDisco 0fdd AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:51.992[I] AppDisco 0fdd   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.992[I] AppDisco 0fdd AppDiscoveryHelper.cp:202  Reading installed version from HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:51.992[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:214  Registry path: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:51.992[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:204  Failed to read from registry for Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW DisplayVersion
+2026-11-13T22:43:51.992[E] AppDisco 0fdd AppDiscoveryHelper.cp:211  Failed to get installed version from registry HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:51.992[I] AppDisco 0fdd   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.992[I] AppDisco 0fdd AppDiscoveryHelper.cp:202  Reading installed version from HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:51.992[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:214  Registry path: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:51.992[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast DisplayVersion
+2026-11-13T22:43:51.992[E] AppDisco 0fdd AppDiscoveryHelper.cp:211  Failed to get installed version from registry HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:51.992[I] AppDisco 0fdd   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.992[I] AppDisco 0fdd AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:51.992[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:51.992[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:204  Failed to read from registry for Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d DisplayVersion
+2026-11-13T22:43:51.992[E] AppDisco 0fdd AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:51.993[I] AppDisco 0fdd   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.993[I] AppDisco 0fdd AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:51.993[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:51.993[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView DisplayVersion
+2026-11-13T22:43:51.993[E] AppDisco 0fdd AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:51.993[I] AppDisco 0fdd   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.993[I] AppDisco 0fdd AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:51.993[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:51.993[I] AppDisco 0fdd  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix DisplayVersion
+2026-11-13T22:43:51.993[E] AppDisco 0fdd AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:51.993[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:51.997[D]               MessageCallbackManage:198  Registering notification listener for method AppActionNotification
+2026-11-13T22:43:51.997[I] AppDisco 1e42 AppDiscoveryTasks.cpp:23   ExecuteAsync AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.997[I] AppDisco 1e42   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.997[I] AppDisco 1e42 AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:51.997[I] AppDisco 1e42  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:51.997[I] AppDisco 292d AppDiscoveryTasks.cpp:23   ExecuteAsync AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.997[I] AppDisco 1e42  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist DisplayVersion
+2026-11-13T22:43:51.997[E] AppDisco 1e42 AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:51.997[I] AppDisco 1e42 AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:51.997[I] AppDisco 1e42  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:51.997[I] AppDisco 1e42  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE DisplayVersion
+2026-11-13T22:43:51.997[E] AppDisco 1e42 AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:51.997[I] AppDisco TASK AppDiscoveryTasks.cpp:40   Finish AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.998[I] AppDisco 292d   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.998[I] AppDisco 292d AppDiscoveryHelper.cp:202  Reading installed version from HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:51.998[I] AppDisco 292d  AppDiscoveryUtil.cpp:214  Registry path: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:51.998[I] AppDisco 292d  AppDiscoveryUtil.cpp:204  Failed to read from registry for Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW DisplayVersion
+2026-11-13T22:43:51.998[E] AppDisco 292d AppDiscoveryHelper.cp:211  Failed to get installed version from registry HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:51.998[I] AppDisco TASK AppDiscoveryTasks.cpp:40   Finish AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.998[I] AppDisco 4b47 AppDiscoveryTasks.cpp:23   ExecuteAsync AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.998[I] AppDisco 4b47   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.998[I] AppDisco 4b47 AppDiscoveryHelper.cp:202  Reading installed version from HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:51.998[I] AppDisco 4b47  AppDiscoveryUtil.cpp:214  Registry path: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:51.998[I] AppDisco 4b47  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast DisplayVersion
+2026-11-13T22:43:51.998[E] AppDisco 4b47 AppDiscoveryHelper.cp:211  Failed to get installed version from registry HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:51.998[I] AppDisco TASK AppDiscoveryTasks.cpp:40   Finish AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.998[I] AppDisco f53d AppDiscoveryTasks.cpp:23   ExecuteAsync AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.998[I] AppDisco 5440 AppDiscoveryTasks.cpp:23   ExecuteAsync AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.999[I] AppDisco 6573 AppDiscoveryTasks.cpp:23   ExecuteAsync AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.999[I] AppDisco f53d   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.999[I] AppDisco 5440   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.999[I] AppDisco f53d AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:51.999[I] AppDisco 6573   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:51.999[I] AppDisco f53d  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:51.999[I] AppDisco 5440 AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:51.999[I] AppDisco 6573 AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:51.999[I] AppDisco 5440  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:51.999[I] AppDisco 6573  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:51.999[I] AppDisco f53d  AppDiscoveryUtil.cpp:204  Failed to read from registry for Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d DisplayVersion
+2026-11-13T22:43:51.999[E] AppDisco f53d AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:51.999[I] AppDisco 5440  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView DisplayVersion
+2026-11-13T22:43:51.999[I] AppDisco 6573  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix DisplayVersion
+2026-11-13T22:43:51.999[E] AppDisco 5440 AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:51.999[I] AppDisco TASK AppDiscoveryTasks.cpp:40   Finish AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.999[E] AppDisco 6573 AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:51.999[I] AppDisco TASK AppDiscoveryTasks.cpp:40   Finish AppDiscoveryGetAppStatus
+2026-11-13T22:43:51.999[I] AppDisco TASK AppDiscoveryTasks.cpp:40   Finish AppDiscoveryGetAppStatus
+2026-11-13T22:43:52.015[I] SystemIn 482d   system_info_win.cpp:455  Replying to Device ID query with : 062b19a572c0afb81f72cb6a5f2fa2a28ebe1bfaef598e50147f89406ef1c5c0
+2026-11-13T22:43:52.015[I] SystemIn TASK   SystemInfoTasks.cpp:103  DeviceIDGet: FinishAsync
+2026-11-13T22:43:52.023[I] SystemIn aaf0   system_info_win.cpp:455  Replying to Device ID query with : 062b19a572c0afb81f72cb6a5f2fa2a28ebe1bfaef598e50147f89406ef1c5c0
+2026-11-13T22:43:52.023[I] SystemIn TASK   SystemInfoTasks.cpp:103  DeviceIDGet: FinishAsync
+2026-11-13T22:43:52.060[I] NvCplDis 3055    NvCplApiModule.cpp:2413 displays Identifier:1
+2026-11-13T22:43:52.066[I] SystemIn bd1f   system_info_win.cpp:455  Replying to Device ID query with : 062b19a572c0afb81f72cb6a5f2fa2a28ebe1bfaef598e50147f89406ef1c5c0
+2026-11-13T22:43:52.066[I] SystemIn TASK   SystemInfoTasks.cpp:103  DeviceIDGet: FinishAsync
+2026-11-13T22:43:52.068[I] SystemIn 4b9f   system_info_win.cpp:455  Replying to Device ID query with : 062b19a572c0afb81f72cb6a5f2fa2a28ebe1bfaef598e50147f89406ef1c5c0
+2026-11-13T22:43:52.068[I] SystemIn TASK   SystemInfoTasks.cpp:103  DeviceIDGet: FinishAsync
+2026-11-13T22:43:52.073[I] AppDisco 54df AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.073[I] AppDisco 54df   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.073[I] AppDisco 54df AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:52.073[I] AppDisco 54df  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:52.073[I] AppDisco 54df  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist DisplayVersion
+2026-11-13T22:43:52.073[E] AppDisco 54df AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:52.073[I] AppDisco 54df AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:52.073[I] AppDisco 54df  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:52.073[I] AppDisco 54df  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE DisplayVersion
+2026-11-13T22:43:52.073[E] AppDisco 54df AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:52.073[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.074[I] AppDisco c2f0 AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.075[I] AppDisco c2f0   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.075[I] AppDisco c2f0 AppDiscoveryHelper.cp:202  Reading installed version from HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:52.075[I] AppDisco c2f0  AppDiscoveryUtil.cpp:214  Registry path: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:52.075[I] AppDisco c2f0  AppDiscoveryUtil.cpp:204  Failed to read from registry for Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW DisplayVersion
+2026-11-13T22:43:52.075[I] AppDisco ff89 AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.075[I] AppDisco ac9b AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.075[I] AppDisco d63d AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.075[E] AppDisco c2f0 AppDiscoveryHelper.cp:211  Failed to get installed version from registry HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:52.075[I] AppDisco fde6 AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.075[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.075[I] AppDisco ff89   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.075[I] AppDisco fde6   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.075[I] AppDisco d63d   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.075[I] AppDisco ff89 AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:52.075[I] AppDisco fde6 AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:52.075[I] AppDisco d63d AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:52.075[I] AppDisco ff89  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:52.075[I] AppDisco ac9b   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.075[I] AppDisco fde6  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:52.075[I] AppDisco d63d  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:52.075[I] AppDisco ff89  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix DisplayVersion
+2026-11-13T22:43:52.075[I] AppDisco ac9b AppDiscoveryHelper.cp:202  Reading installed version from HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:52.075[E] AppDisco ff89 AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:52.075[I] AppDisco ac9b  AppDiscoveryUtil.cpp:214  Registry path: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:52.075[I] AppDisco fde6  AppDiscoveryUtil.cpp:204  Failed to read from registry for Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d DisplayVersion
+2026-11-13T22:43:52.075[I] AppDisco d63d  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView DisplayVersion
+2026-11-13T22:43:52.075[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.075[I] AppDisco ac9b  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast DisplayVersion
+2026-11-13T22:43:52.075[E] AppDisco d63d AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:52.075[E] AppDisco fde6 AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:52.075[E] AppDisco ac9b AppDiscoveryHelper.cp:211  Failed to get installed version from registry HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:52.075[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.076[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.076[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.091[I] AppDisco f957 AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.091[I] AppDisco f957   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.091[I] AppDisco f957 AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:52.091[I] AppDisco f957  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:52.091[I] AppDisco f957  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist DisplayVersion
+2026-11-13T22:43:52.091[E] AppDisco f957 AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GAssist
+2026-11-13T22:43:52.091[I] AppDisco f957 AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:52.091[I] AppDisco f957  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:52.091[I] AppDisco f957  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE DisplayVersion
+2026-11-13T22:43:52.091[E] AppDisco f957 AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RISE
+2026-11-13T22:43:52.091[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.094[I] AppDisco 66be AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.094[I] AppDisco 66be   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.094[I] AppDisco 66be AppDiscoveryHelper.cp:202  Reading installed version from HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:52.094[I] AppDisco 66be  AppDiscoveryUtil.cpp:214  Registry path: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:52.094[I] AppDisco 66be  AppDiscoveryUtil.cpp:204  Failed to read from registry for Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW DisplayVersion
+2026-11-13T22:43:52.094[E] AppDisco 66be AppDiscoveryHelper.cp:211  Failed to get installed version from registry HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_GeforceNOW
+2026-11-13T22:43:52.094[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.096[I] AppDisco 616d AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.097[I] AppDisco 616d   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.097[I] AppDisco 616d AppDiscoveryHelper.cp:202  Reading installed version from HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:52.097[I] AppDisco 616d  AppDiscoveryUtil.cpp:214  Registry path: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:52.097[I] AppDisco 616d  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast DisplayVersion
+2026-11-13T22:43:52.097[E] AppDisco 616d AppDiscoveryHelper.cp:211  Failed to get installed version from registry HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_NVIDIABroadcast
+2026-11-13T22:43:52.097[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.099[I] AppDisco 4c3e AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.099[I] AppDisco 4c3e   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.099[I] AppDisco 4c3e AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:52.099[I] AppDisco 4c3e  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:52.099[I] AppDisco 4c3e  AppDiscoveryUtil.cpp:204  Failed to read from registry for Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d DisplayVersion
+2026-11-13T22:43:52.099[E] AppDisco 4c3e AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\7cc99ea5-8362-58dc-aab5-13f0a1c6fc2d
+2026-11-13T22:43:52.099[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.100[I] AppDisco 0803 AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.100[I] AppDisco 0803   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.100[I] AppDisco 0803 AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:52.100[I] AppDisco 0803  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:52.100[I] AppDisco 0803  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView DisplayVersion
+2026-11-13T22:43:52.100[E] AppDisco 0803 AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_FrameView
+2026-11-13T22:43:52.100[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.101[I] AppDisco a897 AppDiscoveryTasks.cpp:122  ExecuteAsync AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.101[I] AppDisco a897   JSONFileHandler.cpp:264  Cannot open file 'C:\ProgramData\NVIDIA Corporation\NVIDIA App\UpdateFramework\registry\AppDiscovery.json', returning emtpy array, so that new file can be created. Error details - No such file or directory
+2026-11-13T22:43:52.101[I] AppDisco a897 AppDiscoveryHelper.cp:202  Reading installed version from Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:52.101[I] AppDisco a897  AppDiscoveryUtil.cpp:214  Registry path: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:52.101[I] AppDisco a897  AppDiscoveryUtil.cpp:204  Failed to read from registry for SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix DisplayVersion
+2026-11-13T22:43:52.101[E] AppDisco a897 AppDiscoveryHelper.cp:211  Failed to get installed version from registry Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8}_RTX.Remix
+2026-11-13T22:43:52.101[I] AppDisco TASK AppDiscoveryTasks.cpp:148  Finish AppDiscoveryGetAppsStatus
+2026-11-13T22:43:52.187[I] LocalGam 0177   LocalGamesTasks.cpp:552  ExecuteAsync GetAutoOptimizeEnableState
+2026-11-13T22:43:52.188[I] LocalGam TASK   LocalGamesTasks.cpp:559  Finish GetAutoOptimizeEnableState
+2026-11-13T22:43:52.189[I] LocalGam 2a51   LocalGamesTasks.cpp:552  ExecuteAsync GetAutoOptimizeEnableState
+2026-11-13T22:43:52.189[I] LocalGam 2c13   LocalGamesTasks.cpp:18   ExecuteAsync GetApplications
+2026-11-13T22:43:52.190[I] LocalGam TASK   LocalGamesTasks.cpp:559  Finish GetAutoOptimizeEnableState
+2026-11-13T22:43:52.191[I] LocalGam TASK   LocalGamesTasks.cpp:32   Finish GetApplications
+2026-11-13T22:43:52.295[I] NvCplDis bb33    NvCplApiModule.cpp:2161 GetGsyncIndicator API call result:0. isEnabled:0
+2026-11-13T22:43:52.296[I] NvCplDis 5e2e    NvCplApiModule.cpp:3663 NvCplApiGetInfo NVFLAGS_DDS_STATUS result:0,supported:0, automatic:0, kmdResponse:0, muxState:0, srType:0 
+2026-11-13T22:43:52.298[I] NvCplDis 2024    NvCplApiModule.cpp:1860 NVCPLAPI_SETTINGS_GPU_AND_DISPLAY_INFO API call result:0, retValue:1
+2026-11-13T22:43:52.322[D] NvCplDis 3055    NvCplApiModule.cpp:1503 QueryIsAdvanceColorSettingsSupported gpu:0 display:0 result:0 supported:0
+2026-11-13T22:43:52.322[I] NvCplDis 3055    NvCplApiModule.cpp:5478 GetEnableHiddenResolutions: gpuIndex=0, displayIndex=0
+2026-11-13T22:43:52.340[I] NvCplDis 3055    NvCplApiModule.cpp:5509 GetEnableHiddenResolutions: isEnabled=false
+2026-11-13T22:43:52.340[I] NvCplDis 3055    NvCplApiModule.cpp:2434 displays position X:0
+2026-11-13T22:43:52.340[I] NvCplDis 3055    NvCplApiModule.cpp:2435 displays position Y:0
+2026-11-13T22:43:52.354[I] NvCplDis 3055    NvCplApiModule.cpp:210  NVCPLAPI_SETTINGS_DISPLAY_PULSAR_INFO API call result:0, gpu:0, display:0, supported:0
+2026-11-13T22:43:52.354[I] NvCplDis 3055    NvCplApiModule.cpp:2484 GetDisplaysState API call result:0
+2026-11-13T22:43:53.460[I] LocalGam 477f   LocalGamesTasks.cpp:49   ExecuteAsync GetLastApplicationScanTime
+2026-11-13T22:43:53.471[I] NvCplDis 341f NvCplDisplayTasks.cpp:1763 ExecuteAsync NvCplGetContextMenuVisibility
+2026-11-13T22:43:53.471[I] NvCplDis 341f    NvCplApiModule.cpp:5557 GetContextMenuVisibility
+2026-11-13T22:43:53.471[I] NvCplDis 341f    NvCplApiModule.cpp:5583 GetContextMenuVisibility: true
+2026-11-13T22:43:53.477[I] NvCplDis TASK NvCplDisplayTasks.cpp:1776 Finish NvCplGetContextMenuVisibility
+2026-11-13T22:43:53.510[I] LocalGam b9a5   LocalGamesTasks.cpp:101  ExecuteAsync GetApplicationSearchPaths
+2026-11-13T22:43:53.510[I] LocalGam TASK   LocalGamesTasks.cpp:113  Finish GetApplicationSearchPaths
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin BackgroundProcess
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin AppDiscovery
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin DriverInstall
+2026-11-13T22:44:08.858[I] AppDisco TASK AppDiscoveryPlugin.cp:75   Stop AppDiscovery
+2026-11-13T22:44:08.858[I] AppDisco TASK AppDiscoveryPlugin.cp:77   Stopped AppDiscovery
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin LoginId
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin MessageBusRouter
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin NvIGOUtil
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin NvOc
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin LocalGames
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin NvCplDisplayPlugin
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin NvCplPlugin
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin NvPerfMon
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin NvWorkstation
+2026-11-13T22:44:08.858[I] cefclien 1390         CefPlugin.cpp:216  Invoking Stop() for plugin SystemInfo
+2026-11-13T22:44:08.859[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin BackgroundProcess
+2026-11-13T22:44:08.859[I] Backgrou TASK         TaskQueue.cpp:207  BackgroundProcess Worker thread stopped
+2026-11-13T22:44:08.859[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for BackgroundProcess
+2026-11-13T22:44:08.859[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for BackgroundProcess, took 0.01ms
+2026-11-13T22:44:08.859[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin AppDiscovery
+2026-11-13T22:44:08.859[I] AppDisco TASK         TaskQueue.cpp:207  AppDiscovery Worker thread stopped
+2026-11-13T22:44:08.859[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for AppDiscovery
+2026-11-13T22:44:08.859[I] cefclien 1390 AppDiscoveryPlugin.cp:60   Uninitialize AppDiscovery
+2026-11-13T22:44:08.859[I] cefclien 1390 AppDiscoveryPlugin.cp:62   Uninitialized AppDiscovery
+2026-11-13T22:44:08.859[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for AppDiscovery, took 0.01ms
+2026-11-13T22:44:08.859[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin DriverInstall
+2026-11-13T22:44:08.859[I] DriverIn TASK         TaskQueue.cpp:207  DriverInstall Worker thread stopped
+2026-11-13T22:44:08.859[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for DriverInstall
+2026-11-13T22:44:08.860[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for DriverInstall, took 0.03ms
+2026-11-13T22:44:08.860[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin LoginId
+2026-11-13T22:44:08.860[I]  LoginId TASK         TaskQueue.cpp:207  LoginId Worker thread stopped
+2026-11-13T22:44:08.860[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for LoginId
+2026-11-13T22:44:08.860[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for LoginId, took 0.01ms
+2026-11-13T22:44:08.860[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin MessageBusRouter
+2026-11-13T22:44:08.860[I] MessageB TASK         TaskQueue.cpp:207  TASK Worker thread stopped
+2026-11-13T22:44:08.863[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin NvIGOUtil
+2026-11-13T22:44:08.863[I] NvIGOUti TASK         TaskQueue.cpp:207  NvIGOUtil Worker thread stopped
+2026-11-13T22:44:08.863[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for NvIGOUtil
+2026-11-13T22:44:08.863[I] cefclien 1390   nvigoutilPlugin.cpp:59   Reset and closed NVIDIA App ready for G-Assist event
+2026-11-13T22:44:08.863[D] cefclien 1390         nvigoutil.cpp:94   Performing ShadowPlay cleanup...
+2026-11-13T22:44:08.864[D] cefclien 1390         nvigoutil.cpp:109  ShadowPlay cleanup complete
+2026-11-13T22:44:08.865[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for NvIGOUtil, took 1.51ms
+2026-11-13T22:44:08.865[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin NvOc
+2026-11-13T22:44:08.865[I]     NvOc TASK         TaskQueue.cpp:207  NvOc Worker thread stopped
+2026-11-13T22:44:08.865[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for NvOc
+2026-11-13T22:44:08.865[I] cefclien 1390        NvOcPlugin.cpp:61   Uninitialize NvOc
+2026-11-13T22:44:08.865[I] cefclien 1390        NvOcPlugin.cpp:63   Uninitialized NvOc
+2026-11-13T22:44:08.865[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for NvOc, took 0.04ms
+2026-11-13T22:44:08.865[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin LocalGames
+2026-11-13T22:44:08.865[I] LocalGam TASK         TaskQueue.cpp:207  LocalGames Worker thread stopped
+2026-11-13T22:44:08.866[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for LocalGames
+2026-11-13T22:44:08.866[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for LocalGames, took 0.04ms
+2026-11-13T22:44:08.866[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin NvCplDisplayPlugin
+2026-11-13T22:44:08.866[I] NvCplDis TASK         TaskQueue.cpp:207  NvCplDisplayPlugin Worker thread stopped
+2026-11-13T22:44:08.866[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for NvCplDisplayPlugin
+2026-11-13T22:44:08.866[I] cefclien 1390 NvCplDisplayPlugin.cp:188  Uninitialize NvCplDisplayPlugin
+2026-11-13T22:44:08.867[I] cefclien 1390 NvCplDisplayPlugin.cp:190  Uninitialized NvCplDisplayPlugin
+2026-11-13T22:44:08.867[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for NvCplDisplayPlugin, took 0.15ms
+2026-11-13T22:44:08.867[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin NvCplPlugin
+2026-11-13T22:44:08.867[I] NvCplPlu TASK         TaskQueue.cpp:207  NvCplPlugin Worker thread stopped
+2026-11-13T22:44:08.867[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for NvCplPlugin
+2026-11-13T22:44:08.867[I] cefclien 1390       NvCplPlugin.cpp:93   Uninitialize NvCplPlugin
+2026-11-13T22:44:08.867[I] cefclien 1390       ShaderCache.cpp:393  StopPrecompilationStatusCheck called
+2026-11-13T22:44:08.867[I] cefclien 1390      NvBackendApi.cpp:177  NvBackendAPI cleanup started...
+2026-11-13T22:44:08.868[I] cefclien 1390      NvBackendApi.cpp:189  NvBackendAPI cleanup finished.
+2026-11-13T22:44:08.868[I] cefclien 1390       NvCplPlugin.cpp:110  Uninitialized NvCplPlugin
+2026-11-13T22:44:08.868[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for NvCplPlugin, took 0.68ms
+2026-11-13T22:44:08.868[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin NvPerfMon
+2026-11-13T22:44:08.868[I] NvPerfMo TASK         TaskQueue.cpp:207  NvPerfMon Worker thread stopped
+2026-11-13T22:44:08.868[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for NvPerfMon
+2026-11-13T22:44:08.869[I] cefclien 1390   NvPerfMonPlugin.cpp:62   Uninitialize NvPerfMon
+2026-11-13T22:44:08.869[I] cefclien 1390   NvPerfMonPlugin.cpp:64   Uninitialized NvPerfMon
+2026-11-13T22:44:08.869[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for NvPerfMon, took 0.06ms
+2026-11-13T22:44:08.869[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin NvWorkstation
+2026-11-13T22:44:08.869[I] NvWorkst TASK         TaskQueue.cpp:207  NvWorkstation Worker thread stopped
+2026-11-13T22:44:08.869[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for NvWorkstation
+2026-11-13T22:44:08.869[I] cefclien 1390     NvWorkstation.cpp:61   Uninitialize NvWorkstation
+2026-11-13T22:44:08.873[I] cefclien 1390     NvWorkstation.cpp:63   Uninitialized NvWorkstation
+2026-11-13T22:44:08.873[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for NvWorkstation, took 4.17ms
+2026-11-13T22:44:08.873[I] cefclien 1390         CefPlugin.cpp:231  Invoking Uninitialize() for plugin SystemInfo
+2026-11-13T22:44:08.873[I] SystemIn TASK         TaskQueue.cpp:207  SystemInfo Worker thread stopped
+2026-11-13T22:44:08.874[I] cefclien 1390  PluginModuleBase.cpp:382  Starting plugin Uninit for SystemInfo
+2026-11-13T22:44:08.874[I] cefclien 1390   system_info_win.cpp:174  Destroying SystemInfo
+2026-11-13T22:44:08.874[I] cefclien 1390  PluginModuleBase.cpp:387  Uninitialized plugin for SystemInfo, took 0.01ms
+2026-11-13T22:44:08.890[I] cefclien 1390       LoggingImpl.cpp:178  Destroying Logging
+
+End of log.
