@@ -309,6 +309,17 @@ def main() -> int:
         assert diag.place_output(sink, "x.txt", "report.txt").startswith(str(sink.dir)), "-o должен писать в папку прогона"
         assert "ЧТО В ЭТОЙ ПАПКЕ" in (sink.dir / "manifest.txt").read_text(encoding="utf-8-sig")
 
+        # ---- режим fix: dry-run должен отработать без правок и всё записать ----
+        rc = diag.main(["fix", "--dry-run", "--out-dir", str(out_base / "fixsink"), "--wait", "1", "--no-events"])
+        assert rc == 0, f"fix --dry-run вернул {rc}"
+        fdir = sorted((out_base / "fixsink").glob("run_*"))[-1]
+        for name in ("fix_plan.txt", "fix_report.txt", "fix_journal.json", "report.json", "verdict.txt"):
+            assert (fdir / name).exists(), f"fix: нет {name} в папке прогона"
+        ftxt = (fdir / "fix_report.txt").read_text(encoding="utf-8-sig")
+        assert "ЧТО СДЕЛАЛ РЕЖИМ FIX" in ftxt and "wait_overlay_ready" in ftxt, "fix_report пустой"
+        assert diag.parse_key_combo("alt+z") == ([18], 90), "разбор комбинации клавиш сломан"
+        assert diag.parse_key_combo("alt+\\")[1] == 220, "Alt+\\ не парсится"
+
         m = diag.render_fixes(rep)
         assert "ПЛАН ДЕЙСТВИЙ" in m and len(m) > 200
         assert "Команды-подсказки" in diag.render_commands()
