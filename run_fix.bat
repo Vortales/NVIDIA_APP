@@ -3,7 +3,8 @@ chcp 65001 >nul
 rem  Двойной клик = «сделай сам»: диагностика + автопочинка стека NVIDIA App + проверка Alt+Z.
 rem  Ничего не удаляется: папки только переименовываются в *.diagbak-..., конфиги пишутся с бэкапом.
 rem  Откат:  run_fix.bat undo    (то же самое: python nvidia_overlay_diag.py fix --undo)
-rem  Весь вывод — в папке «Результат» рядом с этим файлом, её и архивируй.
+rem  Весь вывод — в папке «Результат»; рядом с ней скрипт кладёт архив попытки
+rem  «Результат_N.zip» — именно его и отправляй ассистенту одним файлом.
 setlocal enableextensions
 cd /d "%~dp0"
 
@@ -48,9 +49,16 @@ if errorlevel 2 (
 )
 
 echo.
-echo [4/4] Открываю папку Результат...
-if exist "%~dp0Результат" ( explorer "%~dp0Результат" ) else ( echo папка не создалась — смотри вывод выше )
-echo.
-echo Готово. Заархивируй «Результат» и отправь ассистенту: по fix_journal.json видно каждое действие.
+echo [4/4] Ищу архив попытки...
+set "ZIP="
+for /f "delims=" %%f in ('dir /b /o-n "%~dp0Результат_*.zip" 2^>nul') do if not defined ZIP set "ZIP=%%f"
+if defined ZIP (
+    echo Готово. Архив попытки: %ZIP% - отправь ассистенту этим одним файлом.
+    echo По fix_journal.json внутри видно каждое действие; откат - run_fix.bat undo
+    explorer /select,"%~dp0%ZIP%"
+) else (
+    echo Архив не собрался -заархивируй папку «Результат» и отправь её.
+    if exist "%~dp0Результат" explorer "%~dp0Результат"
+)
 :end
 pause

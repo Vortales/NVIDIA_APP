@@ -32,7 +32,8 @@ nvidia_overlay_diag.py — диагностика оверлея NVIDIA App (з�
 Куда что пишется (можно не читать пути — просто архивируй папку):
   ./Результат/run_<ГГГГММДД-ЧЧММСС>/  — report.txt (полный отчёт), verdict.txt (гипотезы+план),
                             report.json (для машины), manifest.txt (что внутри и чего не хватило),
-                            logs/ (копии разобранных логов), send_to_assistant.zip (если --bundle)
+                            logs/ (копии разобранных логов), send_to_assistant.zip (если --bundle);
+                            плюс авто-архив «Результат_<номер попытки>.zip» рядом с папкой Результат
   ./Результат/incoming/    — приёмник: сюда кидаешь свои логи/архивы (.log/.txt/.json/.etl/.zip/.gz),
                             они подхватываются автоматом (в т.ч. если путь не указан)
   Переопределение: --out-dir D:\Diag, --no-sink (только консоль), --copy-mb 40, --keep-runs 5.
@@ -676,11 +677,11 @@ SIGNATURES: list[dict[str, Any]] = [
         ],
     ),
     dict(
-        re=r"(?i)isEnableHook:\s*0",
+        re=r"(?i)isGame:\s*1(?=[^\n]*isEnableHook:\s*0)",
         sev="CRITICAL",
         code="log.hooks_disabled",
         hyp="drs_profiles",
-        title="Для приложения выставлен 'isEnableHook: 0' — хук/оверлей запрещён настройкой профиля",
+        title="Игре (isGame: 1) разрешено 'isEnableHook: 0' — хук/оверлей запрещён настройкой профиля",
         why=(
             "CAppSettings::ComputeAppSettings показывает решение драйвера по конкретному приложению: "
             "isEnableHook: 0 = в это приложение хук ставить нельзя → оверлей в игре не появится, запись не начнётся, "
@@ -693,7 +694,7 @@ SIGNATURES: list[dict[str, Any]] = [
         ],
     ),
     dict(
-        re=r"(?i)(NvApiDrsWrapper.{0,50}NVAPI error|not found in m_oGpuProps|ComputeAppSettings.{0,60}m_uiIndex:\s*-1|QueryShadowPlayDdiShimStatus)",
+        re=r"(?i)(NvApiDrsWrapper.{0,50}NVAPI error|not found in m_oGpuProps|ComputeAppSettings.{0,60}m_uiIndex:\s*-1)",
         sev="CRITICAL",
         code="log.drs_broken",
         hyp="drs_profiles",
@@ -2675,6 +2676,7 @@ def analyze_paths(
             if str(f) not in used:
                 used.append(str(f))
         report.snapshot["log_files_used"] = used
+        check_recording_output(report, uniq[:analyzed])
     if not analyzed:
         report.add(
             "MEDIUM",
@@ -2705,8 +2707,14 @@ FIX_METRICS: tuple[tuple[str, str], ...] = (
     ("ddi_shim", "QueryShadowPlayDdiShimStatus"),
     ("window_gone", "window not available"),
     ("drs_132", "NVAPI error - (-132)"),
-    ("hooks_off", "isEnableHook: 0"),
+    # 'isEnableHook: 0' пишется и для dwm/dxdiag/чёрного списка — это норма. Требуем isGame: 1.
+    ("hooks_off", r"re:isGame:\s*1(?=[^\n]*isEnableHook:\s*0)"),
 )
+
+# 're:' в показателе — регулярка, без префикса — обычная подстрока.
+FIX_METRIC_RES: dict[str, "re.Pattern[str]"] = {
+    code: re.compile(needle[3:], re.I) for code, needle in FIX_METRICS if needle.startswith("re:")
+}
 
 # где лежат эти логи (первые существующие пути берутся)
 # список (не кортеж): selftest подменяет содержимое, чтобы проверить движок метрик
@@ -3061,7 +3069,8 @@ class Fixer:
             text = blob.decode("utf-8", "ignore")
             low = text.lower()
             for code, needle in FIX_METRICS:
-                n = low.count(needle.lower())
+                rx = FIX_METRIC_RES.get(code)
+                n = len(list(rx.finditer(text))) if rx is not None else low.count(needle.lower())
                 if n:
                     counts[code] += n
             self.watched_detail.append({"файл": str(p), "до": frm, "после": size})
@@ -3082,8 +3091,13 @@ class Fixer:
         for path, lines in data.items():
             frm = (start or {}).get(path, 0)
             for line in lines[frm:]:
+                low = line.lower()
                 for code, needle in FIX_METRICS:
-                    if needle.lower() in line.lower():
+                    rx = FIX_METRIC_RES.get(code)
+                    if rx is not None:
+                        if rx.search(line):
+                            counts[code] += 1
+                    elif needle.lower() in low:
                         counts[code] += 1
         return dict(counts)
 
@@ -3153,7 +3167,28 @@ class Fixer:
     def step_rebuild_drs(self) -> None:
         """Переименовать ProgramData\\...\\Drs → драйвер пересоберёт базу профилей (лечит -132 / isEnableHook: 0)."""
         src = Path(expand(FIX_DRS_DIR))
+        drs_gripe = any(f.code in ("log.drs_broken", "log.drv_none", "log.hooks_disabled") for f in self.r.findings)
         if not src.exists():
+            if drs_gripe:
+                self.add(
+                    "MEDIUM",
+                    "fix.drs_missing",
+                    f"Папки {FIX_DRS_DIR} нет вообще, а драйвер жалуется на чтение профилей",
+                    detail="\n".join(
+                        [
+                            "Логи сообщают 'NVAPI error - (-132)' / m_uiIndex: -1, но переименовывать нечего: базы профилей нет.",
+                            "Эту папку и файлы в ней создаёт установка полного пакета драйвера — «сброс Drs» и «восстановить по умолчанию»",
+                            "тут помочь не могут, нужен reinstall. Тем же объясняется и 'QueryShadowPlayDdiShimStatus'",
+                            "(компонент захвата вырезан: HKLM\\SOFTWARE\\NVIDIA Corporation\\Installer2\\Stripped).",
+                        ]
+                    ),
+                    fixes=[
+                        "python nvidia_overlay_diag.py fix --reinstall   — установщик восстановит Drs и компонент захвата",
+                        "или руками: «Graphics Driver (Network Install)» → выборочная установка → все компоненты → чистая установка",
+                    ],
+                    hypothesis="drs_profiles",
+                )
+                return
             self.add("OK", "fix.drs_absent", f"Папки {FIX_DRS_DIR} нет — сбрасывать нечего", hypothesis="drs_profiles")
             return
         dst = src.with_name(f"{src.name}.diagbak-{self.stamp()}")
@@ -3879,6 +3914,86 @@ class RunSink:
             self.dir = None
             return
         self._prune(keep)
+        self.attempt, self.archive = self._attempt_slot(base) if self.dir else (0, None)
+        self.archive_files = 0
+        self.archive_bytes = 0
+
+    # ---------- номер попытки и архив «Результат_N.zip» ----------
+    ATTEMPT_NAME_RE = re.compile(r"^Результат_(\d+)\.zip$")
+
+    @staticmethod
+    def _attempt_slot(base: Path) -> tuple[int, Path]:
+        """Номер попытки = max(уже лежащих рядом Результат_N.zip, счётчик Результат/.attempt) + 1.
+
+        Счётчик нужен, чтобы нумерация не «съезжала», когда старые архивы удалены или пересланы.
+        """
+        n = 0
+        with contextlib.suppress(OSError):
+            for p in base.parent.glob(base.name + "_*.zip"):
+                mm = RunSink.ATTEMPT_NAME_RE.match(p.name)
+                if mm:
+                    n = max(n, int(mm.group(1)))
+        with contextlib.suppress(OSError, ValueError):
+            n = max(n, int((base / ".attempt").read_text(encoding="utf-8").strip() or 0))
+        return n + 1, base.parent / f"{base.name}_{n + 1}.zip"
+
+    def make_attempt_archive(self) -> Path | None:
+        """Собрать весь прогон в ОДИН архив «Результат_<номер попытки>.zip» рядом с папкой Результат.
+
+        Его и отправлять ассистенту целиком: внутри отчёты, JSON, журнал fix и копии логов.
+        Имена внутри — «run_<время>/…», то есть ASCII, чтобы не перекодились при упаковке.
+        """
+        if not self.active or self.dir is None or self.base is None or self.attempt <= 0:
+            return None
+        if self.archive is None:
+            self.archive = self.base.parent / f"{self.base.name}_{self.attempt}.zip"
+        dest = self.archive
+        while dest.exists():
+            self.attempt += 1
+            dest = dest.with_name(f"{self.base.name}_{self.attempt}.zip")
+        files = [f for f in sorted(self.dir.rglob("*")) if f.is_file()]
+        if not files:
+            return None
+        try:
+            with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
+                for f in files:
+                    try:
+                        size = f.stat().st_size
+                    except OSError:
+                        continue
+                    arc = f"{self.dir.name}/{f.relative_to(self.dir)}"  # в zip — прямые слеши (спецификация)
+                    if size > 32 * 1024 * 1024:  # гигант внутрь не кладём — оставим записку
+                        zf.writestr(arc + ".skip.txt", f"не упаковано, размер {size} Б: {f}\n")
+                        continue
+                    try:
+                        zf.write(f, arc)
+                        self.archive_files += 1
+                        self.archive_bytes += size
+                    except OSError as exc:
+                        self.notes.append(f"в архив не лёг {f.name}: {type(exc).__name__}: {exc}")
+            (self.base / ".attempt").write_text(str(self.attempt), encoding="utf-8")
+        except OSError as exc:
+            self.notes.append(f"не собрал архив попытки: {type(exc).__name__}: {exc}")
+            with contextlib.suppress(OSError):
+                dest.unlink()
+            return None
+        self.archive = dest
+        return dest
+
+    def prune_empty_runs(self) -> int:
+        """Убрать папки прогонов без единого файла — их оставил прерванный/упавший запуск."""
+        if self.base is None:
+            return 0
+        gone = 0
+        for d in sorted(self.base.glob("run_*")):
+            if not d.is_dir() or (self.dir is not None and d == self.dir):
+                continue
+            if any(f.is_file() for f in d.rglob("*")):
+                continue
+            with contextlib.suppress(OSError):
+                shutil.rmtree(d)
+                gone += 1
+        return gone
 
     @staticmethod
     def _prepare(base: Path | None) -> Path | None:
@@ -4052,6 +4167,7 @@ class RunSink:
             f"скрипт:   nvidia_overlay_diag.py  sha256[:16]={script_sha256()}",
             f"аргументы:  python nvidia_overlay_diag.py {' '.join(extra)}".rstrip(),
             f"среда:    python {platform.python_version()} / {platform.system()} {platform.release()} / cwd={Path.cwd()}",
+            f"попытка:  №{self.attempt} · архив для отправки: {self.archive.name if self.archive else '<не собран>'}",
             f"итог:     находок {len(report.findings)}, файлов отчёта {len(self.written)}, копий логов {len(self.copied)}",
             "",
             "КАК ОТПРАВИТЬ",
@@ -4067,6 +4183,18 @@ class RunSink:
             L.append(f"  {size:>10,} Б  {name}")
         for name, size in self.copied:
             L.append(f"  {size:>10,} Б  {name}")
+        L += [
+            "",
+            "АРХИВ ПОПЫТКИ",
+            dash,
+            (
+                f"{self.archive.name} лежит рядом с папкой {OUT_DIR_NAME} — отправь ассистенту именно его,"
+                f" одним файлом (внутри {self.archive_files} шт, {self.archive_bytes // 1024} КБ до сжатия)."
+                if self.archive and self.archive.is_file()
+                else "не собран (флаг --no-zip или нечего паковать)"
+            ),
+            f"нумерация: счётчик {OUT_DIR_NAME}/.attempt; следующий прогон — попытка №{self.attempt + 1}.",
+        ]
         if self.skipped:
             L += ["", "ПРОПУЩЕНО (не влезло/нет доступа)"]
             L += [f"  {n}: {why}" for n, why in self.skipped]
@@ -4104,16 +4232,102 @@ class RunSink:
         if not self.active:
             return "папка результатов не создана (вывод только в консоль)"
         kb = sum(s for _, s in self.copied) // 1024
+        arch = ""
+        if self.archive and self.archive.is_file():
+            arch = (
+                f"\nАРХИВ ПОПЫТКИ №{self.attempt}: {self.archive}\n"
+                f"  отправь ассистенту этим одним файлом — паковать руками не нужно "
+                f"({self.archive_files} файлов, {self.archive.stat().st_size // 1024} КБ)\n"
+            )
         return (
             f"ВСЁ В ПАПКЕ: {self.dir}\n"
             f"  архивируй её и отправь ассистенту — отчёты {len(self.written)} шт, логов {len(self.copied)} шт ({kb} КБ)"
             + (f", пропущено копий: {len(self.skipped)}" if self.skipped else "")
+            + arch
         )
 
 
 # --------------------------------------------------------------------------------------
 # Пакет для отправки ("мне лог — я решаю")
 # --------------------------------------------------------------------------------------
+
+
+REC_OUTPUT_RE = re.compile(r"Final output filename:\s*\[(?P<p>[^\]]+?\.(?:mp4|avi|mkv|ts))\]", re.I)
+
+
+def check_recording_output(report: Report, files: Sequence[Path]) -> None:
+    """Отвечает на «окно есть — а запись идёт?»: смотрим getOutputFileName в CaptureCore.log.
+
+    Единственное доказательство живого захвата — что драйвер сформировал файл записи. Берём
+    последние пути из 'CSettings::getOutputFileName Final output filename: [ … ]' и проверяем,
+    лежит ли файл на диске.
+    """
+    paths: list[str] = []
+    seen_capture = False
+    for f in files:
+        if "capture" not in f.name.lower() or not f.is_file():
+            continue
+        seen_capture = True
+        try:
+            if f.stat().st_size <= 40 * 1024 * 1024:
+                # 'getOutputFileName' встречается в любом месте файла — «хвостом» на 2 МБ промахиваемся
+                with open(f, "rb") as fh:
+                    lines = fh.read().decode("utf-8", "ignore").splitlines()
+            else:
+                lines, _enc = sniff_read_text(f, max_bytes=8 * 1024 * 1024)
+        except OSError:
+            continue
+        for line in lines:
+            mm = REC_OUTPUT_RE.search(line)
+            if mm:
+                paths.append(mm.group("p").strip())
+    paths = list(dict.fromkeys(paths))[-3:]
+    if not paths and not seen_capture:
+        return  # CaptureCore.log вообще не попадался — нечего и утверждать
+    if not paths:
+        report.add(
+            "INFO",
+            "log.no_recording_session",
+            "В логах нет ни одной попытки записать файл",
+            detail=(
+                "Ни одной строки 'CSettings::getOutputFileName Final output filename' — запись либо не "
+                "запускали, либо она недоступна (нет компонента ShadowPlay: HKLM\\SOFTWARE\\NVIDIA "
+                "Corporation\\Installer2\\Stripped, либо оверлей не цепляет приложение: isEnableHook: 0)."
+            ),
+            fixes=["Alt+Z → «Начать запись» (или Alt+F10) → 10–15 с → стоп → сразу прогони scan."],
+            hypothesis="log_nothing",
+        )
+        return
+    rows: list[str] = []
+    on_disk = 0
+    for p in paths:
+        q = Path(expand(p))
+        exists = q.is_file()
+        if exists:
+            on_disk += 1
+            try:
+                rows.append(f"файл ЕСТЬ, {q.stat().st_size // 1024} КБ: {p}")
+            except OSError:
+                rows.append(f"файл есть, но размер не прочитать: {p}")
+        else:
+            rows.append(f"файла нет на диске: {p}")
+    report.add(
+        "OK" if on_disk else "LOW",
+        "log.capture_output",
+        f"Запись доходит до файла ({on_disk}/{len(paths)} файлов на месте)"
+        if on_disk
+        else "Лог обещает файл записи, но на диске его нет",
+        detail="\n".join(rows)
+        + ("\nПапка записей из настроек: " + str(report.snapshot["videos_folder"]) if report.snapshot.get("videos_folder") else "")
+        + "\nИсточник: CaptureCore.log, CSettings::getOutputFileName — путь берётся оттуда, а не из настроек.",
+        fixes=[]
+        if on_disk
+        else [
+            "Для DVR/Instant Replay это может быть нормой (буфер перезаписывается). Нажми «Начать запись», "
+            "останови и проверь папку записей; если файла нет — смотри log.ddi_shim и Installer2\\Stripped.",
+        ],
+        hypothesis="log_nothing",
+    )
 
 
 def write_bundle(zip_path: Path, report: Report, text: str, log_files: Sequence[Path]) -> list[str]:
@@ -4393,6 +4607,41 @@ def run_selftest(sigs: Sequence[dict[str, Any]]) -> int:
             if "ВСЁ В ПАПКЕ" not in sink.summary_line():
                 problems.append("summary_line неинформативна")
 
+    # ---- авто-архив попытки: Результат_N.zip + нумерация ----
+    with tempfile.TemporaryDirectory() as tdz:
+        zbase = Path(tdz) / OUT_DIR_NAME
+        zbase.mkdir(parents=True)
+        (zbase.parent / f"{OUT_DIR_NAME}_3.zip").write_bytes(b"zip-stub")
+        zsink = RunSink(base=zbase, keep=5)
+        if zsink.attempt != 4:
+            problems.append(f"нумерация попыток: №{zsink.attempt}, ожидалось №4")
+        zsink.write_text("report.txt", "привет")
+        zsink.write_text("manifest.txt", "ман")
+        stub = zbase / "run_00000000-000000"
+        (stub / "logs").mkdir(parents=True)
+        zp = zsink.make_attempt_archive()
+        if zp is None or not zp.is_file():
+            problems.append("не собрался авто-архив попытки")
+        else:
+            if zp.name != f"{OUT_DIR_NAME}_4.zip":
+                problems.append(f"имя архива попытки: {zp.name}")
+            with zipfile.ZipFile(zp) as zf:
+                names = zf.namelist()
+                if zf.read(names[0]).decode("utf-8-sig") not in ("привет\n", "ман\n"):
+                    problems.append("в архиве попытки не читается содержимое отчёта")
+            if not any(n.endswith("report.txt") for n in names):
+                problems.append(f"в архиве попытки нет отчётов: {names}")
+            if any(n.startswith(OUT_DIR_NAME) for n in names):
+                problems.append(f"в архиве утёк путь до папки Результат: {names}")
+        if zsink.prune_empty_runs() < 1 or stub.exists():
+            problems.append("prune_empty_runs не убрал пустую папку прогона")
+        if not zsink.dir.exists():
+            problems.append("prune_empty_runs снёс текущий прогон!")
+        if not (zbase / ".attempt").is_file():
+            problems.append("счётчик попыток .attempt не записан")
+        if RunSink(base=zbase, keep=5).attempt != 5:
+            problems.append("следующая попытка не +1 после архива")
+
     # ---- линт базы сигнатур + дым-тест режима fix ----
     for sig in SIGNATURES:
         for fld in ("re", "sev", "code", "hyp", "title"):
@@ -4508,7 +4757,7 @@ def build_parser() -> argparse.ArgumentParser:
 
             после ЛЮБОГО прогона весь вывод лежит в './Результат/run_<дата-время>/':
               report.txt (полный отчёт) · verdict.txt (причины + план) · report.json · manifest.txt (что внутри)
-              logs/ (копии разобранных логов) · send_to_assistant.zip (если --bundle). Эту папку и архивируй.
+              logs/ (копии разобранных логов) · send_to_assistant.zip (если --bundle) · авто-архив Результат_N.zip.
               свои логи кидай в './Результат/incoming/' — подхватятся сами (режим logs без аргументов).
 
             примеры:
@@ -4530,7 +4779,11 @@ def build_parser() -> argparse.ArgumentParser:
         sp.add_argument("-o", "--out", metavar="FILE", help="имя файла отчёта (пишется ВНУТРЬ папки результатов)")
         sp.add_argument("--out-dir", metavar="DIR", help=f"куда складывать вывод (по умолчанию './{OUT_DIR_NAME}' рядом со скриптом)")
         sp.add_argument("--no-sink", action="store_true", help="ничего не сохранять на диск, только консоль")
-        sp.add_argument("--no-zip", action="store_true", help="не собирать send_to_assistant.zip в папке прогона")
+        sp.add_argument(
+            "--no-zip",
+            action="store_true",
+            help=f"не собирать авто-архив попытки {OUT_DIR_NAME}_<номер>.zip рядом с папкой {OUT_DIR_NAME}",
+        )
         sp.add_argument("--inbox-done", action="store_true", help=f"после разбора перенести файлы из {OUT_DIR_NAME}/{INCOMING_NAME} в {INCOMING_NAME}/processed, чтобы не пережёвывать их снова")
         sp.add_argument("--keep-runs", type=int, default=KEEP_RUNS_DEFAULT, metavar="N", help="сколько прогонов хранить (0 = все)")
         sp.add_argument("--copy-mb", type=int, default=COPY_TOTAL_CAP_MB, metavar="MB", help="лимит размера копий логов в папке прогона")
@@ -4800,6 +5053,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         text += "\n" + render_fix(report, width)
 
     # ---- всё в папку результатов (её и архивируешь) ----
+    if sink.active:
+        report.snapshot["attempt"] = sink.attempt
+        report.snapshot["attempt_archive"] = sink.archive.name if sink.archive else ""
     payload = report.to_json()
     payload["log_files"] = [str(p) for p in log_files]
     payload["argv"] = " ".join(sys.argv[1:])
@@ -4836,6 +5092,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         sink.write_text("verdict.txt", render_verdict(report, width) + "\n\n" + render_fixes(report))
         sink.copy_logs(log_files, cap_mb=int(getattr(args, "copy_mb", COPY_TOTAL_CAP_MB) or COPY_TOTAL_CAP_MB))
         sink.write_text("manifest.txt", sink.manifest(report, cmd, sys.argv[1:]))
+        if not getattr(args, "no_zip", False):
+            sink.make_attempt_archive()
+        sink.prune_empty_runs()
         print(sink.summary_line())
     elif out_arg is None and getattr(args, "no_sink", False):
         print("\n(--no-sink: на диск ничего не писалось)")

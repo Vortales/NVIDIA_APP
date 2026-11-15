@@ -17,6 +17,7 @@ import json
 import os
 import sys
 import types
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -357,6 +358,15 @@ def main() -> int:
         assert diag.parse_key_combo("alt+z") == ([18], 90), "разбор комбинации клавиш сломан"
         assert diag.parse_key_combo("alt+\\")[1] == 220, "Alt+\\ не парсится"
 
+        arch = sorted(out_base.glob("fixsink_*.zip"))  # имя = имя папки результатов + номер попытки
+        assert arch, "нет авто-архива попытки рядом с папкой результатов"
+        with zipfile.ZipFile(arch[-1]) as zf:
+            anames = zf.namelist()
+        assert any(n.endswith("fix_report.txt") for n in anames), f"в архиве попытки нет fix_report: {anames[:4]}"
+        assert any(n.endswith("manifest.txt") for n in anames), "в архиве попытки нет manifest.txt"
+        assert (out_base / "fixsink" / ".attempt").is_file(), "счётчик попыток не записан"
+        rep2 = json.loads((fdir / "report.json").read_text(encoding="utf-8-sig"))
+        assert rep2["snapshot"].get("attempt") == 1, f"номер попытки не попал в report.json: {rep2['snapshot'].get('attempt')}"
         m = diag.render_fixes(rep)
         assert "ПЛАН ДЕЙСТВИЙ" in m and len(m) > 200
         assert "Команды-подсказки" in diag.render_commands()
