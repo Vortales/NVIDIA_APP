@@ -116,15 +116,20 @@ python nvidia_overlay_diag.py list-signatures          # что именно и�
 8. Защитники: активные AV из `SecurityCenter2`, **Controlled Folder Access**, записи `Get-MpThreatDetection`
    по NVIDIA, SmartScreen, а также **Code Integrity (WDAC)** в журнале.
 9. Конфликтующий софт в процессах: RTSS/Afterburner, Steam, Discord, Game Bar, Nahimic/Sonic, Razer, iCUE,
-   G Hub, OBS, XSplit, Fraps/Bandicam, EVGA, Special K / Lossless Scaling / MangoHUD, AutoHotkey/PowerToys, HWiNFO.
+   G Hub, OBS, XSplit, Fraps/Bandicam, EVGA, Special K / Lossless Scaling / MangoHUD, AutoHotkey/PowerToys, HWiNFO, а также оверлей-скриншотеры GTA-RP-_launcher (Skrinshoter/Screenshoter, Majestic).
 10. Куда пишется: папка «Видео» (через `User Shell Folders`), свободное место, политики `GameDVR`/Game Bar.
 11. Журнал событий за `--days` (по умолчанию 3): `nvlddmkm` (TDR/`ID 4101`), ошибки уровня Critical/Error в System,
     `Application Error/Hang/WER` с NVIDIA-строками (**Faulting module** — по нему видно, чья это DLL), CodeIntegrity-блокировки,
     Kernel-Power 41.
 12. Автопоиск и разбор самых свежих логов (`nvlog*`, `NvContainer*`, `*overlay*`, `*installer*`, `*.etl`, …) —
     см. раздел 3.
-13. Доходит ли запись до файла: `CSettings::getOutputFileName` в `CaptureCore.log` + проверка, что этот `.mp4`
-    действительно лежит на диске (`log.capture_output`). Ни одной такой строки → запись либо не запускали,
+13. Где реально лежит база DRS-профилей: `C:\ProgramData\NVIDIA Corporation\Drs` (старые драйверы) и
+    `C:\Windows\System32\drivers\NVIDIA Corporation\Drs` + `dbInstaller.exe` (55x/56x). Плюс разбор
+    `C:\Windows\INF\setupapi.dev.log`: если `nvdrsdb.bin`/`dbInstaller.exe` были «still in use» в момент
+    установки, база не пересобралась → `m_uiIndex: -1` → `isEnableHook: 0` на все приложения (`log.drs_installer_blocked`).
+14. Доходит ли запись до файла: `CSettings::getOutputFileName` в `CaptureCore.log` + проверка, что этот `.mp4`
+    действительно лежит на диске (`log.capture_output`), и кто именно пишется: если все файлы `Desktop …`,
+    работает десктоп-захват, а игровой хук запрещён — это разные пути драйвера (`log.capture_desktop_only`). Ни одной такой строки → запись либо не запускали,
     либо компонент захвата недоступен (`log.no_recording_session`).
 
 **Разбор логов (`scan` + `logs`)** — 45 сигнатур, каждая = регексп + «что это значит» + конкретные шаги + голос за гипотезу:
@@ -134,7 +139,10 @@ python nvidia_overlay_diag.py list-signatures          # что именно и�
 `log.desktop_duplication` (DXGI/DuplicateOutput) · `log.display_enum` · `log.nvenc` · `log.gpu_lost` (device lost/TDR) ·
 `log.container` (nvcontainer/pipe/IPC) · `log.storage` · `log.config_corrupt` · `log.plugin_missing` · `log.av_block` ·
 `log.net` · `log.installer` · `log.oom` · `log.timeout` · `log.crash_generic` · `log.record_fail` · `log.hotkey` ·
-`log.hdr` · `log.driver` · `log.os_unsupported` · `log.power_graphic` · `log.first_severe` + `log.unknown_errors`.
+`log.hdr` · `log.driver` · `log.os_unsupported` · `log.power_graphic` · `log.first_severe` + `log.unknown_errors`,
+отдельно `log.drs_installer_blocked` (в `C:\Windows\INF\setupapi.dev.log` файлы `nvdrsdb.bin`/`dbInstaller.exe`
+были «still in use» → базу не пересобрали) и `log.no_recording_session`. Разбор идёт по приоритету:
+`CaptureCore/CaptureApi/NVIDIA App|Overlay/CxNative` не вытесняются шумом `NvContainer*` при `--max-files`.
 
 Две эвристики, которые обычно и дают правильный ответ:
 
@@ -177,12 +185,12 @@ python nvidia_overlay_diag.py scan "D:\Logs" "C:\Users\me\Downloads\nvlog_2026-1
 |---|---|---|
 | `kill` | `taskkill /f /t /im "NVIDIA Overlay.exe" /t` + завершает `NVIDIA App.exe` (убивает zombie-хосты, из-за которых App обращается не к тому pid) | не требуется |
 | `svc` | `Restart-Service NVDisplay.ContainerLocalSystem,NvContainerLocalSystem -Force` | не требуется |
-| `drs` | переименовывает `C:\ProgramData\NVIDIA Corporation\Drs` → `Drs.diagbak-<дата>`; драйвер пересоздаёт базу профилей (лечит `NVAPI error -132`, `isEnableHook: 0`, `unknown DRV value: 'none'`) | `--undo` вернёт имя |
+| `drs` | ищет базу профилей в ДВУХ местах: `C:\ProgramData\NVIDIA Corporation\Drs` (старые драйверы) и `C:\Windows\System32\drivers\NVIDIA Corporation\Drs` (55x/56x — именно там `nvdrsdb.bin` и `dbInstaller.exe`). ProgramData-папку переименовывает целиком (`Drs.diagbak-<дата>`), в System32 трогает только `nvdrsdb*.bin`, затем запускает `dbInstaller.exe -force -all` (штатный пересборщик базы) и просит перезагрузку. Лечит `NVAPI error -132`, `m_uiIndex: -1`, `isEnableHook: 0`, `unknown DRV value: 'none'` | `--undo` вернёт имена |
 | `cef` | переименовывает кэш UI-рантайма (`Cache`, `GPUCache`, `Code Cache`, `ShaderCache`, `blob_storage`, `Network`) в `*.diagbak-<дата>` | `--undo` |
 | `settings` | в JSON-конфиге App включает **уже существующие** ключи `overlay` / `instant_replay` / `record` (ложь → правда); чужие ключи не создаёт, файл сначала копирует в бэкап | бэкап в `%TEMP%`, путь в журнале |
 | `hotkey` | удаляет **пустые** значения хоткеев в `HKLM\HKCU\...\NVIDIA Corporation\...\Hotkey...` (у тебя в логах `GetHotkeyProperty: reg read failed` и `Hotkey:  State: OpenIGO` — привязка пустая) | старое значение (пусто) в журнале |
 | `reinstall` | только с флагом `--reinstall`: находит в кэше загрузок `setup.exe` полного пакета и запускает его — тебе остаётся нажать «Выборочная установка» и включить захват. Это **решающий** шаг, когда `Installer2\Stripped\ShadowPlay = 1` | — |
-| `app` | стартует `NVIDIA App.exe` (одним экземпляром) | — |
+| `app` | стартует `NVIDIA App.exe` (путь берётся из `…\NVIDIA App\CEF\NVIDIA App.exe`, затем `AppEXEPath` из реестра, затем поиск по корням установки) | — |
 | `probe` | отправляет клавиши (`--keys`, по умолчанию `alt+z`), ждёт `--wait` с, ищет видимое окно процесса `NVIDIA Overlay.exe` через `EnumWindows`, и считает, **наросло** ли число ошибок в `CaptureCore.log` | — |
 
 Что важно про безопасность:

@@ -377,7 +377,7 @@ SIGNATURES: list[dict[str, Any]] = [
         ],
     ),
     dict(
-        re=r"(?i)(riva\s?tuner|rtss|afterburner|nahimic|sonic\s?studio|sonic\s?radar|razer|icue|corsair|steam(?:works)?\s?overlay|gameoverlayrenderer|discord.{0,15}overlay|xbox\s?game\s?bar|gamerdvr|special\s?k|mangohud|lossless\s?scaling|xsplit|evga)\w*",
+        re=r"(?i)(riva\s?tuner|rtss|afterburner|nahimic|sonic\s?studio|sonic\s?radar|razer|icue|corsair|steam(?:works)?\s?overlay|gameoverlayrenderer|discord.{0,15}overlay|skrinshoter|screenshoter|majestic|5play|reallife\s?rp|xbox\s?game\s?bar|gamerdvr|special\s?k|mangohud|lossless\s?scaling|xsplit|evga)\w*",
         sev="MEDIUM",
         code="log.conflict_software",
         hyp="conflict",
@@ -2516,6 +2516,11 @@ class WinCollector:
 # --------------------------------------------------------------------------------------
 
 
+PRIORITY_LOG_RE = re.compile(
+    r"(?i)(capturecore|captureapi|nvstream\.log|log\.nvidia (app|overlay)\.exe|cxnative_nvidia (app|overlay))"
+)
+
+
 def find_log_files(roots: Sequence[str], limit: int, hints: re.Pattern[str] | None = None) -> list[Path]:
     """Свежие лог-файлы NVIDIA (по возможности) — сортировка по времени модификации."""
     out: dict[Path, float] = {}
@@ -2545,7 +2550,9 @@ def find_log_files(roots: Sequence[str], limit: int, hints: re.Pattern[str] | No
             if st.st_size == 0:
                 continue
             out[p] = st.st_mtime
-    ranked = sorted(out.items(), key=lambda kv: kv[1], reverse=True)
+    # важнейшие логи (CaptureCore/CaptureApi/NVIDIA App|Overlay/CxNative) идём первыми: иначе при
+    # --max-files они вытесняются десятками NvContainer*/AudioDriver*, и самый полезный файл не читается.
+    ranked = sorted(out.items(), key=lambda kv: (0 if PRIORITY_LOG_RE.search(kv[0].name) else 1, -kv[1]))
     return [p for p, _ in ranked[:limit]]
 
 
@@ -2592,7 +2599,10 @@ def analyze_paths(
         if k not in seen:
             seen.add(k)
             uniq.append(f)
-    uniq.sort(key=lambda f: f.stat().st_mtime if f.exists() else 0, reverse=True)
+    # Важнейшие логи (CaptureCore = оверлей/захват) не должны вытесняться шумом NvContainer*:
+    # сортируем по «приоритет, затем свежесть», иначе при лимите --max_files самые важные файлы
+    # просто не попадают в разбор (на реальных дампах так и происходило).
+    uniq.sort(key=lambda f: (0 if PRIORITY_LOG_RE.search(f.name) else 1, -(f.stat().st_mtime if f.exists() else 0)))
     uniq = uniq[:max_files]
 
     total_bytes = 0
@@ -2677,6 +2687,7 @@ def analyze_paths(
                 used.append(str(f))
         report.snapshot["log_files_used"] = used
         check_recording_output(report, uniq[:analyzed])
+        check_drs_installer(report, uniq[:analyzed])
     if not analyzed:
         report.add(
             "MEDIUM",
@@ -2765,6 +2776,11 @@ FIX_HOTKEY_NAME_RE = re.compile(r"(?i)hotkey|shortcut|binding")
 FIX_TOGGLE_KEY_RE = re.compile(r"(?i)^(in[\s_-]?game[\s_-]?overlay|overlay|overlayenabled|instant[\s_-]?replay|instantreplay|automagicgame|highlight|record|capture)$")
 FIX_LEAF_RE = re.compile(r"(?i)^(enabled|on|active|isenabled|usedesktopcapture|allowcapture)$")
 FIX_DRS_DIR = r"C:\ProgramData\NVIDIA Corporation\Drs"
+# У драйверов 55x/56x база профилей живёт ЗДЕСЬ, рядом с dbInstaller.exe (PerfDriverDB).
+# Проверять только ProgramData — значит врать «папки нет», когда база на месте и просто не собрана.
+FIX_DRS_SYS_DIR = r"%SystemRoot%\System32\drivers\NVIDIA Corporation\Drs"
+# на случай, если SystemRoot не разворачивается (нестандартный профиль/окружение)
+FIX_DRS_SYS_DIR_ALT = r"C:\Windows\System32\drivers\NVIDIA Corporation\Drs"
 FIX_SERVICES = ("NVDisplay.ContainerLocalSystem", "NvContainerLocalSystem")
 
 
@@ -2966,7 +2982,7 @@ class Fixer:
     # ---------- утилиты ----------
     @staticmethod
     def stamp() -> str:
-        return re.sub(r"[-:]", "", now_iso())[:15].replace("T", "-")
+        return re.sub(r"[-:]", "", now_iso()).replace(" ", "-")[:15]  # без пробелов: имя файла должно быть копируемым
 
     def admin(self) -> bool:
         if not IS_WIN:
@@ -3165,19 +3181,31 @@ class Fixer:
         self.record("services", names=list(FIX_SERVICES))
 
     def step_rebuild_drs(self) -> None:
-        """Переименовать ProgramData\\...\\Drs → драйвер пересоберёт базу профилей (лечит -132 / isEnableHook: 0)."""
-        src = Path(expand(FIX_DRS_DIR))
-        drs_gripe = any(f.code in ("log.drs_broken", "log.drv_none", "log.hooks_disabled") for f in self.r.findings)
-        if not src.exists():
+        """Спрятать базу профилей DRS → драйвер/dbInstaller пересоберут её (лечит -132, m_uiIndex: -1, isEnableHook: 0).
+
+        У современных драйверов база — это C:\\Windows\\System32\\drivers\\NVIDIA Corporation\\Drs\\nvdrsdb.bin
+        рядом с dbInstaller.exe, а не папка ProgramData\\NVIDIA Corporation\\Drs. Смотрим обе: раньше шаг
+        отрабатывал «папки нет — сбрасывать нечего» и на самом деле ничего не чинил. Ничего не удаляем:
+        файлы только переименовываются в *.diagbak-<_stamp> и попадают в журнал (fix --undo возвращает).
+        """
+        drs_gripe = any(
+            f.code in ("log.drs_broken", "log.drv_none", "log.hooks_disabled", "log.drs_installer_blocked")
+            for f in self.r.findings
+        )
+        prog = Path(expand(FIX_DRS_DIR))
+        drv_roots = [Path(expand(p)) for p in (FIX_DRS_SYS_DIR, FIX_DRS_SYS_DIR_ALT)]
+        drv = next((d for d in drv_roots if d.is_dir()), drv_roots[0])
+        if not prog.is_dir() and not any(d.is_dir() for d in drv_roots):
             if drs_gripe:
                 self.add(
                     "MEDIUM",
                     "fix.drs_missing",
-                    f"Папки {FIX_DRS_DIR} нет вообще, а драйвер жалуется на чтение профилей",
+                    "Базы профилей DRS нет ни в одной из типовых папок, а драйвер жалуется на чтение профилей",
                     detail="\n".join(
                         [
-                            "Логи сообщают 'NVAPI error - (-132)' / m_uiIndex: -1, но переименовывать нечего: базы профилей нет.",
-                            "Эту папку и файлы в ней создаёт установка полного пакета драйвера — «сброс Drs» и «восстановить по умолчанию»",
+                            "Логи сообщают 'NVAPI error - (-132)' / m_uiIndex: -1, а переименовывать нечего: базы нет.",
+                            "Проверены: " + FIX_DRS_DIR + " и " + FIX_DRS_SYS_DIR + " (и вариант с C:\\Windows)",
+                            "Такую базу создаёт установка полного пакета драйвера — «сброс Drs» и «восстановить по умолчанию»",
                             "тут помочь не могут, нужен reinstall. Тем же объясняется и 'QueryShadowPlayDdiShimStatus'",
                             "(компонент захвата вырезан: HKLM\\SOFTWARE\\NVIDIA Corporation\\Installer2\\Stripped).",
                         ]
@@ -3189,39 +3217,82 @@ class Fixer:
                     hypothesis="drs_profiles",
                 )
                 return
-            self.add("OK", "fix.drs_absent", f"Папки {FIX_DRS_DIR} нет — сбрасывать нечего", hypothesis="drs_profiles")
+            self.add("OK", "fix.drs_absent", "Папок DRS нет ни в ProgramData, ни в System32 — сбрасывать нечего", hypothesis="drs_profiles")
             return
-        dst = src.with_name(f"{src.name}.diagbak-{self.stamp()}")
         if not self.confirm(
             "Сбросить базу профилей DRS",
-            f"переименовать {src} → {dst.name}. Игра/оверлей после этого видят чистые профили. Откат: python nvidia_overlay_diag.py fix --undo",
+            f"переименовать файлы базы в {prog} и {drv} в *.diagbak-… ; затем dbInstaller.exe -force -all пересоберёт nvdrsdb.bin. "
+            "Откат — fix --undo. После пересборки нужна перезагрузка.",
         ):
             self.add("INFO", "fix.drs_skip", "Сброс DRS пропущен", hypothesis="drs_profiles")
             return
-        try:
+        moved: list[str] = []
+        if prog.is_dir():  # ProgramData-папку можно уносить целиком
+            dst = prog.with_name(f"{prog.name}.diagbak-{self.stamp()}")
             if self.dry:
-                self.actions.append(f"[dry-run] rename {src} → {dst}")
+                self.actions.append(f"[dry-run] rename {prog} → {dst.name}")
+                moved.append(f"[dry-run] {prog.name}")
             else:
-                src.rename(dst)
-                self.record("rename", src=str(src), dst=str(dst), what="drs")
-        except OSError as exc:
+                try:
+                    prog.rename(dst)
+                    self.record("rename", src=str(prog), dst=str(dst), what="drs")
+                    moved.append(str(dst))
+                except OSError as exc:
+                    self.add(
+                        "HIGH",
+                        "fix.drs_locked",
+                        "Папку Drs переименовать не удалось (удерживается драйвером)",
+                        detail=f"{type(exc).__name__}: {exc}\nСначала шаг 'Перезапустить сервисы NVIDIA', потом повторить fix --only drs.",
+                        fixes=["powershell (админ): Restart-Service NVDisplay.ContainerLocalSystem -Force, затем повторить fix --only drs",
+                               "или: перегрузись и сразу запусти fix --only drs (до запуска NVIDIA App)"],
+                        hypothesis="drs_profiles",
+                    )
+        elif drv.is_dir():
+            # в System32 папку не трогаем (её держит драйвер/TrustedInstaller) — только сами базы
+            locked: list[str] = []
+            for f in sorted(drv.glob("nvdrsdb*.bin")):
+                dst = f.with_name(f"{f.name}.diagbak-{self.stamp()}")
+                if self.dry:
+                    self.actions.append(f"[dry-run] rename {f.name} → {dst.name}")
+                    moved.append(f"[dry-run] {f.name}")
+                    continue
+                try:
+                    f.rename(dst)
+                    self.record("rename", src=str(f), dst=str(dst), what="drs_bin")
+                    moved.append(str(dst))
+                except OSError as exc:
+                    locked.append(f"{f.name}: {type(exc).__name__}")
+            if locked:
+                self.add(
+                    "MEDIUM",
+                    "fix.drs_locked",
+                    "Файлы базы в System32 переименовать не удалось ( занята/TrustedInstaller)",
+                    detail="\n".join(locked[:4]) + "\nОстаётся пересборка dbInstaller + перезагрузка — их шаг и делает.",
+                    fixes=["перезагрузись и сразу: python nvidia_overlay_diag.py fix --only drs (до старта NVIDIA App)",
+                           "или из безопасного режима / через psexec -s (база принадлежит TrustedInstaller)"],
+                    hypothesis="drs_profiles",
+                )
+        inst = drv / "dbInstaller.exe"
+        if inst.is_file():
+            rc, out = self.sh(f'"{inst}" -force -all', timeout=240)
             self.add(
-                "HIGH",
-                "fix.drs_locked",
-                "Папку Drs переименовать не удалось (удерживается драйвером)",
-                detail=f"{type(exc).__name__}: {exc}\nСначала шаг 'Перезапустить сервисы NVIDIA', потом повторить; либо назначить переименование на перезагрузку.",
-                fixes=["powershell (админ): Restart-Service NVDisplay.ContainerLocalSystem -Force, затем повторить fix --only drs",
-                       "или: перегрузись и сразу запусти fix --only drs (до запуска NVIDIA App)"],
+                "OK" if rc == 0 else "MEDIUM",
+                "fix.drs_dbinstaller",
+                f"dbInstaller.exe -force -all → rc={rc}",
+                detail=(out or "")[-600:]
+                + "\nПересборка базы профилей из BaseProfileDB.xml. Чтобы драйвер перечитал nvdrsdb.bin — перезагрузись.",
+                fixes=["Перезагрузи ПК и проверь: python nvidia_overlay_diag.py scan (m_uiIndex: -1 должен исчезнуть)"],
                 hypothesis="drs_profiles",
             )
-            return
-        self.add(
-            "OK",
-            "fix.drs_reset",
-            f"База DRS сброшена: {src.name} → {dst.name}",
-            detail="Драйвер создаст Drs заново при следующем обращении. Если что — fix --undo вернёт как было.",
-            hypothesis="drs_profiles",
-        )
+        if moved:
+            self.add(
+                "OK",
+                "fix.drs_reset",
+                f"База DRS спрятана: {len(moved)} объект(ов)",
+                detail="; ".join(Path(x).name for x in moved[-6:]) + "\nДрайвер создаст базу заново; откат — fix --undo.",
+                fixes=["Перезагрузи ПК, затем Alt+Z в игре."],
+                hypothesis="drs_profiles",
+            )
 
     def step_clear_cef(self) -> None:
         """Кэш CEF — источник 'приложение есть, а окно белое/никакое'."""
@@ -4255,14 +4326,109 @@ class RunSink:
 REC_OUTPUT_RE = re.compile(r"Final output filename:\s*\[(?P<p>[^\]]+?\.(?:mp4|avi|mkv|ts))\]", re.I)
 
 
+DRS_INSTALLER_RE = re.compile(
+    r"(?i)(dbInstaller\.exe|nvdrsdb)[^\n]{0,160}(still in use|needs to be reconfigured|remains with owner|failed|error|denied)"
+)
+
+
+def check_drs_installer(report: Report, files: Sequence[Path] = ()) -> None:
+    """Чем закончилась установка драйвера для базы DRS — смотрим C:\\Windows\\INF\\setupapi.dev.log.
+
+    Строки вида «File '…\\Drs\\dbInstaller.exe' still in use by 3 sources» / «needs to be reconfigured»
+    означают, что базу профилей не пересобрали при установке. Дальше по цепочке: NVAPI -132 →
+    m_uiIndex: -1 → isEnableHook: 0 на все приложения → оверлея в игре нет, хотя десктоп-захват работает.
+    Лечится перезагрузкой + dbInstaller.exe -force -all (это делает 'fix --only drs').
+    """
+    # сначала среди разобранных файлов (так работает и на присланном дампе), потом системный путь
+    cands = [c for c in files if "setupapi" in c.name.lower()]
+    cands += [Path(expand(r"%SystemRoot%\INF\setupapi.dev.log")), Path(r"C:\Windows\INF\setupapi.dev.log")]
+    f = next((c for c in cands if c.is_file()), None)
+    if f is None:
+        return
+    try:
+        size = f.stat().st_size
+        with open(f, "rb") as fh:
+            if size > 6 * 1024 * 1024:  # интересует последняя установка — читаем хвост
+                fh.seek(max(0, size - 6 * 1024 * 1024))
+            blob = fh.read().decode("utf-8", "ignore")
+    except OSError:
+        return
+    lines = [ln.strip() for ln in blob.splitlines() if DRS_INSTALLER_RE.search(ln)]
+    if not lines:
+        return
+    # 'still in use'/'remains with owner' у dbInstaller.exe/nvdrsdb.bin — типичная запись setupapi при
+    # обновлении драйвера, а не приговор. Поэтому MEDIUM (улика), а не CRITICAL: доказательство
+    # поломки базы — 'm_uiIndex: -1' и NVAPI -132 в живых логах, они и ведут гипотезу.
+    blocked = [ln for ln in lines if "still in use" in ln.lower() or "owner" in ln.lower() or "reconfigur" in ln.lower()]
+    report.add(
+        "MEDIUM" if blocked else "INFO",
+        "log.drs_installer_blocked",
+        f"Файлы базы DRS были заняты при установке драйвера (dbInstaller/nvdrsdb), строк: {len(lines)}",
+        detail=f"файл: {f} (хвост {min(size, 6 * 1024 * 1024) // 1024} КБ)\n"
+        + "\n".join("  …" + ln[-150:] for ln in (blocked or lines)[-6:]),
+        fixes=[
+            "Перезагрузи ПК и СРАЗУ (до запуска NVIDIA App) прогони: python nvidia_overlay_diag.py fix --only drs",
+            "или руками: переименовать C:\\Windows\\System32\\drivers\\NVIDIA Corporation\\Drs\\nvdrsdb.bin, "
+            "затем dbInstaller.exe -force -all и перезагрузка",
+            "если и после этого m_uiIndex: -1 остаётся — переустановка полного пакета (--reinstall)",
+        ],
+        hypothesis="drs_profiles",
+        source="log:setupapi",
+    )
+
+
+REC_SOURCE_RE = re.compile(r"^(?P<label>.+?)\s+\d{4}[.\d]*\s*-")
+
+
+def win_name(path: str) -> str:
+    """Имя файла из windows-пути — на любой ОС (Path() на POSIX backslash разделителем не считает)."""
+    return re.split(r"[\\/]", path.replace("\\", "/"))[-1]
+
+
+def win_parent(path: str) -> str:
+    """Папка из windows-пути — так же независимо от ОС."""
+    parts = re.split(r"[\\/]", path.replace("\\", "/"))
+    return "/".join(parts[:-1]) or "."
+
+
+def rec_label(path: str) -> str:
+    """'Desktop 2026.11.16 - 15.49.40.01.DVR.mp4' → 'Desktop', 'GTA5 2026.11.15 - …' → 'GTA5'."""
+    name = win_name(path)
+    m = REC_SOURCE_RE.match(name)
+    return (m.group("label") if m else re.sub(r"\.(mp4|avi|mkv|ts)$", "", name, flags=re.I))[:24]
+
+
+def rec_folder_note(folder: Path) -> tuple[str, int]:
+    """Что лежит в папке записей — самый честный признак «захват работает»."""
+    try:
+        if not folder.is_dir():
+            return f"папки записей нет: {folder}", 0
+        rows: list[tuple[float, int, Path]] = []
+        for f in folder.iterdir():
+            if not f.is_file() or f.suffix.lower() not in (".mp4", ".avi", ".mkv", ".ts"):
+                continue
+            with contextlib.suppress(OSError):
+                st = f.stat()
+                rows.append((st.st_mtime, st.st_size, f))
+        if not rows:
+            return f"в папке {folder} нет ни одного видеофайла", 0
+        rows.sort(reverse=True)
+        mt, size, freshest = rows[0]
+        age_h = max(0.0, (dt.datetime.now().timestamp() - mt) / 3600)
+        return f"в {folder} видеофайлов: {len(rows)}, самый свежий {freshest.name} ({size // 1024} КБ, {age_h:.1f} ч назад)", len(rows)
+    except OSError as exc:
+        return f"папку {folder} не прочитать: {type(exc).__name__}: {exc}", 0
+
+
 def check_recording_output(report: Report, files: Sequence[Path]) -> None:
     """Отвечает на «окно есть — а запись идёт?»: смотрим getOutputFileName в CaptureCore.log.
 
-    Единственное доказательство живого захвата — что драйвер сформировал файл записи. Берём
-    последние пути из 'CSettings::getOutputFileName Final output filename: [ … ]' и проверяем,
-    лежит ли файл на диске.
+    Единственное доказательство живого захвата — что драйвер сформировал файл записи. Смотрим
+    пути из 'CSettings::getOutputFileName Final output filename: [ … ]', проверяем, лежит ли файл
+    на диске, и отдельно — не «десктоп вместо игры» ли пишется (у оверлея и десктоп-захвата разные
+    пути: десктоп работает, даже когда хук в игру ставить запрещено).
     """
-    paths: list[str] = []
+    hits: list[tuple[str, str]] = []  # (метка времени из лога, путь)
     seen_capture = False
     for f in files:
         if "capture" not in f.name.lower() or not f.is_file():
@@ -4279,12 +4445,18 @@ def check_recording_output(report: Report, files: Sequence[Path]) -> None:
             continue
         for line in lines:
             mm = REC_OUTPUT_RE.search(line)
-            if mm:
-                paths.append(mm.group("p").strip())
-    paths = list(dict.fromkeys(paths))[-3:]
-    if not paths and not seen_capture:
+            if not mm:
+                continue
+            ts = re.match(r"^\[([\d:. -]{6,40})\]", line)
+            hits.append((ts.group(1) if ts else "?", mm.group("p").strip()))
+    uniq: list[str] = []
+    for _ts, p in hits:
+        if p not in uniq:
+            uniq.append(p)
+    uniq = uniq[-3:]
+    if not uniq and not seen_capture:
         return  # CaptureCore.log вообще не попадался — нечего и утверждать
-    if not paths:
+    if not uniq:
         report.add(
             "INFO",
             "log.no_recording_session",
@@ -4300,33 +4472,78 @@ def check_recording_output(report: Report, files: Sequence[Path]) -> None:
         return
     rows: list[str] = []
     on_disk = 0
-    for p in paths:
+    folders: list[Path] = []
+    labels: list[str] = []
+    for p in uniq:
         q = Path(expand(p))
-        exists = q.is_file()
-        if exists:
+        labels.append(rec_label(p))
+        if q.is_file():
             on_disk += 1
-            try:
+            with contextlib.suppress(OSError):
                 rows.append(f"файл ЕСТЬ, {q.stat().st_size // 1024} КБ: {p}")
-            except OSError:
-                rows.append(f"файл есть, но размер не прочитать: {p}")
-        else:
-            rows.append(f"файла нет на диске: {p}")
+                continue
+        rows.append(f"файла нет на диске: {p}")
+        # папку берём из windows-пути: на случай, что разбираем чужой лог не на той же машине
+        parent = Path(expand(win_parent(p)))
+        if parent not in folders:
+            folders.append(parent)
+    notes: list[str] = []
+    any_video = 0
+    for folder in folders[:2]:
+        note, cnt = rec_folder_note(folder)
+        notes.append(note)
+        any_video += cnt
+    ts_note = " · ".join(f"{ts} → {rec_label(p)}" for ts, p in hits[-3:])
+    detail = "\n".join(rows + notes) + f"\nПопытки записи по времени лога: {ts_note}"
+    if report.snapshot.get("videos_folder"):
+        detail += "\nПапка записей из настроек: " + str(report.snapshot["videos_folder"])
+    detail += "\nИсточник: CaptureCore.log, CSettings::getOutputFileName — путь берётся оттуда, а не из настроек."
+    sev = "OK" if on_disk else ("LOW" if any_video else "MEDIUM")
     report.add(
-        "OK" if on_disk else "LOW",
+        sev,
         "log.capture_output",
-        f"Запись доходит до файла ({on_disk}/{len(paths)} файлов на месте)"
+        f"Запись доходит до файла ({on_disk}/{len(uniq)} на месте)"
         if on_disk
-        else "Лог обещает файл записи, но на диске его нет",
-        detail="\n".join(rows)
-        + ("\nПапка записей из настроек: " + str(report.snapshot["videos_folder"]) if report.snapshot.get("videos_folder") else "")
-        + "\nИсточник: CaptureCore.log, CSettings::getOutputFileName — путь берётся оттуда, а не из настроек.",
+        else (f"Файлов записи на диске нет, но в папке есть видео ({any_video}) — вероятно, это DVR-буфер" if any_video else "Лог обещает файл записи, а на диске пусто"),
+        detail=detail,
         fixes=[]
         if on_disk
         else [
-            "Для DVR/Instant Replay это может быть нормой (буфер перезаписывается). Нажми «Начать запись», "
-            "останови и проверь папку записей; если файла нет — смотри log.ddi_shim и Installer2\\Stripped.",
+            "Для DVR/Instant Replay пустое место нормально (буфер перезаписывается). Нажми «Начать запись» → 10 с → стоп, "
+            "затем сразу scan; если файла нет — смотри log.ddi_shim, Installer2\\Stripped и log.hooks_disabled.",
         ],
         hypothesis="log_nothing",
+    )
+    desktop_only = bool(labels) and all(l.strip().lower() in ("desktop", "рабочий стол") for l in labels)
+    if not desktop_only:
+        return
+    games: list[str] = []
+    for fd in report.findings:
+        if fd.code != "log.hooks_disabled":
+            continue
+        for ev in fd.evidence:
+            gm = re.search(r"\]\[([^\]:]{2,40}):\d+:", ev)
+            if gm and gm.group(1) not in games:
+                games.append(gm.group(1))
+    report.add(
+        "HIGH" if games else "MEDIUM",
+        "log.capture_desktop_only",
+        "Запись идёт только для рабочего стола — в играх файл не создаётся"
+        + (f" (затронуты: {', '.join(games[:4])})" if games else ""),
+        detail=(
+            "Все выходы захвата называются 'Desktop …' — значит работает десктоп-путь (DUPLICATE_OUTPUT), а "
+            "игровой хук не ставится. Обычно рядом лежит 'm_uiIndex: -1' + 'isEnableHook: 0': драйвер не может "
+            "прочитать профиль приложения (база DRS) и запрещает инжект во ВСЕ приложения, включая игры.\n"
+            f"Метки файлов в логе: {', '.join(labels)}"
+            + (f"\nПриложения с запрещённым хуком: {', '.join(games[:8])}" if games else "")
+        ),
+        fixes=[
+            "python nvidia_overlay_diag.py fix --only drs   — спрятать nvdrsdb.bin и запустить dbInstaller -force -all, затем перезагрузка",
+            "после перезагрузки: NVIDIA App → Настройки → Внутриигровой оверлей → Вкл, и в профиле игры снять «Отключить»",
+            "если m_uiIndex: -1 остаётся — переустановка полного пакета: python nvidia_overlay_diag.py fix --reinstall",
+            "на время проверки записи убери сторонние оверлеи/скриншотеры (RTSS, MangoHUD, Skrinshoter из Majestic/GTA-RP)",
+        ],
+        hypothesis="capture_target",
     )
 
 
@@ -4666,6 +4883,32 @@ def run_selftest(sigs: Sequence[dict[str, Any]]) -> int:
         problems.append("level_of не видит короткую метку [E]")
     if BENIGN_ERROR_RE.search("2026-01-01 ERROR CSettings::DeleteDVRTmpFiles: FindFirstFileW failed") is None:
         problems.append("BENIGN_ERROR_RE не ловит известный шум")
+    # проверка 'dbInstaller/nvdrsdb' по setupapi.dev.log + приоритет важнейших логов в разборе
+    with tempfile.TemporaryDirectory() as td4:
+        root4 = Path(td4)
+        (root4 / "setupapi.dev.log").write_text(
+            "!!! inf: \t File 'C:\\Windows\\System32\\drivers\\NVIDIA Corporation\\Drs\\dbInstaller.exe' still in use by 3 sources.\r\n"
+            "!!! inf: \t File 'C:\\Windows\\System32\\drivers\\NVIDIA Corporation\\Drs\\nvdrsdb.bin' remains with owner '!nvcvi.inf_amd64_x'.\r\n"
+            "dvi: \t Copied file 'C:\\Windows\\INF\\other.log'\r\n",
+            encoding="utf-8",
+        )
+        rep4 = Report(mode="selftest-drs")
+        check_drs_installer(rep4, [root4 / "setupapi.dev.log"])
+        hit = [f for f in rep4.findings if f.code == "log.drs_installer_blocked"]
+        if not hit or hit[0].severity != "MEDIUM":
+            problems.append(f"check_drs_installer: находка не та — {[(f.code, f.severity) for f in rep4.findings]}")
+        # CaptureCore.log не должен вытесняться шумом при малом --max-files
+        for i_noise in range(12):
+            (root4 / f"NvContainerNoise{i_noise}.log").write_text("2026-11-16 09:00:00 INFO ok\n", encoding="utf-8")
+        cap = root4 / "CaptureCore.log"
+        cap.write_text("2026-11-16 09:00:00 ERROR CShadowPlayApi::CheckAndWaitForOverlayReady: WaitForOverlayReady failed.\n", encoding="utf-8")
+        os.utime(cap, (0, 0))  # делаем CaptureCore «самым старым»: по свежесть он проигрывает шуму
+        rep5 = Report(mode="selftest-prio")
+        got = analyze_paths(rep5, [str(root4)], sigs=COMPILED_SIGNATURES, max_files=3)
+        names = [p.name for p in got[:3]]
+        if "CaptureCore.log" not in names:
+            problems.append(f"сортировка логов: CaptureCore.log вытеснен шумом — {names}")
+
     # движок метрик «до/после» на подставном CaptureCore.log
     with tempfile.TemporaryDirectory() as td3:
         root = Path(td3)
