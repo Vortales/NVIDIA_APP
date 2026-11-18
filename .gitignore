@@ -9,3 +9,7 @@ report.json
 diag.zip
 nvidia_overlay_*.zip
 nvidia_overlay_report.txt
+
+# дампы результатов: держим только последний (Результат_N.zip)
+Результат_*.zip
+Результат*.7z

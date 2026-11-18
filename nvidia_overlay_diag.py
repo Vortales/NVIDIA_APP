@@ -2023,6 +2023,66 @@ class WinCollector:
                 ],
                 hypothesis="overlay_proc",
             )
+        ov_main, app_main, helpers, unknown = count_main_procs(procs)
+        if ov_main + app_main > 2:
+            r.add(
+                "HIGH" if max(ov_main, app_main) > 2 else "MEDIUM",
+                "proc.multiplied",
+                f"Несколько ГЛАВНЫХ процессов оверлея/приложения ({ov_main} + {app_main}) — хосты дерутся за MMF и MessageBus",
+                detail=(
+                    f"главных (без флага --type=): NVIDIA Overlay.exe — {ov_main}, NVIDIA App.exe — {app_main}; "
+                    f"CEF-помощников (gpu/renderer/utility): {helpers} — это норма, их не считаем дублями.\n"
+                    "Каждый главный процесс регистрирует OverlayApi в общем MMF, и нажатие хоткея уходит в "
+                    "мёртвый хост: в логах это 'CheckAndWaitForOverlayReady: WaitForOverlayReady failed' и "
+                    "'ShowGFEOverlay FAIL[0x80040228]'."
+                    + (f"\nещё у {unknown} процессов аргументы не видны без прав администратора — они в счёт не шли."
+                       if unknown else "")
+                ),
+                fixes=[
+                    "python nvidia_overlay_diag.py fix --only kill,svc,app   — выгрузить дубли и оставить один хост",
+                    "не «закрывать в трей», а «Выйти» полностью; не запускать второй экземпляр App",
+                    "после чистого старта (или перезагрузки) проверить Alt+Z",
+                ],
+                evidence=[
+                    f"{_pget(p, _NAME_KEYS)} pid={p.get('PID') or p.get('pid')} cmd={_pget(p, _CMD_KEYS)[:110]}"
+                    for p in procs
+                    if _cmd_known(_pget(p, _CMD_KEYS)) and "--type=" not in _pget(p, _CMD_KEYS)
+                ][:8],
+                hypothesis="overlay_proc",
+            )
+        elif unknown > 2:
+            # дублировать нечего по данным, но куча процессов с невидимой командной строкой —
+            # это ровно то, что мешает судить; честно говорим «не видно», а не «это зомби»
+            r.add(
+                "LOW",
+                "proc.cmdline_hidden",
+                f"{unknown} процессов NVIDIA с невидимой командной строкой — судить о дублях нельзя",
+                detail=(
+                    "CommandLine чужого/привилегированного процесса виден только из админской консоли.\n"
+                    "Без аргументов непонятно, сколько из них настоящих хостов, а сколько CEF-помощников "
+                    "(1 хост + 4 помощника — это норма, а не «зависшие копии»: в дампе №10 так и было).\n"
+                    "Косвенный признак дублей — строки 'CheckAndWaitForOverlayReady: WaitForOverlayReady failed' "
+                    "в CaptureCore.log: их больше нуля при живом оверлее = нажатие уходит в мёртвый хост."
+                ),
+                fixes=[
+                    "перезапусти машину либо: python nvidia_overlay_diag.py fix --only kill,svc,app",
+                    "для точного счёта запусти этот скрипт от администратора (тогда будет видно аргументы)",
+                ],
+                evidence=[
+                    f"{_pget(p, _NAME_KEYS)} pid={p.get('PID') or p.get('pid')}"
+                    for p in procs
+                    if not _cmd_known(_pget(p, _CMD_KEYS))
+                ][:8],
+                hypothesis="overlay_proc",
+            )
+        elif overlay_up:
+            r.add(
+                "INFO",
+                "proc.instances_normal",
+                f"Хост оверлея один ({ov_main}), CEF-помощников {helpers} — это штатно",
+                detail="Пять-шесть процессов 'NVIDIA Overlay.exe' в диспетчере — это 1 хост + gpu/renderer/utility, а не «зависшие копии».",
+                hypothesis="overlay_proc",
+            )
         else:
             detail = "Процесс NVIDIA Overlay.exe не найден."
             fixes = []
@@ -2519,6 +2579,51 @@ class WinCollector:
 PRIORITY_LOG_RE = re.compile(
     r"(?i)(capturecore|captureapi|nvstream\.log|log\.nvidia (app|overlay)\.exe|cxnative_nvidia (app|overlay))"
 )
+
+
+# PowerShell отдаёт то Name, то name (в report.py процессы лежат в нижнем регистре), а Cmd
+# бывает "None" — CommandLine чужого процесса без прав не читается.
+_NAME_KEYS = ("Name", "name", "image", "ProcessName")
+_CMD_KEYS = ("Cmd", "cmd", "CommandLine", "command_line")
+_CMD_UNKNOWN = ("", "none", "null", "n/a", "нет", "not available")
+
+
+def _pget(p: dict[str, Any], keys: Sequence[str]) -> str:
+    for k in keys:
+        if k in p and p[k] is not None:
+            return str(p[k])
+    return ""
+
+
+def _cmd_known(cmd: str) -> bool:
+    return cmd.strip().lower() not in _CMD_UNKNOWN
+
+
+def count_main_procs(procs: Sequence[dict[str, Any]]) -> tuple[int, int, int, int]:
+    """(главных 'NVIDIA Overlay.exe', главных 'NVIDIA App.exe', CEF-помощников, с невидимыми аргументами).
+
+    CEF запускает по процессу на gpu/renderer/utility — их флаги '--type=' и отличают хост
+    от помощника. Без этого любой нормальный оверлей выглядит как «пять зависших копий».
+    Если аргументы процесса не видны (нет прав на CommandLine), процесс в «главные» не
+    записывается и попадает в 4-й счётчик: по нему нельзя утверждать, что это дубль.
+    """
+    ov = app = helpers = unknown = 0
+    for p in procs:
+        name = _pget(p, _NAME_KEYS).lower()
+        cmd = _pget(p, _CMD_KEYS)
+        if name not in ("nvidia overlay.exe", "nvidia app.exe", "nvidiaapp.exe"):
+            continue
+        if not _cmd_known(cmd):
+            unknown += 1
+            continue
+        if "--type=" in cmd or "--type\"" in cmd:
+            helpers += 1
+            continue
+        if name == "nvidia overlay.exe":
+            ov += 1
+        else:
+            app += 1
+    return ov, app, helpers, unknown
 
 
 def find_log_files(roots: Sequence[str], limit: int, hints: re.Pattern[str] | None = None) -> list[Path]:
@@ -4331,6 +4436,52 @@ DRS_INSTALLER_RE = re.compile(
 )
 
 
+CAPTURE_OK_NOISE: tuple[str, ...] = (
+    "inst.component_stripped",
+    "log.drs_broken",
+    "log.drv_none",
+    "log.hooks_disabled",
+    "log.ddi_shim",
+    "log.overlay_window_gone",
+)
+
+
+def reconcile_findings(report: Report) -> None:
+    """Понизить «страшилки», если есть прямое доказательство, что оверлей и захват работают.
+
+    'm_uiIndex: -1', 'isEnableHook: 0', 'QueryShadowPlayDdiShimStatus' и пометка
+    Installer2\\Stripped сами по себе ещё не поломка. Когда CaptureCore.log показывает файл
+    записи и этот файл реально лежит на диске (log.capture_output → OK), система работает:
+    строки остаются в отчёте, но ведут вердикт не от них (иначе совет «переустанавливай драйвер»
+    выдаётся человеку с уже работающим оверлеем).
+    """
+    capture_ok = any(f.code == "log.capture_output" and f.severity == "OK" for f in report.findings)
+    if not capture_ok:
+        return
+    down: list[str] = []
+    for f in report.findings:
+        if f.code in CAPTURE_OK_NOISE and f.severity in ("CRITICAL", "HIGH"):
+            f.severity = "MEDIUM"
+            f.detail = (f.detail + "\n" if f.detail else "") + (
+                "Вес понижен: запись и оверлей работают (файлы на диске есть) — эти строки остались "
+                "от прошлых сессий/других приложений и сейчас не мешают."
+            )
+            down.append(f.code)
+    if not down:
+        return
+    report.add(
+        "OK",
+        "verdict.reconciled",
+        f"Вердикт сверен с реальностью: понижено {len(down)} «страшилок»",
+        detail=(
+            "Признак: в CaptureCore.log есть CSettings::getOutputFileName, и файл записи найден на диске.\n"
+            "Понижены до MEDIUM: " + ", ".join(sorted(set(down))) + "\n"
+            "Согласиться с прежней оценкой (не понижать вес) — флаг --no-reconcile."
+        ),
+        hypothesis="log_nothing",
+    )
+
+
 def check_drs_installer(report: Report, files: Sequence[Path] = ()) -> None:
     """Чем закончилась установка драйвера для базы DRS — смотрим C:\\Windows\\INF\\setupapi.dev.log.
 
@@ -4883,6 +5034,58 @@ def run_selftest(sigs: Sequence[dict[str, Any]]) -> int:
         problems.append("level_of не видит короткую метку [E]")
     if BENIGN_ERROR_RE.search("2026-01-01 ERROR CSettings::DeleteDVRTmpFiles: FindFirstFileW failed") is None:
         problems.append("BENIGN_ERROR_RE не ловит известный шум")
+    # подсчёт «размножения» процессов и сверка вердикта с фактом работающей записи
+    procs = [
+        {"Name": "NVIDIA Overlay.exe", "Cmd": '"…\\NVIDIA Overlay.exe"'},
+        {"Name": "NVIDIA Overlay.exe", "Cmd": '"…\\NVIDIA Overlay.exe" --type=gpu-process'},
+        {"Name": "NVIDIA Overlay.exe", "Cmd": '"…\\NVIDIA Overlay.exe" --type=renderer'},
+        {"Name": "NVIDIA App.exe", "Cmd": '"…\\NVIDIA App.exe"'},
+        {"Name": "NVIDIA App.exe", "Cmd": '"…\\NVIDIA App.exe"'},
+        {"Name": "nvcontainer.exe", "Cmd": "nvcontainer --watchdog"},
+    ]
+    if count_main_procs(procs) != (1, 2, 2, 0):
+        problems.append(f"count_main_procs считает неверно: {count_main_procs(procs)} (ожидалось (1, 2, 2, 0))")
+    # реальные срезы из дампов: №10 (5 × App.exe с невидимыми аргументами) и №11 (1 хост + 4 помощника)
+    snap10 = [
+        {"name": "nvcontainer.exe", "pid": 13396, "cmd": "None"},
+        {"name": "NVIDIA Overlay.exe", "pid": 8732, "cmd": '"C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\CEF\\NVIDIA Overlay.exe"'},
+        {"name": "NVIDIA App.exe", "pid": 16640, "cmd": "None"},
+        {"name": "NVIDIA App.exe", "pid": 11904, "cmd": "None"},
+        {"name": "NVIDIA App.exe", "pid": 3480, "cmd": "None"},
+        {"name": "NVIDIA App.exe", "pid": 18240, "cmd": "None"},
+        {"name": "NVIDIA App.exe", "pid": 9476, "cmd": "None"},
+        {"name": "NVIDIA Overlay.exe", "pid": 18200, "cmd": '"…NVIDIA Overlay.exe" --type=gpu-process'},
+        {"name": "NVIDIA Overlay.exe", "pid": 18904, "cmd": '"…NVIDIA Overlay.exe" --type=utility'},
+    ]
+    if count_main_procs(snap10) != (1, 0, 2, 5):
+        problems.append(f"насчёт №10 ошибается: {count_main_procs(snap10)} (ожидалось (1, 0, 2, 5))")
+    snap11 = [
+        {"name": "NVIDIA Overlay.exe", "pid": 16892, "cmd": '"C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\CEF\\NVIDIA Overlay.exe"'},
+        {"name": "NVIDIA Overlay.exe", "pid": 14048, "cmd": '"…\\NVIDIA Overlay.exe" --type=gpu-process'},
+        {"name": "NVIDIA Overlay.exe", "pid": 9912, "cmd": '"…\\NVIDIA Overlay.exe" --type=utility --u'},
+        {"name": "NVIDIA Overlay.exe", "pid": 10924, "cmd": '"…\\NVIDIA Overlay.exe" --type=renderer --'},
+        {"name": "NVIDIA Overlay.exe", "pid": 21080, "cmd": '"…\\NVIDIA Overlay.exe" --type=utility --u'},
+        {"name": "nvcontainer.exe", "pid": 4596, "cmd": "None"},
+        {"name": "NVDisplay.Container.exe", "pid": 2804, "cmd": "None"},
+    ]
+    got11 = count_main_procs(snap11)
+    # nvcontainer/NVDisplay с cmd="None" сюда не входят: считаем только хосты оверлея и App
+    if got11 != (1, 0, 4, 0):
+        problems.append(f"насчёт №11 ошибается: {got11} (ожидалось (1, 0, 4, 0))")
+    rep3 = Report(mode="selftest-reconcile")
+    rep3.add("OK", "log.capture_output", "Запись доходит до файла", hypothesis="log_nothing")
+    rep3.add("CRITICAL", "inst.component_stripped", "Вырезан ShadowPlay", hypothesis="component_stripped")
+    rep3.add("CRITICAL", "log.drs_broken", "Не читается DRS", hypothesis="drs_profiles")
+    rep3.add("CRITICAL", "log.overlay_fail", "Оверлей не поднимается", hypothesis="overlay_proc")
+    reconcile_findings(rep3)
+    sev = {f.code: f.severity for f in rep3.findings}
+    if sev.get("inst.component_stripped") != "MEDIUM" or sev.get("log.drs_broken") != "MEDIUM":
+        problems.append(f"reconcile_findings не понизил вес: {sev}")
+    if sev.get("log.overlay_fail") != "CRITICAL":
+        problems.append("reconcile_findings тронул находку вне списка")
+    if "verdict.reconciled" not in {f.code for f in rep3.findings}:
+        problems.append("reconcile_findings не сообщил, что именно понизил")
+
     # проверка 'dbInstaller/nvdrsdb' по setupapi.dev.log + приоритет важнейших логов в разборе
     with tempfile.TemporaryDirectory() as td4:
         root4 = Path(td4)
@@ -5022,6 +5225,11 @@ def build_parser() -> argparse.ArgumentParser:
         sp.add_argument("-o", "--out", metavar="FILE", help="имя файла отчёта (пишется ВНУТРЬ папки результатов)")
         sp.add_argument("--out-dir", metavar="DIR", help=f"куда складывать вывод (по умолчанию './{OUT_DIR_NAME}' рядом со скриптом)")
         sp.add_argument("--no-sink", action="store_true", help="ничего не сохранять на диск, только консоль")
+        sp.add_argument(
+            "--no-reconcile",
+            action="store_true",
+            help="не понижать вес DRS/Stripped/hooks-строк, когда запись и оверлей реально работают",
+        )
         sp.add_argument(
             "--no-zip",
             action="store_true",
@@ -5276,6 +5484,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         report.snapshot["fix_result_diff"] = fix_res.get("diff") or {}
 
     log_files = [Path(p) for p in (report.snapshot.get("log_files_used") or []) if Path(p).exists()]
+    if cmd in ("scan", "logs", "fix", "verify") and not getattr(args, "no_reconcile", False):
+        reconcile_findings(report)  # см. docstring: не вести вердикт от строк, которые уже не мешают
 
     width = max(60, min(160, int(getattr(args, "width", 100) or 100)))
     verbose = not bool(getattr(args, "quiet", False))

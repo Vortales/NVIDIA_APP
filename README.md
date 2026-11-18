@@ -78,7 +78,7 @@ python nvidia_overlay_diag.py list-signatures          # что именно и�
 
 Флаги: `--json`, `-o FILE`, `--bundle [ZIP]`, `--only-problems`, `--quiet`, `--width`, `--context`, `--tail-kb`,
 `--max-files`, `--all-files`, `--days`, `--no-logs`, `--no-events`, `--elevate`, `--out-dir DIR`, `--no-sink`,
-`--no-zip`, `--inbox-done`, `--keep-runs N`, `--copy-mb N`, `--kb FILE`, `--keep-foreign`.
+`--no-zip`, `--inbox-done`, `--keep-runs N`, `--copy-mb N`, `--kb FILE`, `--keep-foreign`, `--no-reconcile` (не понижать вес хронического шума, если запись работает).
 Для `fix`: `--dry-run`, `--yes` (по умолчанию и так делает без вопросов), `--ask` (спрашивать каждый шаг),
 `--only ids` / `--skip ids`, `--wait N`, `--keys alt+z`, `--reinstall`, `--undo`, `--elevate`.
 
@@ -107,6 +107,11 @@ python nvidia_overlay_diag.py list-signatures          # что именно и�
 4. Все сервисы NVIDIA: кто `Running`, кто `Stopped`, кто **отключён твикерами** (`StartMode=Disabled/Manual`) —
    с разбором по критичным для оверлея (`NVDisplay.ContainerLocalSystem`, App/Telemetry-контейнеры).
 5. Процессы: запущен ли `NVIDIA Overlay.exe`, `nvcontainer.exe`, сам NVIDIA App; какие аргументы у процесса.
+   Число процессов само по себе ничего не значит: CEF на каждый gpu/renderer/utility держит отдельный
+   `NVIDIA Overlay.exe`, поэтому 5 одинаковых имён — это `proc.instances_normal` (1 хост + 4 помощника), а не «зависшие копии».
+   О дублях судят только по ГЛАВНЫМ процессам (без `--type=`): `≥3` → `proc.multiplied`. Если CommandLine
+   чужого процесса не виден (`cmd=None` без прав админа), находится `proc.cmdline_hidden` с честным
+   «судить о дублях нельзя», а не обвинение в зомби (так я ошибся в разборе дампа №10).
 6. Конфигы: поиск `Settings.json`/`*.json` настроек в ProgramData/Program Files/LocalAppData, парсинг JSON,
    поиск флагов `overlay/capture/record/replay = false` и путей вида `D:\...`, проверка этих путей
    (существование, свободное место, OneDrive, «ожидается папка, а тут файл»), битый JSON → отдельная находка.
@@ -127,6 +132,9 @@ python nvidia_overlay_diag.py list-signatures          # что именно и�
     `C:\Windows\System32\drivers\NVIDIA Corporation\Drs` + `dbInstaller.exe` (55x/56x). Плюс разбор
     `C:\Windows\INF\setupapi.dev.log`: если `nvdrsdb.bin`/`dbInstaller.exe` были «still in use» в момент
     установки, база не пересобралась → `m_uiIndex: -1` → `isEnableHook: 0` на все приложения (`log.drs_installer_blocked`).
+    В дампе №11 на этих же строках установщик «Skipping isolated file» / «still in use by 5–6 sources» пропустил
+    153 файла, включая `nvapi64/nvcuvid/NvFBC/NvIFR` и `Drs\nvdrsdb.bin`, — залочены они были тем самым
+    нагромождением хостов App, которое снимается перезагрузкой или `fix --only kill,svc,app`.
 14. Доходит ли запись до файла: `CSettings::getOutputFileName` в `CaptureCore.log` + проверка, что этот `.mp4`
     действительно лежит на диске (`log.capture_output`), и кто именно пишется: если все файлы `Desktop …`,
     работает десктоп-захват, а игровой хук запрещён — это разные пути драйвера (`log.capture_desktop_only`). Ни одной такой строки → запись либо не запускали,
@@ -150,6 +158,12 @@ python nvidia_overlay_diag.py list-signatures          # что именно и�
   («retry», «failed to start», «timeout»), — последствия. Эта строка получает максимальный вес и становится вердиктом №1.
 * **`log.unknown_errors`** — строки, похожие на ошибку, но не описанные базой: нормализуются (цифры → `N`),
   группируются и печатаются с номерами строк. Именно их текст стоит дослать мне, чтобы я добавил сигнатуру.
+
+**Сверка вердикта с реальностью (`verdict.reconciled`).** Если `log.capture_output` = OK (строка
+`CSettings::getOutputFileName` есть в логе и файл `.mp4` найден на диске), то хронический шум
+`inst.component_stripped`, `log.drs_broken`, `log.drv_none`, `log.hooks_disabled`, `log.ddi_shim`,
+`log.overlay_window_gone` понижается до MEDIUM: строки остаются в отчёте, но не ведут вердикт к
+«переустанавливай драйвер». Отключить понижение — `--no-reconcile`.
 
 **Вердикт.** Находки голосуют за 15 гипотез-причин (`svc`, `overlay_proc`, `disabled`, `elevated`, `conflict`,
 `blocked`, `capture_target`, `encoder`, `storage`, `driver`, `app_ver`, `config_corrupt`, `hotkey`, `log_nothing`, `unknown`)
